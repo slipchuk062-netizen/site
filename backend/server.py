@@ -878,6 +878,128 @@ async def get_admin_stats(admin: bool = Depends(verify_admin)):
     }
 
 
+# ============= GOOGLE PLACES API INTEGRATION =============
+
+async def get_place_details(place_name, location_lat, location_lng):
+    """
+    Отримати деталі місця з Google Places API
+    """
+    if not GOOGLE_PLACES_API_KEY:
+        return None
+    
+    try:
+        # Пошук Place ID
+        search_url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+        search_params = {
+            "input": place_name,
+            "inputtype": "textquery",
+            "locationbias": f"circle:5000@{location_lat},{location_lng}",
+            "fields": "place_id",
+            "key": GOOGLE_PLACES_API_KEY
+        }
+        
+        async with httpx.AsyncClient() as client:
+            search_response = await client.get(search_url, params=search_params)
+            search_data = search_response.json()
+            
+            if search_data.get('status') == 'OK' and search_data.get('candidates'):
+                place_id = search_data['candidates'][0]['place_id']
+                
+                # Отримання деталей
+                details_url = "https://maps.googleapis.com/maps/api/place/details/json"
+                details_params = {
+                    "place_id": place_id,
+                    "fields": "name,rating,user_ratings_total,reviews,opening_hours,website,formatted_phone_number,photos,formatted_address",
+                    "language": "uk",
+                    "key": GOOGLE_PLACES_API_KEY
+                }
+                
+                details_response = await client.get(details_url, params=details_params)
+                details_data = details_response.json()
+                
+                if details_data.get('status') == 'OK':
+                    result = details_data.get('result', {})
+                    
+                    # Обробка фото
+                    photos = []
+                    if result.get('photos'):
+                        for photo in result['photos'][:3]:
+                            photo_reference = photo.get('photo_reference')
+                            photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference={photo_reference}&key={GOOGLE_PLACES_API_KEY}"
+                            photos.append(photo_url)
+                    
+                    # Обробка відгуків
+                    reviews = []
+                    if result.get('reviews'):
+                        for review in result['reviews'][:5]:
+                            reviews.append({
+                                'author': review.get('author_name'),
+                                'rating': review.get('rating'),
+                                'text': review.get('text'),
+                                'time': review.get('relative_time_description')
+                            })
+                    
+                    return {
+                        'place_id': place_id,
+                        'name': result.get('name'),
+                        'rating': result.get('rating'),
+                        'user_ratings_total': result.get('user_ratings_total'),
+                        'website': result.get('website'),
+                        'phone': result.get('formatted_phone_number'),
+                        'address': result.get('formatted_address'),
+                        'opening_hours': result.get('opening_hours', {}).get('weekday_text', []),
+                        'is_open_now': result.get('opening_hours', {}).get('open_now'),
+                        'photos': photos,
+                        'reviews': reviews
+                    }
+        
+        return None
+    except Exception as e:
+        logger.error(f"Google Places API error: {str(e)}")
+        return None
+
+
+@api_router.get("/places/details/{attraction_id}")
+async def get_attraction_place_details(attraction_id: str):
+    """
+    Отримати Google Places деталі для туристичного об'єкта
+    """
+    try:
+        # Знайти об'єкт в даних
+        attraction = next((a for a in ATTRACTIONS_DATA if str(a.get('id')) == attraction_id), None)
+        
+        if not attraction:
+            raise HTTPException(status_code=404, detail="Attraction not found")
+        
+        # Отримати деталі з Google Places
+        coords = attraction.get('coordinates', {})
+        place_details = await get_place_details(
+            attraction.get('name'),
+            coords.get('lat', 0),
+            coords.get('lng', 0)
+        )
+        
+        if place_details:
+            return {
+                "success": True,
+                "attraction": attraction,
+                "google_details": place_details
+            }
+        else:
+            return {
+                "success": True,
+                "attraction": attraction,
+                "google_details": None,
+                "message": "Google Places data not available"
+            }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Get place details error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============= RECOMMENDATIONS ENGINE =============
 
 def get_personalized_recommendations(preferences, visited_ids=None):
