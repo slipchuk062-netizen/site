@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { clusters } from '../data/mock';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
-import { Landmark, Trees, ShoppingBag, Theater, Mountain, UtensilsCrossed, Bed, ArrowRight } from 'lucide-react';
+import { Landmark, Trees, ShoppingBag, Theater, Mountain, UtensilsCrossed, Bed, ArrowRight, TrendingUp, Activity } from 'lucide-react';
+import axios from 'axios';
 
 const iconMap = {
   Landmark,
