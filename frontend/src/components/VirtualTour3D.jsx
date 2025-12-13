@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { 
   Play, Pause, RotateCw, Maximize2, Volume2, VolumeX,
-  ChevronLeft, ChevronRight, Camera, Navigation
+  ChevronLeft, ChevronRight, Camera, Navigation, MapPin
 } from 'lucide-react';
 
 const VirtualTour3D = () => {
