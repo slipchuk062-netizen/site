@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, GeoJSON, Circle, useMap } from 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
+import './EnhancedMap.css';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
