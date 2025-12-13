@@ -513,25 +513,26 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
 
               {/* Legend */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-2 block">
+                <label className="text-sm font-medium text-slate-700 mb-3 block flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-amber-600" />
                   Легенда Heat Map
                 </label>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-blue-500"></div>
-                    <span className="text-xs">0-30% відвідуваність</span>
+                  <div className="legend-item flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all duration-300">
+                    <div className="w-5 h-5 rounded-full bg-blue-500 shadow-lg flex-shrink-0"></div>
+                    <span className="text-sm font-medium">0-30% відвідуваність</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-emerald-500"></div>
-                    <span className="text-xs">30-50% відвідуваність</span>
+                  <div className="legend-item flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all duration-300">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500 shadow-lg flex-shrink-0"></div>
+                    <span className="text-sm font-medium">30-50% відвідуваність</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-amber-500"></div>
-                    <span className="text-xs">50-70% відвідуваність</span>
+                  <div className="legend-item flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all duration-300">
+                    <div className="w-5 h-5 rounded-full bg-amber-500 shadow-lg flex-shrink-0"></div>
+                    <span className="text-sm font-medium">50-70% відвідуваність</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded bg-red-500"></div>
-                    <span className="text-xs">70-100% відвідуваність</span>
+                  <div className="legend-item flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all duration-300">
+                    <div className="w-5 h-5 rounded-full bg-red-500 shadow-lg badge-pulse flex-shrink-0"></div>
+                    <span className="text-sm font-medium">70-100% відвідуваність</span>
                   </div>
                 </div>
               </div>
