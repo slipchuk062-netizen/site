@@ -126,7 +126,7 @@ const Header = () => {
           {navLinks.map((link) => (
             <button
               key={link.name}
-              onClick={() => scrollToSection(link.href)}
+              onClick={() => handleNavigation(link)}
               className="px-4 py-3 text-left text-slate-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg font-medium transition-colors"
             >
               {link.name}
