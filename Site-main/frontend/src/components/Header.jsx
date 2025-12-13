@@ -82,7 +82,7 @@ const Header = () => {
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => scrollToSection(link.href)}
+                onClick={() => handleNavigation(link)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   isScrolled || !isHomePage
                     ? 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'
