@@ -355,44 +355,46 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="border-2 border-emerald-100">
+          <Card className="stat-card border-2 border-emerald-100 hover:border-emerald-300 transition-all duration-300 cursor-pointer">
             <CardContent className="pt-6">
               <div className="text-center">
-                <MapPin className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-slate-900">{statistics.total}</p>
-                <p className="text-sm text-slate-600">Об'єктів на карті</p>
+                <MapPin className="h-8 w-8 text-emerald-600 mx-auto mb-2 icon-rotate" />
+                <p className="text-3xl font-bold text-slate-900 gradient-text">{statistics.total}</p>
+                <p className="text-sm text-slate-600 font-medium">Об'єктів на карті</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-blue-100">
+          <Card className="stat-card border-2 border-blue-100 hover:border-blue-300 transition-all duration-300 cursor-pointer">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Layers className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-slate-900">{Object.keys(statistics.byCategory).length}</p>
-                <p className="text-sm text-slate-600">Активних категорій</p>
+                <Layers className="h-8 w-8 text-blue-600 mx-auto mb-2 icon-rotate" />
+                <p className="text-3xl font-bold text-slate-900 gradient-text">{Object.keys(statistics.byCategory).length}</p>
+                <p className="text-sm text-slate-600 font-medium">Активних категорій</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-amber-100">
+          <Card className="stat-card border-2 border-amber-100 hover:border-amber-300 transition-all duration-300 cursor-pointer">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Activity className="h-8 w-8 text-amber-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-slate-900">{densityStats.length}</p>
-                <p className="text-sm text-slate-600">Районів</p>
+                <Activity className="h-8 w-8 text-amber-600 mx-auto mb-2 icon-rotate" />
+                <p className="text-3xl font-bold text-slate-900 gradient-text">{densityStats.length}</p>
+                <p className="text-sm text-slate-600 font-medium">Районів</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-rose-100">
+          <Card className="stat-card border-2 border-rose-100 hover:border-rose-300 transition-all duration-300 cursor-pointer">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Flame className="h-8 w-8 text-rose-600 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-slate-900">
-                  {Object.values(clusterStats).reduce((acc, stat) => acc + (stat.visit_percentage || 0), 0) > 0 ? 'ON' : 'OFF'}
+                <Flame className="h-8 w-8 text-rose-600 mx-auto mb-2 icon-rotate" />
+                <p className="text-3xl font-bold text-slate-900">
+                  <span className={Object.values(clusterStats).reduce((acc, stat) => acc + (stat.visit_percentage || 0), 0) > 0 ? 'badge-pulse' : ''}>
+                    {Object.values(clusterStats).reduce((acc, stat) => acc + (stat.visit_percentage || 0), 0) > 0 ? '🔥 ON' : 'OFF'}
+                  </span>
                 </p>
-                <p className="text-sm text-slate-600">Heat Map</p>
+                <p className="text-sm text-slate-600 font-medium">Heat Map</p>
               </div>
             </CardContent>
           </Card>
