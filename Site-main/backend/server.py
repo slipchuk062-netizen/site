@@ -878,6 +878,90 @@ async def get_admin_stats(admin: bool = Depends(verify_admin)):
     }
 
 
+# ============= CLUSTER ANALYTICS ENDPOINTS =============
+
+@api_router.get("/clusters/statistics")
+async def get_cluster_statistics():
+    """
+    Отримати статистику кластерів з розрахунками
+    """
+    try:
+        cluster_stats = calculate_cluster_statistics()
+        return {
+            "success": True,
+            "data": cluster_stats,
+            "total_objects": len(ATTRACTIONS_DATA)
+        }
+    except Exception as e:
+        logger.error(f"Cluster statistics error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/clusters/density")
+async def get_district_density():
+    """
+    Розрахунок щільності об'єктів по районах
+    """
+    try:
+        density_stats = calculate_district_density()
+        return {
+            "success": True,
+            "data": density_stats
+        }
+    except Exception as e:
+        logger.error(f"District density error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/clusters/metrics")
+async def get_clustering_metrics():
+    """
+    Метрики якості кластеризації
+    """
+    try:
+        metrics = calculate_clustering_metrics()
+        return {
+            "success": True,
+            "data": metrics
+        }
+    except Exception as e:
+        logger.error(f"Clustering metrics error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/clusters/analytics")
+async def get_full_analytics():
+    """
+    Повна аналітика кластеризації для магістерської роботи
+    """
+    try:
+        return {
+            "success": True,
+            "cluster_statistics": calculate_cluster_statistics(),
+            "district_density": calculate_district_density(),
+            "clustering_metrics": calculate_clustering_metrics(),
+            "methodology": {
+                "algorithm": "Комбінований підхід: K-means + Геопросторова кластеризація",
+                "description": "Тематична класифікація об'єктів з урахуванням географічного розподілу",
+                "steps": [
+                    "1. Збір та очищення даних туристичних об'єктів",
+                    "2. Класифікація за тематичними категоріями",
+                    "3. Розрахунок щільності об'єктів по районах",
+                    "4. Визначення популярних зон методом heat mapping",
+                    "5. Оцінка якості кластеризації метриками Silhouette та Davies-Bouldin"
+                ],
+                "metrics_explanation": {
+                    "silhouette_score": "Оцінка згуртованості кластерів (0.65-0.85 - добре)",
+                    "davies_bouldin_index": "Індекс розподілу кластерів (< 1.0 - добре)",
+                    "density": "Кількість об'єктів на км² території району"
+                }
+            }
+        }
+    except Exception as e:
+        logger.error(f"Full analytics error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
