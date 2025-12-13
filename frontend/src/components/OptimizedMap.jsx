@@ -389,25 +389,21 @@ const OptimizedMap = ({ attractions = [] }) => {
                         key={attraction.id}
                         position={[attraction.coordinates.lat, attraction.coordinates.lng]}
                         icon={createCategoryIcon(attraction.category)}
+                        eventHandlers={{
+                          click: async () => {
+                            // Fetch Google Places details
+                            try {
+                              const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+                              const response = await axios.get(`${backendUrl}/api/places/details/${attraction.id}`);
+                              console.log('Google Places data:', response.data);
+                            } catch (error) {
+                              console.error('Failed to fetch place details:', error);
+                            }
+                          }
+                        }}
                       >
-                        <Popup>
-                          <div className="p-2 min-w-[200px]">
-                            <h3 className="font-bold text-base mb-2">{attraction.name}</h3>
-                            
-                            <Badge 
-                              className="mb-2"
-                              style={{ backgroundColor: categoryColors[attraction.category] }}
-                            >
-                              {categoryNames[attraction.category]}
-                            </Badge>
-
-                            {attraction.address && (
-                              <div className="flex items-start gap-2 text-sm text-slate-700 mb-2">
-                                <MapPin className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                                <span>{attraction.address}</span>
-                              </div>
-                            )}
-                          </div>
+                        <Popup maxWidth={350}>
+                          <GooglePlacesPopup attraction={attraction} />
                         </Popup>
                       </Marker>
                     ))}
