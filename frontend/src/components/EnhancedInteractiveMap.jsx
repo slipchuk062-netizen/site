@@ -412,17 +412,18 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
             <CardContent className="space-y-6 custom-scrollbar">
               {/* Search */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-2 block">
+                <label className="text-sm font-medium text-slate-700 mb-2 block flex items-center gap-2">
+                  <Search className="h-4 w-4 text-emerald-600" />
                   Пошук об'єктів
                 </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <div className="relative search-box">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500 transition-all duration-300" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Назва або адреса..."
-                    className="w-full pl-9 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full pl-9 pr-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-300"
                   />
                 </div>
               </div>
