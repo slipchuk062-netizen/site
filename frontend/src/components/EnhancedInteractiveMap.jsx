@@ -572,7 +572,7 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
                   />
 
                   {/* District boundaries */}
-                  <DistrictBoundaries showBoundaries={showBoundaries} />
+                  <DistrictBoundaries showBoundaries={showBoundaries} densityStats={densityStats} />
 
                   {/* Heat map */}
                   {showHeatMap && viewMode === 'heatmap' && (
