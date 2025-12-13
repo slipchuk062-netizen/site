@@ -52,6 +52,7 @@ function App() {
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/trip-planner" element={<TripPlanner />} />
           <Route path="/feedback" element={<FeedbackForm />} />
+          <Route path="/analytics" element={<ClusterAnalytics />} />
         </Routes>
       </BrowserRouter>
     </div>
