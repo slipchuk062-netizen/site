@@ -655,23 +655,30 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
         </div>
 
         {/* Info panel */}
-        <Card className="mt-6 bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-emerald-600 rounded-full">
-                <TrendingUp className="h-6 w-6 text-white" />
+        <Card className="mt-6 floating-panel bg-gradient-to-r from-emerald-50 via-blue-50 to-violet-50 border-2 border-emerald-200 shadow-xl">
+          <CardContent className="p-8">
+            <div className="flex items-start gap-6">
+              <div className="p-4 bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-2xl shadow-lg">
+                <TrendingUp className="h-8 w-8 text-white" />
               </div>
-              <div>
-                <h3 className="font-bold text-lg text-slate-900 mb-2">
-                  Науковий підхід до візуалізації
+              <div className="flex-1">
+                <h3 className="font-bold text-2xl mb-3">
+                  <span className="gradient-text">🔬 Науковий підхід до візуалізації</span>
                 </h3>
-                <p className="text-slate-700 text-sm leading-relaxed">
-                  Карта використовує алгоритм теплової візуалізації для відображення популярних зон 
+                <p className="text-slate-700 text-base leading-relaxed mb-4">
+                  Карта використовує <strong>алгоритм теплової візуалізації</strong> для відображення популярних зон 
                   на основі відсотка відвідуваності об'єктів. Розмір маркерів пропорційний відвідуваності. 
-                  Межі районів показують географічний розподіл туристичної інфраструктури Житомирської області.
-                  Heat map gradient від синього (низька активність) до червоного (висока активність) 
-                  дозволяє туристам швидко ідентифікувати найпопулярніші зони для відвідування.
                 </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="p-3 bg-white/70 backdrop-blur-sm rounded-lg border-2 border-emerald-100">
+                    <p className="text-sm font-semibold text-emerald-700 mb-1">🗺️ Межі районів</p>
+                    <p className="text-xs text-slate-600">Чіткі кордони Житомирської області та 4 районів з кольоровим кодуванням</p>
+                  </div>
+                  <div className="p-3 bg-white/70 backdrop-blur-sm rounded-lg border-2 border-blue-100">
+                    <p className="text-sm font-semibold text-blue-700 mb-1">🔥 Heat Map</p>
+                    <p className="text-xs text-slate-600">Градієнт від синього (низька активність) до червоного (висока активність)</p>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
