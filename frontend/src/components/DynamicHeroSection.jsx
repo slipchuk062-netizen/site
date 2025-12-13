@@ -9,13 +9,11 @@ const DynamicHeroSection = ({ attractionsCount }) => {
 
   // Реальні фото Житомира та області (високої якості)
   const zhytomyrImages = [
-    'https://images.unsplash.com/photo-1587667624448-972b1399a0d1?w=1920&q=80', // Історична дерев'яна фортеця
-    'https://images.unsplash.com/photo-1604065900163-bff83e16dacb?w=1920&q=80', // Величний замок з територією
-    'https://images.unsplash.com/photo-1669117518160-bd6dece3dda7?w=1920&q=80', // Кам'яний замок на пагорбі
-    'https://images.unsplash.com/photo-1699369294918-38e7ad24f664?w=1920&q=80', // Високі дерева з драматичним небом
-    'https://images.unsplash.com/photo-1571577550707-7749974e2c30?w=1920&q=80', // Лісовий пейзаж
-    'https://images.unsplash.com/photo-1657915351269-11a983f79890?w=1920&q=80', // Лісова стежка
-    'https://images.unsplash.com/photo-1690022107126-5fa507a2c26c?w=1920&q=80', // Український міський пейзаж
+    'https://customer-assets.emergentagent.com/job_geodatahub/artifacts/k5aipgcz_2.jpg',
+    'https://customer-assets.emergentagent.com/job_geodatahub/artifacts/xzj86o6h_3.jpg',
+    'https://customer-assets.emergentagent.com/job_geodatahub/artifacts/u0lq4r38_4.jpg',
+    'https://customer-assets.emergentagent.com/job_geodatahub/artifacts/bt8vwg1v_5.jpg',
+    'https://customer-assets.emergentagent.com/job_geodatahub/artifacts/cij6a3q1_6.jpg',
   ];
 
   useEffect(() => {

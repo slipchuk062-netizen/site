@@ -37,13 +37,12 @@ const HomePage = () => {
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
         <ClusteringHeroSection />
-        <ClustersSection attractions={attractions} />
-        <VirtualTour3D />
         <EnhancedClusterViz />
-        <DataUploadSection />
-        <PersonalizedRecommendations />
+        <ClustersSection attractions={attractions} />
         <OptimizedMap attractions={attractions} />
         <VisitStatistics />
+        <PersonalizedRecommendations />
+        <DataUploadSection />
         <TestimonialsSection />
         <ContactSection />
       </main>
