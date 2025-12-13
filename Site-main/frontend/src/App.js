@@ -13,6 +13,7 @@ import AdminPanel from './components/AdminPanel';
 import TripPlanner from './components/TripPlanner';
 import FeedbackForm from './components/FeedbackForm';
 import AiAssistant from './components/AiAssistant';
+import ClusterAnalytics from './components/ClusterAnalytics';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
