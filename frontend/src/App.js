@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import ClustersSection from './components/ClustersSection';
-import InteractiveMap from './components/InteractiveMap';
+import EnhancedInteractiveMap from './components/EnhancedInteractiveMap';
 import TestimonialsSection from './components/TestimonialsSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
