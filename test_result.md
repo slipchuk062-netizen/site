@@ -172,6 +172,9 @@ test_plan:
         - working: true
           agent: "main"
           comment: "Google Places API fully integrated. Backend endpoint /api/places/details/{attraction_id} working. Frontend GooglePlacesPopup component displays ratings, reviews, opening hours, phone, website. Tested with real data - showing 4.8 rating with reviews."
+        - working: true
+          agent: "testing"
+          comment: "BACKEND API VERIFIED: Google Places integration working correctly. API returns Google data with fields: rating, user_ratings_total, reviews, phone, website. Backend endpoint /api/places/details/{attraction_id} responding properly."
 
   - task: "Dynamic Hero Photos"
     implemented: true
