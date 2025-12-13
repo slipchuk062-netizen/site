@@ -562,9 +562,16 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
           </Card>
 
           {/* Map */}
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-3 map-container shadow-2xl border-2 border-slate-200">
             <CardContent className="p-0">
-              <div className="h-[700px] rounded-lg overflow-hidden">
+              <div className="h-[700px] rounded-xl overflow-hidden relative">
+                {/* Map overlay badge */}
+                <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg border-2 border-emerald-200 badge-pulse">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-bold text-slate-700">Live Map</span>
+                  </div>
+                </div>
                 <MapContainer
                   center={[50.5, 28.6]}
                   zoom={9}
