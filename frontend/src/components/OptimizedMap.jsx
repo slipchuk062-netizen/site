@@ -12,9 +12,156 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
-import { Search, MapPin, Layers, Activity, Flame, Filter, Zap } from 'lucide-react';
+import { Search, MapPin, Layers, Activity, Flame, Filter, Zap, Star, Clock, Phone, Globe, ExternalLink } from 'lucide-react';
 import { districts, zhytomyrRegionBorder, districtColors } from '../data/districts';
 import axios from 'axios';
+
+// Google Places Popup Component
+const GooglePlacesPopup = ({ attraction }) => {
+  const [placeDetails, setPlaceDetails] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+        const response = await axios.get(`${backendUrl}/api/places/details/${attraction.id}`);
+        if (response.data.success && response.data.google_details) {
+          setPlaceDetails(response.data.google_details);
+        }
+      } catch (error) {
+        console.error('Failed to fetch place details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetails();
+  }, [attraction.id]);
+
+  if (loading) {
+    return (
+      <div className="p-4 min-w-[300px]">
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-slate-200 rounded w-3/4"></div>
+          <div className="h-3 bg-slate-200 rounded w-1/2"></div>
+          <div className="h-3 bg-slate-200 rounded w-full"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 min-w-[300px] max-w-[350px]">
+      <h3 className="font-bold text-lg mb-2">{attraction.name}</h3>
+      
+      <Badge className="mb-3" style={{ backgroundColor: categoryColors[attraction.category] }}>
+        {categoryNames[attraction.category]}
+      </Badge>
+
+      {placeDetails ? (
+        <div className="space-y-3">
+          {/* Rating */}
+          {placeDetails.rating && (
+            <div className="flex items-center gap-2 p-2 bg-amber-50 rounded">
+              <div className="flex items-center">
+                <Star className="h-4 w-4 text-amber-500 fill-amber-500 mr-1" />
+                <span className="font-bold text-amber-900">{placeDetails.rating}</span>
+              </div>
+              <span className="text-xs text-slate-600">
+                ({placeDetails.user_ratings_total} відгуків)
+              </span>
+            </div>
+          )}
+
+          {/* Address */}
+          {placeDetails.address && (
+            <div className="flex items-start gap-2 text-sm">
+              <MapPin className="h-4 w-4 text-slate-500 mt-0.5 flex-shrink-0" />
+              <span className="text-slate-700">{placeDetails.address}</span>
+            </div>
+          )}
+
+          {/* Opening Hours */}
+          {placeDetails.is_open_now !== undefined && (
+            <div className="flex items-center gap-2 text-sm">
+              <Clock className="h-4 w-4 text-slate-500" />
+              <span className={placeDetails.is_open_now ? 'text-emerald-600 font-medium' : 'text-red-600 font-medium'}>
+                {placeDetails.is_open_now ? 'Зараз відкрито' : 'Зараз зачинено'}
+              </span>
+            </div>
+          )}
+
+          {/* Phone */}
+          {placeDetails.phone && (
+            <div className="flex items-center gap-2 text-sm">
+              <Phone className="h-4 w-4 text-slate-500" />
+              <a href={`tel:${placeDetails.phone}`} className="text-blue-600 hover:underline">
+                {placeDetails.phone}
+              </a>
+            </div>
+          )}
+
+          {/* Website */}
+          {placeDetails.website && (
+            <div className="flex items-center gap-2 text-sm">
+              <Globe className="h-4 w-4 text-slate-500" />
+              <a 
+                href={placeDetails.website} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline flex items-center gap-1"
+              >
+                Веб-сайт
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          )}
+
+          {/* Latest Review */}
+          {placeDetails.reviews && placeDetails.reviews[0] && (
+            <div className="mt-3 p-2 bg-slate-50 rounded border border-slate-200">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i}
+                      className={`h-3 w-3 ${
+                        i < placeDetails.reviews[0].rating 
+                          ? 'text-amber-400 fill-amber-400' 
+                          : 'text-slate-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs font-medium text-slate-700">
+                  {placeDetails.reviews[0].author}
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 line-clamp-2">
+                {placeDetails.reviews[0].text}
+              </p>
+              <span className="text-xs text-slate-400 mt-1 block">
+                {placeDetails.reviews[0].time}
+              </span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {attraction.address && (
+            <div className="flex items-start gap-2 text-sm">
+              <MapPin className="h-4 w-4 text-slate-500 mt-0.5" />
+              <span className="text-slate-700">{attraction.address}</span>
+            </div>
+          )}
+          <p className="text-xs text-slate-500 italic">
+            Інформація Google Places недоступна
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Fix for default markers
 delete L.Icon.Default.prototype._getIconUrl;
