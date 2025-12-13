@@ -27,14 +27,18 @@ const Header = () => {
     { name: 'Контакти', href: '#contact', type: 'scroll' },
   ];
 
-  const scrollToSection = (href) => {
-    if (isHomePage) {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+  const handleNavigation = (link) => {
+    if (link.type === 'route') {
+      navigate(link.href);
     } else {
-      navigate('/' + href);
+      if (isHomePage) {
+        const element = document.querySelector(link.href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        navigate('/' + link.href);
+      }
     }
     setIsMobileMenuOpen(false);
   };
