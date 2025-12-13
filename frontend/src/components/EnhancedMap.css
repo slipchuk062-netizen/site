@@ -443,3 +443,71 @@ input[type="checkbox"]:checked {
     opacity: 1;
   }
 }
+
+/* Marker Cluster Custom Styles */
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 50%;
+  animation: cluster-appear 0.3s ease-out;
+}
+
+.marker-cluster div {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  text-align: center;
+}
+
+.marker-cluster-small {
+  background-color: rgba(16, 185, 129, 0.6);
+  border: 3px solid rgba(16, 185, 129, 0.9);
+}
+
+.marker-cluster-small div {
+  background-color: rgba(16, 185, 129, 0.8);
+  color: white;
+  font-size: 14px;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(59, 130, 246, 0.6);
+  border: 3px solid rgba(59, 130, 246, 0.9);
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(59, 130, 246, 0.8);
+  color: white;
+  font-size: 16px;
+}
+
+.marker-cluster-large {
+  background-color: rgba(139, 92, 246, 0.6);
+  border: 3px solid rgba(139, 92, 246, 0.9);
+}
+
+.marker-cluster-large div {
+  background-color: rgba(139, 92, 246, 0.8);
+  color: white;
+  font-size: 18px;
+}
+
+.marker-cluster:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Spiderfy lines */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-in;
+}
+
+.marker-cluster-spider-leg {
+  stroke: #10b981;
+  stroke-width: 2;
+  stroke-opacity: 0.5;
+}
