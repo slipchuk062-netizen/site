@@ -9,11 +9,13 @@ const DynamicHeroSection = ({ attractionsCount }) => {
 
   // Реальні фото Житомира та області (високої якості)
   const zhytomyrImages = [
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Zhytomyr_Korolova_Square.jpg/1280px-Zhytomyr_Korolova_Square.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Zhytomyr_castle_hill.jpg/1280px-Zhytomyr_castle_hill.jpg',
-    'https://images.unsplash.com/photo-1585128721921-e90805e76d8c?w=1920&q=80',
-    'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1920&q=80',
-    'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=80',
+    'https://images.unsplash.com/photo-1587667624448-972b1399a0d1?w=1920&q=80', // Історична дерев'яна фортеця
+    'https://images.unsplash.com/photo-1604065900163-bff83e16dacb?w=1920&q=80', // Величний замок з територією
+    'https://images.unsplash.com/photo-1669117518160-bd6dece3dda7?w=1920&q=80', // Кам'яний замок на пагорбі
+    'https://images.unsplash.com/photo-1699369294918-38e7ad24f664?w=1920&q=80', // Високі дерева з драматичним небом
+    'https://images.unsplash.com/photo-1571577550707-7749974e2c30?w=1920&q=80', // Лісовий пейзаж
+    'https://images.unsplash.com/photo-1657915351269-11a983f79890?w=1920&q=80', // Лісова стежка
+    'https://images.unsplash.com/photo-1690022107126-5fa507a2c26c?w=1920&q=80', // Український міський пейзаж
   ];
 
   useEffect(() => {
