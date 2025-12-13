@@ -67,11 +67,18 @@ const DynamicHeroSection = ({ attractionsCount }) => {
         <div className="animate-fade-in-up">
           {/* Coat of Arms */}
           <div className="mb-6 flex justify-center">
-            <img 
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Coat_of_Arms_of_Zhytomyr_Oblast.svg/200px-Coat_of_Arms_of_Zhytomyr_Oblast.svg.png"
-              alt="Герб Житомирської області"
-              className="h-24 w-24 drop-shadow-2xl animate-float"
-            />
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-500 blur-2xl opacity-30 rounded-full"></div>
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Coat_of_Arms_of_Zhytomyr_Oblast.svg"
+                alt="Герб Житомирської області"
+                className="relative h-28 w-28 drop-shadow-2xl animate-float"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  console.error('Failed to load coat of arms');
+                }}
+              />
+            </div>
           </div>
           
           {/* Badge */}
