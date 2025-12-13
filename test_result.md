@@ -223,10 +223,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Data Upload Feature E2E Testing"
-    - "Complete site verification"
+    - "Frontend testing (if needed)"
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
