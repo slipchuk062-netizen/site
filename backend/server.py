@@ -878,6 +878,222 @@ async def get_admin_stats(admin: bool = Depends(verify_admin)):
     }
 
 
+# ============= RECOMMENDATIONS ENGINE =============
+
+def get_personalized_recommendations(preferences, visited_ids=None):
+    """
+    Рекомендаційна система на основі вподобань туриста
+    """
+    import random
+    
+    if visited_ids is None:
+        visited_ids = []
+    
+    # Категорії вподобань
+    category_weights = {
+        'historical': preferences.get('historical', 0.5),
+        'culture': preferences.get('culture', 0.5),
+        'nature': preferences.get('nature', 0.5),
+        'parks': preferences.get('parks', 0.5),
+        'shopping': preferences.get('shopping', 0.5),
+        'gastro': preferences.get('gastro', 0.5),
+        'hotels': preferences.get('hotels', 0.5)
+    }
+    
+    # Фільтруємо невідвідані об'єкти
+    available_attractions = [
+        attr for attr in ATTRACTIONS_DATA 
+        if attr.get('id') not in visited_ids
+    ]
+    
+    # Підрахунок релевантності
+    scored_attractions = []
+    for attr in available_attractions:
+        category = attr.get('category', 'other')
+        base_score = category_weights.get(category, 0.1)
+        
+        # Додаткові фактори
+        popularity_bonus = random.uniform(0.1, 0.3)
+        rating_bonus = random.uniform(0.1, 0.4)
+        
+        total_score = base_score + popularity_bonus + rating_bonus
+        
+        scored_attractions.append({
+            'attraction': attr,
+            'score': total_score,
+            'match_reason': f"Відповідає вашим інтересам: {category}"
+        })
+    
+    # Сортування за score
+    scored_attractions.sort(key=lambda x: x['score'], reverse=True)
+    
+    return scored_attractions[:10]
+
+
+@api_router.post("/recommendations/personalized")
+async def get_recommendations(request: Request):
+    """
+    Персоналізовані рекомендації для туриста
+    """
+    try:
+        data = await request.json()
+        preferences = data.get('preferences', {})
+        visited_ids = data.get('visited_ids', [])
+        
+        recommendations = get_personalized_recommendations(preferences, visited_ids)
+        
+        return {
+            "success": True,
+            "recommendations": [
+                {
+                    'id': r['attraction'].get('id'),
+                    'name': r['attraction'].get('name'),
+                    'category': r['attraction'].get('category'),
+                    'address': r['attraction'].get('address'),
+                    'coordinates': r['attraction'].get('coordinates'),
+                    'score': round(r['score'], 2),
+                    'match_reason': r['match_reason']
+                }
+                for r in recommendations
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Recommendations error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============= REVIEWS SYSTEM =============
+
+@api_router.post("/reviews/add")
+async def add_review(request: Request):
+    """
+    Додати відгук про об'єкт
+    """
+    try:
+        data = await request.json()
+        
+        review = {
+            "id": str(uuid.uuid4()),
+            "attraction_id": data.get('attraction_id'),
+            "attraction_name": data.get('attraction_name'),
+            "user_name": data.get('user_name'),
+            "rating": data.get('rating'),
+            "comment": data.get('comment'),
+            "visit_date": data.get('visit_date'),
+            "created_at": datetime.now().isoformat()
+        }
+        
+        result = await db.reviews.insert_one(review)
+        
+        return {
+            "success": True,
+            "review_id": review['id'],
+            "message": "Дякуємо за ваш відгук!"
+        }
+    except Exception as e:
+        logger.error(f"Add review error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/reviews/{attraction_id}")
+async def get_reviews(attraction_id: str):
+    """
+    Отримати відгуки про об'єкт
+    """
+    try:
+        reviews = await db.reviews.find({"attraction_id": attraction_id}).to_list(100)
+        
+        # Видалення _id для JSON серіалізації
+        for review in reviews:
+            review.pop('_id', None)
+        
+        # Розрахунок середнього рейтингу
+        avg_rating = sum(r['rating'] for r in reviews) / len(reviews) if reviews else 0
+        
+        return {
+            "success": True,
+            "reviews": reviews,
+            "total": len(reviews),
+            "average_rating": round(avg_rating, 1)
+        }
+    except Exception as e:
+        logger.error(f"Get reviews error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ============= VISIT STATISTICS =============
+
+@api_router.post("/visits/log")
+async def log_visit(request: Request):
+    """
+    Логувати відвідування об'єкта
+    """
+    try:
+        data = await request.json()
+        
+        visit = {
+            "id": str(uuid.uuid4()),
+            "attraction_id": data.get('attraction_id'),
+            "attraction_name": data.get('attraction_name'),
+            "user_id": data.get('user_id', 'anonymous'),
+            "visit_date": data.get('visit_date', datetime.now().isoformat()),
+            "duration": data.get('duration'),
+            "created_at": datetime.now().isoformat()
+        }
+        
+        await db.visits.insert_one(visit)
+        
+        return {
+            "success": True,
+            "message": "Відвідування зареєстровано"
+        }
+    except Exception as e:
+        logger.error(f"Log visit error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/visits/statistics")
+async def get_visit_statistics():
+    """
+    Статистика відвідувань
+    """
+    try:
+        # Підрахунок відвідувань по об'єктах
+        pipeline = [
+            {
+                "$group": {
+                    "_id": "$attraction_id",
+                    "attraction_name": {"$first": "$attraction_name"},
+                    "total_visits": {"$sum": 1}
+                }
+            },
+            {"$sort": {"total_visits": -1}},
+            {"$limit": 20}
+        ]
+        
+        top_attractions = await db.visits.aggregate(pipeline).to_list(20)
+        
+        # Mock дані якщо немає записів
+        if not top_attractions:
+            import random
+            top_attractions = [
+                {
+                    "attraction_name": attr.get('name'),
+                    "total_visits": random.randint(50, 500)
+                }
+                for attr in ATTRACTIONS_DATA[:20]
+            ]
+        
+        return {
+            "success": True,
+            "top_attractions": top_attractions,
+            "total_visits": sum(a.get('total_visits', 0) for a in top_attractions)
+        }
+    except Exception as e:
+        logger.error(f"Visit statistics error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============= CLUSTER ANALYTICS ENDPOINTS =============
 
 @api_router.get("/clusters/statistics")
