@@ -38,9 +38,18 @@ const DataUploadSection = () => {
       const fileContent = await file.text();
       const data = JSON.parse(fileContent);
 
-      // Perform analysis
-      const analysis = analyzeData(data);
-      setAnalysisResult(analysis);
+      // Send to backend for analysis
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+      const response = await axios.post(`${backendUrl}/api/upload-data`, {
+        data: Array.isArray(data) ? data : data.attractions || [],
+        filename: file.name
+      });
+
+      if (response.data.success) {
+        setAnalysisResult(response.data);
+      } else {
+        setError('Помилка обробки даних на сервері');
+      }
     } catch (err) {
       setError('Помилка аналізу файлу. Перевірте формат даних.');
       console.error(err);
