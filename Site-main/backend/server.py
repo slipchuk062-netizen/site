@@ -42,6 +42,9 @@ if ATTRACTIONS_FILE.exists():
     with open(ATTRACTIONS_FILE, 'r', encoding='utf-8') as f:
         ATTRACTIONS_DATA = json.load(f)
 
+# Load districts data
+DISTRICTS_FILE = ROOT_DIR.parent / 'frontend' / 'src' / 'data' / 'districts.js'
+
 # Create the main app without a prefix
 app = FastAPI()
 
