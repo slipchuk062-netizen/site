@@ -31,10 +31,10 @@ const HomePage = () => {
     <div className="min-h-screen">
       <Header />
       <main>
-        <HeroSection attractionsCount={attractions.length} />
+        <ClusteringHeroSection />
         <ClustersSection attractions={attractions} />
         <PersonalizedRecommendations />
-        <EnhancedInteractiveMap attractions={attractions} />
+        <OptimizedMap attractions={attractions} />
         <VisitStatistics />
         <TestimonialsSection />
         <ContactSection />
