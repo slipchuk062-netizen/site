@@ -38,6 +38,7 @@ const HomePage = () => {
         <DynamicHeroSection attractionsCount={attractions.length} />
         <ClusteringHeroSection />
         <ClustersSection attractions={attractions} />
+        <VirtualTour3D />
         <EnhancedClusterViz />
         <DataUploadSection />
         <PersonalizedRecommendations />
