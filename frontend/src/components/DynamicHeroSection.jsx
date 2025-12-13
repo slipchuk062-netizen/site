@@ -4,21 +4,27 @@ import { Badge } from './ui/badge';
 import { MapPin, TrendingUp, Users, Sparkles } from 'lucide-react';
 
 const DynamicHeroSection = ({ attractionsCount }) => {
-  const [gradientIndex, setGradientIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Красиві градієнти для фону
-  const gradients = [
-    'from-emerald-600 via-teal-500 to-cyan-600',
-    'from-blue-600 via-purple-500 to-pink-600',
-    'from-violet-600 via-purple-500 to-fuchsia-600',
-    'from-amber-500 via-orange-500 to-red-600',
-    'from-green-600 via-emerald-500 to-teal-600',
+  // Реальні фото Житомира та області (високої якості)
+  const zhytomyrImages = [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Zhytomyr_Korolova_Square.jpg/1280px-Zhytomyr_Korolova_Square.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Zhytomyr_castle_hill.jpg/1280px-Zhytomyr_castle_hill.jpg',
+    'https://images.unsplash.com/photo-1585128721921-e90805e76d8c?w=1920&q=80',
+    'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1920&q=80',
+    'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=80',
   ];
 
   useEffect(() => {
-    // Зміна градієнту кожні 5 секунд
+    // Preload першого фото
+    const img = new Image();
+    img.src = zhytomyrImages[0];
+    img.onload = () => setIsLoaded(true);
+
+    // Зміна фото кожні 5 секунд
     const interval = setInterval(() => {
-      setGradientIndex((prevIndex) => (prevIndex + 1) % gradients.length);
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % zhytomyrImages.length);
     }, 5000);
 
     return () => clearInterval(interval);
