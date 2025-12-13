@@ -21,9 +21,10 @@ const Header = () => {
   const navLinks = [
     { name: 'Головна', href: '#hero', type: 'scroll' },
     { name: 'Кластери', href: '#clusters', type: 'scroll' },
+    { name: 'Рекомендації', href: '#recommendations', type: 'scroll' },
     { name: 'Аналітика', href: '/analytics', type: 'route' },
     { name: 'Карта', href: '#map', type: 'scroll' },
-    { name: 'Відгуки', href: '#testimonials', type: 'scroll' },
+    { name: 'Статистика', href: '#statistics', type: 'scroll' },
     { name: 'Контакти', href: '#contact', type: 'scroll' },
   ];
 
