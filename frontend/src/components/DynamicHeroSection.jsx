@@ -3,28 +3,22 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { MapPin, TrendingUp, Users, Sparkles } from 'lucide-react';
 
-// Красиві фото Житомира та області (можна додати реальні URL)
-const zhytomyrImages = [
-  'https://images.unsplash.com/photo-1585128721921-e90805e76d8c?w=1920&q=80', // Ukrainian architecture
-  'https://images.unsplash.com/photo-1565008576549-57569a49371d?w=1920&q=80', // Historic building
-  'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=80', // City landscape
-  'https://images.unsplash.com/photo-1534313314376-a7f5d6be0b9c?w=1920&q=80', // Nature/park
-  'https://images.unsplash.com/photo-1601066255004-e95f6e9c5f7e?w=1920&q=80', // Church/cathedral
-];
-
 const DynamicHeroSection = ({ attractionsCount }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [gradientIndex, setGradientIndex] = useState(0);
+
+  // Красиві градієнти для фону
+  const gradients = [
+    'from-emerald-600 via-teal-500 to-cyan-600',
+    'from-blue-600 via-purple-500 to-pink-600',
+    'from-violet-600 via-purple-500 to-fuchsia-600',
+    'from-amber-500 via-orange-500 to-red-600',
+    'from-green-600 via-emerald-500 to-teal-600',
+  ];
 
   useEffect(() => {
-    // Preload first image
-    const img = new Image();
-    img.src = zhytomyrImages[0];
-    img.onload = () => setIsLoaded(true);
-
-    // Change background image every 5 seconds
+    // Зміна градієнту кожні 5 секунд
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % zhytomyrImages.length);
+      setGradientIndex((prevIndex) => (prevIndex + 1) % gradients.length);
     }, 5000);
 
     return () => clearInterval(interval);
