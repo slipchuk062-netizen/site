@@ -19,7 +19,6 @@ import PersonalizedRecommendations from './components/PersonalizedRecommendation
 import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
-import VirtualTour3D from './components/VirtualTour3D';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
