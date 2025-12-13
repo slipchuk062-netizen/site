@@ -37,6 +37,7 @@ const categoryIdMap = {
 
 const ClustersSection = ({ attractions = [] }) => {
   const [activeCluster, setActiveCluster] = useState(null);
+  const [clusterStats, setClusterStats] = useState({});
 
   // Calculate counts from real data
   const clusterCounts = useMemo(() => {
@@ -46,6 +47,26 @@ const ClustersSection = ({ attractions = [] }) => {
     });
     return counts;
   }, [attractions]);
+
+  // Fetch cluster statistics from API
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+        const response = await axios.get(`${backendUrl}/api/clusters/statistics`);
+        if (response.data.success) {
+          const statsMap = {};
+          response.data.data.forEach(stat => {
+            statsMap[stat.id] = stat;
+          });
+          setClusterStats(statsMap);
+        }
+      } catch (error) {
+        console.error('Error fetching cluster stats:', error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const getClusterAttractions = (clusterId) => {
     return attractions.filter((a) => a.category === categoryIdMap[clusterId]).slice(0, 5);
