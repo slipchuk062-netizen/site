@@ -19,11 +19,12 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Головна', href: '#hero' },
-    { name: 'Кластери', href: '#clusters' },
-    { name: 'Карта', href: '#map' },
-    { name: 'Відгуки', href: '#testimonials' },
-    { name: 'Контакти', href: '#contact' },
+    { name: 'Головна', href: '#hero', type: 'scroll' },
+    { name: 'Кластери', href: '#clusters', type: 'scroll' },
+    { name: 'Аналітика', href: '/analytics', type: 'route' },
+    { name: 'Карта', href: '#map', type: 'scroll' },
+    { name: 'Відгуки', href: '#testimonials', type: 'scroll' },
+    { name: 'Контакти', href: '#contact', type: 'scroll' },
   ];
 
   const scrollToSection = (href) => {
