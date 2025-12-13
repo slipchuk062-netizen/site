@@ -104,6 +104,7 @@ const ClustersSection = ({ attractions = [] }) => {
             const clusterAttractions = getClusterAttractions(cluster.id);
             const isActive = activeCluster === cluster.id;
             const count = clusterCounts[categoryIdMap[cluster.id]] || 0;
+            const stats = clusterStats[cluster.id] || {};
 
             return (
               <Card
@@ -128,6 +129,26 @@ const ClustersSection = ({ attractions = [] }) => {
                     {cluster.name}
                   </h3>
                   <p className="text-slate-600 mb-4 text-sm">{cluster.description}</p>
+
+                  {/* Statistics */}
+                  {stats.visit_percentage && (
+                    <div className="flex gap-3 mb-4">
+                      <div className="flex-1 p-2 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-lg">
+                        <div className="flex items-center gap-1 text-xs text-emerald-700 font-medium">
+                          <TrendingUp className="w-3 h-3" />
+                          <span>Відвідування</span>
+                        </div>
+                        <p className="text-lg font-bold text-emerald-800">{stats.visit_percentage}%</p>
+                      </div>
+                      <div className="flex-1 p-2 bg-gradient-to-r from-amber-50 to-amber-100 rounded-lg">
+                        <div className="flex items-center gap-1 text-xs text-amber-700 font-medium">
+                          <Activity className="w-3 h-3" />
+                          <span>Популярність</span>
+                        </div>
+                        <p className="text-lg font-bold text-amber-800">{stats.popularity_score}</p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Expanded content */}
                   <div className={`overflow-hidden transition-all duration-500 ${
