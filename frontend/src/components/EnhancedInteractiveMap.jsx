@@ -9,7 +9,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
 import { Search, MapPin, Clock, TrendingUp, Filter, Layers, Activity, Flame } from 'lucide-react';
-import { districts, districtColors, districtNames } from '../data/districts';
+import { districts, districtColors, districtNames, zhytomyrRegionBorder } from '../data/districts';
 import axios from 'axios';
 
 // Fix for default markers
