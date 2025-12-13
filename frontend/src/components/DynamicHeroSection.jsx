@@ -65,6 +65,15 @@ const DynamicHeroSection = ({ attractionsCount }) => {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
+          {/* Coat of Arms */}
+          <div className="mb-6 flex justify-center">
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Coat_of_Arms_of_Zhytomyr_Oblast.svg/200px-Coat_of_Arms_of_Zhytomyr_Oblast.svg.png"
+              alt="Герб Житомирської області"
+              className="h-24 w-24 drop-shadow-2xl animate-float"
+            />
+          </div>
+          
           {/* Badge */}
           <Badge className="mb-6 bg-emerald-600/90 backdrop-blur-sm text-white border-emerald-400/50 text-lg px-6 py-2 shadow-xl">
             <Sparkles className="h-5 w-5 mr-2 inline animate-pulse" />
@@ -165,6 +174,19 @@ const DynamicHeroSection = ({ attractionsCount }) => {
 
         .animate-fade-in-up {
           animation: fade-in-up 1s ease-out;
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
         }
 
         @keyframes scroll {
