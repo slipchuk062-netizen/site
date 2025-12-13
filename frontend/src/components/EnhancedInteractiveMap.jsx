@@ -123,32 +123,121 @@ const HeatMapLayer = ({ attractions, clusterStats }) => {
   return null;
 };
 
-// District boundaries layer
-const DistrictBoundaries = ({ showBoundaries }) => {
+// District boundaries layer with region border
+const DistrictBoundaries = ({ showBoundaries, densityStats }) => {
   if (!showBoundaries) return null;
 
+  // Region border style (outer boundary)
+  const regionStyle = {
+    fillColor: 'transparent',
+    fillOpacity: 0,
+    color: '#059669', // emerald-600
+    weight: 5,
+    opacity: 1,
+    dashArray: 'none',
+    className: 'region-border-animation'
+  };
+
+  // District style
   const districtStyle = (feature) => ({
     fillColor: districtColors[feature.properties.id] || '#6b7280',
-    fillOpacity: 0.15,
+    fillOpacity: 0.12,
     color: districtColors[feature.properties.id] || '#6b7280',
     weight: 3,
-    opacity: 0.8,
-    dashArray: '10, 10'
+    opacity: 0.9,
+    dashArray: '8, 5',
+    className: 'district-border-pulse'
   });
 
   const onEachDistrict = (feature, layer) => {
     if (feature.properties && feature.properties.name) {
+      const districtId = feature.properties.id;
+      const stats = densityStats.find(d => d.id === districtId);
+      
       layer.bindPopup(
-        `<div class="p-2">
-          <h3 class="font-bold text-lg">${feature.properties.name}</h3>
-          <p class="text-sm text-slate-600">Клацніть для детальної інформації</p>
+        `<div class="p-4 min-w-[200px]">
+          <h3 class="font-bold text-lg text-slate-900 mb-3">${feature.properties.name}</h3>
+          ${stats ? `
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">Об'єктів:</span>
+                <span class="font-bold text-emerald-700">${stats.count}</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">Щільність:</span>
+                <span class="font-bold text-blue-700">${stats.density} об/км²</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">Популярність:</span>
+                <span class="font-bold text-amber-700">${(stats.popularity_index * 100).toFixed(0)}%</span>
+              </div>
+              <div class="w-full bg-slate-200 rounded-full h-2 mt-2">
+                <div class="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full transition-all duration-500" 
+                     style="width: ${(stats.popularity_index * 100).toFixed(0)}%"></div>
+              </div>
+            </div>
+          ` : '<p class="text-sm text-slate-600">Немає статистики</p>'}
         </div>`
       );
+
+      // Hover effects
+      layer.on('mouseover', function() {
+        this.setStyle({
+          fillOpacity: 0.25,
+          weight: 4,
+          opacity: 1
+        });
+      });
+
+      layer.on('mouseout', function() {
+        this.setStyle({
+          fillOpacity: 0.12,
+          weight: 3,
+          opacity: 0.9
+        });
+      });
     }
+  };
+
+  const onRegionHover = (feature, layer) => {
+    layer.bindPopup(
+      `<div class="p-4">
+        <h2 class="font-bold text-xl text-emerald-700 mb-2">🗺️ Житомирська область</h2>
+        <p class="text-sm text-slate-600">Туристична карта регіону</p>
+        <div class="mt-2 text-xs text-slate-500">
+          ${districts.length} районів • ${densityStats.reduce((sum, d) => sum + d.count, 0)} об'єктів
+        </div>
+      </div>`
+    );
+
+    layer.on('mouseover', function() {
+      this.setStyle({
+        color: '#10b981', // emerald-500
+        weight: 6,
+        opacity: 1
+      });
+    });
+
+    layer.on('mouseout', function() {
+      this.setStyle({
+        color: '#059669', // emerald-600
+        weight: 5,
+        opacity: 1
+      });
+    });
   };
 
   return (
     <>
+      {/* Region outer boundary */}
+      <GeoJSON
+        key="region-border"
+        data={zhytomyrRegionBorder}
+        style={regionStyle}
+        onEachFeature={onRegionHover}
+      />
+      
+      {/* District boundaries */}
       {districts.map(district => (
         <GeoJSON
           key={district.id}
