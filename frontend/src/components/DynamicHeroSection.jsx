@@ -202,11 +202,8 @@ const DynamicHeroSection = ({ attractionsCount }) => {
           animation-delay: 4s;
         }
 
-        .bg-grid-pattern {
-          background-image: 
-            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-          background-size: 50px 50px;
+        .bg-radial-gradient {
+          background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
         }
       `}</style>
     </section>
