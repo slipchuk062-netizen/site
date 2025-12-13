@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import Header from './components/Header';
+import DynamicHeroSection from './components/DynamicHeroSection';
 import ClusteringHeroSection from './components/ClusteringHeroSection';
 import ClustersSection from './components/ClustersSection';
 import OptimizedMap from './components/OptimizedMap';
@@ -16,6 +17,8 @@ import AiAssistant from './components/AiAssistant';
 import ClusterAnalytics from './components/ClusterAnalytics';
 import PersonalizedRecommendations from './components/PersonalizedRecommendations';
 import VisitStatistics from './components/VisitStatistics';
+import DataUploadSection from './components/DataUploadSection';
+import EnhancedClusterViz from './components/EnhancedClusterViz';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
