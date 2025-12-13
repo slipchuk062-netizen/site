@@ -14,6 +14,8 @@ import TripPlanner from './components/TripPlanner';
 import FeedbackForm from './components/FeedbackForm';
 import AiAssistant from './components/AiAssistant';
 import ClusterAnalytics from './components/ClusterAnalytics';
+import PersonalizedRecommendations from './components/PersonalizedRecommendations';
+import VisitStatistics from './components/VisitStatistics';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
