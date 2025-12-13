@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Critical bug investigation - website not loading in browser due to JavaScript error"
+user_problem_statement: "Zhytomyr tourism website development - clustering visualization, Google Places API integration, dynamic photos, data upload feature"
 
 frontend:
   - task: "Homepage Loading"
