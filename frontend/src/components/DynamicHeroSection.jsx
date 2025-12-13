@@ -33,19 +33,19 @@ const DynamicHeroSection = ({ attractionsCount }) => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Dynamic Background Images */}
+      {/* Dynamic Gradient Background */}
       <div className="absolute inset-0 z-0">
-        {zhytomyrImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
-              index === currentImageIndex && isLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ backgroundImage: `url(${image})` }}
-          />
-        ))}
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/50 to-slate-900/70"></div>
+        <div className={`absolute inset-0 bg-gradient-to-br ${gradients[gradientIndex]} transition-all duration-2000 opacity-90`}></div>
+        
+        {/* Animated shapes */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
+
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       </div>
 
       {/* Content */}
