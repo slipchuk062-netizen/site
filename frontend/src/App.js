@@ -19,6 +19,7 @@ import PersonalizedRecommendations from './components/PersonalizedRecommendation
 import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
+import AdvancedClusterVisualization from './components/AdvancedClusterVisualization';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
@@ -35,9 +36,8 @@ const HomePage = () => {
       <Header />
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
+        <AdvancedClusterVisualization />
         <ClusteringHeroSection />
-        <EnhancedClusterViz />
-        <ClustersSection attractions={attractions} />
         <OptimizedMap attractions={attractions} />
         <VisitStatistics />
         <PersonalizedRecommendations />
