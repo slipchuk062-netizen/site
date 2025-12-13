@@ -33,7 +33,9 @@ const HomePage = () => {
       <main>
         <HeroSection attractionsCount={attractions.length} />
         <ClustersSection attractions={attractions} />
+        <PersonalizedRecommendations />
         <EnhancedInteractiveMap attractions={attractions} />
+        <VisitStatistics />
         <TestimonialsSection />
         <ContactSection />
       </main>
