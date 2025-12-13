@@ -481,10 +481,10 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
                         <button
                           key={cat.id}
                           onClick={() => setSelectedCategory(cat.id)}
-                          className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                          className={`category-button ripple-effect w-full text-left px-3 py-3 rounded-xl transition-all duration-300 ${
                             selectedCategory === cat.id
-                              ? 'bg-emerald-100 text-emerald-900 border-2 border-emerald-500'
-                              : 'hover:bg-slate-100'
+                              ? 'active bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-900 border-2 border-emerald-500 shadow-lg'
+                              : 'hover:bg-slate-50 border-2 border-transparent hover:border-slate-200'
                           }`}
                         >
                           <div className="flex items-center justify-between">
