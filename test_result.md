@@ -161,6 +161,58 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Google Places API Integration"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, /app/frontend/src/components/OptimizedMap.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Google Places API fully integrated. Backend endpoint /api/places/details/{attraction_id} working. Frontend GooglePlacesPopup component displays ratings, reviews, opening hours, phone, website. Tested with real data - showing 4.8 rating with reviews."
+
+  - task: "Dynamic Hero Photos"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/DynamicHeroSection.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Added 7 high-quality images of Zhytomyr region (castles, forests, landmarks). Images rotate every 5 seconds with smooth transitions. Verified with screenshots showing different backgrounds."
+
+  - task: "Data Upload Feature"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py, /app/frontend/src/components/DataUploadSection.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: true
+          agent: "main"
+          comment: "Backend endpoint /api/upload-data created. Accepts JSON data, performs clustering analysis, returns metrics (silhouette score, davies-bouldin index), recommendations. Frontend component connected to backend. Backend API tested successfully with curl. Frontend needs E2E testing."
+
+metadata:
+  created_by: "main_agent"
+  version: "2.0"
+  test_sequence: 2
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Data Upload Feature E2E Testing"
+    - "Complete site verification"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
 agent_communication:
     - agent: "testing"
       message: "CRITICAL BUG RESOLVED: Website loading issue was caused by missing MapPin import in VirtualTour3D.jsx. Fixed by adding MapPin to lucide-react imports. All components now render correctly. Homepage fully functional with Virtual Tour, Map, and other sections working properly."
+    - agent: "main"
+      message: "Completed 3 major features: 1) Google Places API integration with real-time data (ratings, reviews, hours, phone, website), 2) Dynamic hero photos with 7 high-quality images rotating every 5s, 3) Data upload feature with backend analysis endpoint. All features implemented and basic tested. Ready for comprehensive E2E testing."
