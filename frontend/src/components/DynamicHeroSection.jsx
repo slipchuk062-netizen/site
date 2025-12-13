@@ -39,19 +39,27 @@ const DynamicHeroSection = ({ attractionsCount }) => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Dynamic Gradient Background */}
+      {/* Dynamic Photo Background */}
       <div className="absolute inset-0 z-0">
-        <div className={`absolute inset-0 bg-gradient-to-br ${gradients[gradientIndex]} transition-all duration-2000 opacity-90`}></div>
+        {zhytomyrImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+              index === currentImageIndex && isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ 
+              backgroundImage: `url(${image})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover'
+            }}
+          />
+        ))}
         
-        {/* Animated shapes */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000"></div>
-        </div>
-
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        {/* Dark overlay для читабельності */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900/80"></div>
+        
+        {/* Vignette effect */}
+        <div className="absolute inset-0 bg-radial-gradient opacity-50"></div>
       </div>
 
       {/* Content */}
