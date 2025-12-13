@@ -402,14 +402,14 @@ const EnhancedInteractiveMap = ({ attractions = [] }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar with filters and legend */}
-          <Card className="lg:col-span-1 h-fit">
-            <CardHeader>
+          <Card className="lg:col-span-1 h-fit filter-sidebar shadow-xl border-2 border-slate-200">
+            <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 border-b-2 border-emerald-100">
               <CardTitle className="flex items-center gap-2">
-                <Filter className="h-5 w-5" />
-                Фільтри та легенда
+                <Filter className="h-5 w-5 text-emerald-600" />
+                <span className="gradient-text">Фільтри та легенда</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-6 custom-scrollbar">
               {/* Search */}
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-2 block">
