@@ -34,8 +34,11 @@ const HomePage = () => {
     <div className="min-h-screen">
       <Header />
       <main>
+        <DynamicHeroSection attractionsCount={attractions.length} />
         <ClusteringHeroSection />
         <ClustersSection attractions={attractions} />
+        <EnhancedClusterViz />
+        <DataUploadSection />
         <PersonalizedRecommendations />
         <OptimizedMap attractions={attractions} />
         <VisitStatistics />
