@@ -31,7 +31,7 @@ const HomePage = () => {
       <main>
         <HeroSection attractionsCount={attractions.length} />
         <ClustersSection attractions={attractions} />
-        <InteractiveMap attractions={attractions} />
+        <EnhancedInteractiveMap attractions={attractions} />
         <TestimonialsSection />
         <ContactSection />
       </main>
