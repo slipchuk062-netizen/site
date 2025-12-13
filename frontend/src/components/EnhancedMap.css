@@ -1,0 +1,445 @@
+/* Enhanced Map Animations and Styles */
+
+/* Region border animation - glowing effect */
+@keyframes region-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(5, 150, 105, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.9)) drop-shadow(0 0 15px rgba(16, 185, 129, 0.5));
+  }
+}
+
+.region-border-animation {
+  animation: region-glow 3s ease-in-out infinite;
+}
+
+/* District border pulse */
+@keyframes district-pulse {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.district-border-pulse {
+  animation: district-pulse 2s ease-in-out infinite;
+}
+
+/* Custom marker animations */
+.custom-marker {
+  animation: marker-bounce 0.6s ease-in-out;
+}
+
+@keyframes marker-bounce {
+  0% {
+    transform: scale(0) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.custom-marker:hover {
+  animation: marker-pulse 0.8s ease-in-out infinite;
+  z-index: 1000 !important;
+}
+
+@keyframes marker-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Leaflet popup enhancements */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: popup-appear 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes popup-appear {
+  0% {
+    transform: scale(0.8) translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heat map fade in */
+.leaflet-heatmap-layer {
+  animation: heatmap-fade 0.8s ease-in;
+}
+
+@keyframes heatmap-fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Marker cluster effects */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  animation: cluster-appear 0.4s ease-out;
+}
+
+@keyframes cluster-appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Zoom level transitions */
+.leaflet-zoom-animated {
+  transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Tile loading shimmer */
+.leaflet-tile-container {
+  animation: tile-load 0.5s ease-in;
+}
+
+@keyframes tile-load {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Category button hover effects */
+.category-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.category-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.category-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.category-button.active {
+  box-shadow: 0 0 0 2px #10b981, 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Statistics card animations */
+.stat-card {
+  animation: stat-appear 0.5s ease-out backwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes stat-appear {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+/* Loading spinner */
+@keyframes spinner-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  animation: spinner-rotate 1s linear infinite;
+}
+
+/* Progress bar animation */
+@keyframes progress-fill {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: var(--progress-width);
+  }
+}
+
+.progress-bar-fill {
+  animation: progress-fill 1s ease-out;
+}
+
+/* Fade in filter sidebar */
+.filter-sidebar {
+  animation: slide-in-left 0.4s ease-out;
+}
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Map container fade in */
+.map-container {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+@keyframes fade-in-up {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Legend items stagger */
+.legend-item {
+  animation: legend-appear 0.4s ease-out backwards;
+}
+
+.legend-item:nth-child(1) { animation-delay: 0.1s; }
+.legend-item:nth-child(2) { animation-delay: 0.2s; }
+.legend-item:nth-child(3) { animation-delay: 0.3s; }
+.legend-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes legend-appear {
+  0% {
+    transform: translateX(-15px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Search box focus effect */
+.search-box {
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Checkbox custom animation */
+input[type="checkbox"] {
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  animation: checkbox-check 0.3s ease;
+}
+
+@keyframes checkbox-check {
+  0%, 50% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Badge pulse for new items */
+.badge-pulse {
+  animation: badge-glow 2s ease-in-out infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.8), 0 0 25px rgba(16, 185, 129, 0.4);
+  }
+}
+
+/* Icon rotation on hover */
+.icon-rotate:hover {
+  animation: icon-spin 0.6s ease-in-out;
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Gradient text animation */
+.gradient-text {
+  background: linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* Ripple effect on button click */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Floating animation for info panel */
+.floating-panel {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Enhanced tooltip */
+.custom-tooltip {
+  animation: tooltip-appear 0.2s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes tooltip-appear {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
