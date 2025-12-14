@@ -58,7 +58,7 @@ const ClusteringHeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Content */}
         <div className="text-center mb-16">
-          <Badge className="mb-6 bg-emerald-600 text-white border-emerald-500 text-lg px-6 py-2">
+          <Badge className="mb-6 bg-emerald-600 text-slate-900 border-emerald-500 text-lg px-6 py-2">
             <Brain className="h-5 w-5 mr-2 inline" />
             Магістерська робота
           </Badge>
@@ -78,7 +78,7 @@ const ClusteringHeroSection = () => {
             <Button 
               size="lg"
               onClick={() => navigate('/analytics')}
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-lg px-8 py-6 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-slate-900 text-lg px-8 py-6 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
             >
               <Brain className="h-6 w-6 mr-2" />
               Переглянути аналітику
@@ -123,7 +123,7 @@ const ClusteringHeroSection = () => {
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 mx-auto transform transition-transform duration-300 ${
                     isActive ? 'scale-110 rotate-6' : ''
                   }`}>
-                    <Icon className="h-8 w-8 text-white" />
+                    <Icon className="h-8 w-8 text-slate-900" />
                   </div>
                   
                   <h3 className="text-lg font-bold text-slate-900 mb-2 text-center">
@@ -178,36 +178,36 @@ const ClusteringHeroSection = () => {
                   <Target className="h-6 w-6 text-emerald-600" />
                   Методологія K-means
                 </h3>
-                <div className="space-y-3 text-purple-100">
+                <div className="space-y-3 text-slate-600">
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-white">1</span>
+                      <span className="text-xs font-bold text-slate-900">1</span>
                     </div>
-                    <p><strong className="text-white">Ініціалізація:</strong> Вибір 7 початкових центроїдів для категорій</p>
+                    <p><strong className="text-slate-900">Ініціалізація:</strong> Вибір 7 початкових центроїдів для категорій</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-white">2</span>
+                      <span className="text-xs font-bold text-slate-900">2</span>
                     </div>
-                    <p><strong className="text-white">Присвоєння:</strong> Кожен об'єкт до найближчого кластера</p>
+                    <p><strong className="text-slate-900">Присвоєння:</strong> Кожен об'єкт до найближчого кластера</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-white">3</span>
+                      <span className="text-xs font-bold text-slate-900">3</span>
                     </div>
-                    <p><strong className="text-white">Оновлення:</strong> Перерахунок центроїдів кластерів</p>
+                    <p><strong className="text-slate-900">Оновлення:</strong> Перерахунок центроїдів кластерів</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-white">4</span>
+                      <span className="text-xs font-bold text-slate-900">4</span>
                     </div>
-                    <p><strong className="text-white">Конвергенція:</strong> Повторення до стабілізації</p>
+                    <p><strong className="text-slate-900">Конвергенція:</strong> Повторення до стабілізації</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
                   <Zap className="h-6 w-6 text-pink-400" />
                   Переваги підходу
                 </h3>
@@ -215,25 +215,25 @@ const ClusteringHeroSection = () => {
                   <div className="p-3 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/30">
                     <div className="flex items-center gap-2 mb-1">
                       <TrendingUp className="h-4 w-4 text-purple-300" />
-                      <span className="font-semibold text-white">Швидкість</span>
+                      <span className="font-semibold text-slate-900">Швидкість</span>
                     </div>
-                    <p className="text-sm text-purple-100">Ефективна обробка великих обсягів даних O(n·k·i)</p>
+                    <p className="text-sm text-slate-600">Ефективна обробка великих обсягів даних O(n·k·i)</p>
                   </div>
                   
                   <div className="p-3 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30">
                     <div className="flex items-center gap-2 mb-1">
                       <Layers className="h-4 w-4 text-blue-300" />
-                      <span className="font-semibold text-white">Масштабованість</span>
+                      <span className="font-semibold text-slate-900">Масштабованість</span>
                     </div>
-                    <p className="text-sm text-purple-100">Легко адаптується під нові категорії та об'єкти</p>
+                    <p className="text-sm text-slate-600">Легко адаптується під нові категорії та об'єкти</p>
                   </div>
                   
                   <div className="p-3 rounded-lg bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-400/30">
                     <div className="flex items-center gap-2 mb-1">
                       <Target className="h-4 w-4 text-emerald-300" />
-                      <span className="font-semibold text-white">Точність</span>
+                      <span className="font-semibold text-slate-900">Точність</span>
                     </div>
-                    <p className="text-sm text-purple-100">Silhouette Score 0.748 - висока якість кластеризації</p>
+                    <p className="text-sm text-slate-600">Silhouette Score 0.748 - висока якість кластеризації</p>
                   </div>
                 </div>
               </div>
