@@ -140,14 +140,14 @@ const ClusteringHeroSection = () => {
 
         {/* Key Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-            <div className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent mb-2">
+          <div className="text-center p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-300">
+            <div className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
               1,864
             </div>
-            <p className="text-purple-200 font-medium">Об'єктів</p>
+            <p className="text-slate-700 font-medium">Об'єктів</p>
           </div>
           
-          <div className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
+          <div className="text-center p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-300">
             <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent mb-2">
               7
             </div>
