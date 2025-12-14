@@ -27,11 +27,22 @@ import './App.css';
 
 const HomePage = () => {
   const [attractions, setAttractions] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [ratingFilter, setRatingFilter] = useState(0);
+  const [districtFilter, setDistrictFilter] = useState('all');
+  const [showHeatmap, setShowHeatmap] = useState(false);
 
   useEffect(() => {
     // Load attractions from JSON
     setAttractions(attractionsData);
   }, []);
+
+  // Filter attractions
+  const filteredAttractions = attractions.filter(attr => {
+    if (categoryFilter !== 'all' && attr.category !== categoryFilter) return false;
+    if (ratingFilter > 0 && (!attr.rating || attr.rating < ratingFilter)) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen">
@@ -40,7 +51,25 @@ const HomePage = () => {
         <DynamicHeroSection attractionsCount={attractions.length} />
         <AdvancedClusterVisualization />
         <ClusteringHeroSection />
-        <OptimizedMap attractions={attractions} />
+        
+        {/* Map Section with Filters */}
+        <section className="py-12 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <EnhancedMapFilters
+              categoryFilter={categoryFilter}
+              setCategoryFilter={setCategoryFilter}
+              ratingFilter={ratingFilter}
+              setRatingFilter={setRatingFilter}
+              districtFilter={districtFilter}
+              setDistrictFilter={setDistrictFilter}
+              showHeatmap={showHeatmap}
+              setShowHeatmap={setShowHeatmap}
+              totalAttractions={attractions.length}
+              filteredCount={filteredAttractions.length}
+            />
+            <OptimizedMap attractions={filteredAttractions} showHeatmap={showHeatmap} />
+          </div>
+        </section>
         <VisitStatistics />
         <PersonalizedRecommendations />
         <DataUploadSection />
