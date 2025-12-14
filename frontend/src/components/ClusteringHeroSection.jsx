@@ -47,29 +47,29 @@ const ClusteringHeroSection = () => {
   }, []);
 
   return (
-    <section className="relative py-24 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden">
+    <section className="relative py-24 bg-gradient-to-br from-white via-slate-50 to-emerald-50 overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Content */}
         <div className="text-center mb-16">
-          <Badge className="mb-6 bg-white/10 backdrop-blur-sm text-white border-white/20 text-lg px-6 py-2">
+          <Badge className="mb-6 bg-emerald-600 text-white border-emerald-500 text-lg px-6 py-2">
             <Brain className="h-5 w-5 mr-2 inline" />
             Магістерська робота
           </Badge>
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900 bg-clip-text text-transparent">
               Кластеризація туристичних об'єктів
             </span>
           </h1>
           
-          <p className="text-xl sm:text-2xl text-purple-100 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl sm:text-2xl text-slate-700 max-w-4xl mx-auto mb-8 leading-relaxed">
             Інтелектуальна система класифікації та аналізу туристичної інфраструктури 
             Житомирської області з використанням алгоритмів машинного навчання
           </p>
