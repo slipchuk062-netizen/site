@@ -148,34 +148,34 @@ const ClusteringHeroSection = () => {
           </div>
           
           <div className="text-center p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-300">
-            <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent mb-2">
+            <div className="text-5xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent mb-2">
               7
             </div>
-            <p className="text-purple-200 font-medium">Кластерів</p>
+            <p className="text-slate-700 font-medium">Кластерів</p>
           </div>
           
-          <div className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-            <div className="text-5xl font-bold bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent mb-2">
+          <div className="text-center p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-300">
+            <div className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent mb-2">
               0.748
             </div>
-            <p className="text-purple-200 font-medium">Silhouette Score</p>
+            <p className="text-slate-700 font-medium">Silhouette Score</p>
           </div>
           
-          <div className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300">
-            <div className="text-5xl font-bold bg-gradient-to-r from-pink-400 to-pink-600 bg-clip-text text-transparent mb-2">
+          <div className="text-center p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg transition-all duration-300">
+            <div className="text-5xl font-bold bg-gradient-to-r from-pink-600 to-pink-800 bg-clip-text text-transparent mb-2">
               4
             </div>
-            <p className="text-purple-200 font-medium">Райони</p>
+            <p className="text-slate-700 font-medium">Райони</p>
           </div>
         </div>
 
         {/* Algorithm Explanation */}
-        <Card className="bg-white/5 backdrop-blur-md border-white/20">
+        <Card className="bg-white border-slate-200">
           <CardContent className="p-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                  <Target className="h-6 w-6 text-purple-400" />
+                <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <Target className="h-6 w-6 text-emerald-600" />
                   Методологія K-means
                 </h3>
                 <div className="space-y-3 text-purple-100">
