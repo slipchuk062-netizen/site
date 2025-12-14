@@ -67,11 +67,13 @@ const DynamicHeroSection = ({ attractionsCount }) => {
         <div className="animate-fade-in-up">
           {/* Coat of Arms */}
           <div className="mb-6 flex justify-center">
-            <div className="relative w-32 h-32 bg-white rounded-full shadow-2xl flex items-center justify-center animate-float">
-              <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-20 rounded-full"></div>
-              <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-yellow-400 rounded-full flex items-center justify-center">
-                <span className="text-4xl font-bold text-white">ЖО</span>
-              </div>
+            <div className="relative w-32 h-32 bg-white rounded-full shadow-2xl flex items-center justify-center animate-float p-2">
+              <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-30 rounded-full"></div>
+              <img 
+                src="https://customer-assets.emergentagent.com/job_geodatahub/artifacts/bsxv0olg_Coat_of_Arms_of_Zhytomyr_Oblast.svg.png"
+                alt="Герб Житомирської області"
+                className="relative w-full h-full object-contain"
+              />
             </div>
           </div>
           
