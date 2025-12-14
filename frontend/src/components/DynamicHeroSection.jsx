@@ -56,7 +56,7 @@ const DynamicHeroSection = ({ attractionsCount }) => {
         ))}
         
         {/* Dark overlay для читабельності */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/95 via-slate-900/85 to-slate-900/95"></div>
         
         {/* Vignette effect */}
         <div className="absolute inset-0 bg-radial-gradient opacity-50"></div>
@@ -67,14 +67,11 @@ const DynamicHeroSection = ({ attractionsCount }) => {
         <div className="animate-fade-in-up">
           {/* Coat of Arms */}
           <div className="mb-6 flex justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-emerald-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Coat_of_Arms_of_Zhytomyr_Oblast.svg/300px-Coat_of_Arms_of_Zhytomyr_Oblast.svg.png"
-                alt="Герб Житомирської області"
-                className="relative h-28 w-28 object-contain drop-shadow-2xl animate-float bg-white/10 rounded-full p-2 backdrop-blur-sm"
-                loading="eager"
-              />
+            <div className="relative w-32 h-32 bg-white rounded-full shadow-2xl flex items-center justify-center animate-float">
+              <div className="absolute inset-0 bg-emerald-500 blur-xl opacity-20 rounded-full"></div>
+              <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-yellow-400 rounded-full flex items-center justify-center">
+                <span className="text-4xl font-bold text-white">ЖО</span>
+              </div>
             </div>
           </div>
           
