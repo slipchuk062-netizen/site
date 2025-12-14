@@ -78,7 +78,7 @@ const ClusteringHeroSection = () => {
             <Button 
               size="lg"
               onClick={() => navigate('/analytics')}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8 py-6 shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-lg px-8 py-6 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
             >
               <Brain className="h-6 w-6 mr-2" />
               Переглянути аналітику
@@ -91,7 +91,7 @@ const ClusteringHeroSection = () => {
                 const mapSection = document.getElementById('map');
                 if (mapSection) mapSection.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="border-2 border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 text-lg px-8 py-6"
+              className="border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-900 text-lg px-8 py-6 shadow-lg"
             >
               <MapPin className="h-6 w-6 mr-2" />
               Дослідити карту
@@ -110,9 +110,9 @@ const ClusteringHeroSection = () => {
                 key={index}
                 className={`relative overflow-hidden transition-all duration-500 cursor-pointer ${
                   isActive 
-                    ? 'scale-105 shadow-2xl border-2 border-purple-400' 
-                    : 'scale-100 hover:scale-105 border-white/20 bg-white/5'
-                } backdrop-blur-sm`}
+                    ? 'scale-105 shadow-2xl border-2 border-emerald-400 bg-white' 
+                    : 'scale-100 hover:scale-105 border-slate-200 bg-white hover:shadow-lg'
+                }`}
                 onClick={() => setActiveStep(index)}
               >
                 <CardContent className="pt-8 pb-6">
@@ -126,10 +126,10 @@ const ClusteringHeroSection = () => {
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   
-                  <h3 className="text-lg font-bold text-white mb-2 text-center">
+                  <h3 className="text-lg font-bold text-slate-900 mb-2 text-center">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-purple-200 text-center leading-relaxed">
+                  <p className="text-sm text-slate-600 text-center leading-relaxed">
                     {step.description}
                   </p>
                 </CardContent>
