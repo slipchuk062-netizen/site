@@ -20,6 +20,7 @@ import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
 import AdvancedClusterVisualization from './components/AdvancedClusterVisualization';
+import ClusteringAnalytics from './components/ClusteringAnalytics';
 import EnhancedMapFilters from './components/EnhancedMapFilters';
 import MapLegend from './components/MapLegend';
 import attractionsData from './data/attractions.json';
@@ -50,6 +51,7 @@ const HomePage = () => {
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
         <AdvancedClusterVisualization />
+        <ClusteringAnalytics />
         <ClusteringHeroSection />
         
         {/* Map Section with Filters */}
