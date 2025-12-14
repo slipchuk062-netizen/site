@@ -20,6 +20,8 @@ import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
 import AdvancedClusterVisualization from './components/AdvancedClusterVisualization';
+import EnhancedMapFilters from './components/EnhancedMapFilters';
+import MapLegend from './components/MapLegend';
 import attractionsData from './data/attractions.json';
 import './App.css';
 
