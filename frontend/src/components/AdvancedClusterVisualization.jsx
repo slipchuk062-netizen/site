@@ -101,10 +101,10 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <MapPin className="h-8 w-8 text-emerald-600" />
-                <Badge className="bg-emerald-100 text-emerald-700 text-sm">Всього</Badge>
+                <Badge className="bg-emerald-100 text-emerald-700 text-base">Всього</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">{total.toLocaleString()}</p>
-              <p className="text-sm text-slate-600">Туристичних об'єктів</p>
+              <p className="text-5xl font-bold text-emerald-700 mb-2">1,864</p>
+              <p className="text-base text-slate-600 font-medium">Туристичних об'єктів</p>
             </CardContent>
           </Card>
 
@@ -112,10 +112,10 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <Layers className="h-8 w-8 text-blue-600" />
-                <Badge className="bg-blue-100 text-blue-700 text-sm">Кластери</Badge>
+                <Badge className="bg-blue-100 text-blue-700 text-base">Категорії</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">{clusterStats.total_clusters || 7}</p>
-              <p className="text-sm text-slate-600">Категорій</p>
+              <p className="text-5xl font-bold text-blue-700 mb-2">7</p>
+              <p className="text-base text-slate-600 font-medium">Категорій</p>
             </CardContent>
           </Card>
 
@@ -123,10 +123,10 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <Target className="h-8 w-8 text-purple-600" />
-                <Badge className="bg-purple-100 text-purple-700 text-sm">Райони</Badge>
+                <Badge className="bg-purple-100 text-purple-700 text-base">Райони</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">4</p>
-              <p className="text-sm text-slate-600">Адмін. райони</p>
+              <p className="text-5xl font-bold text-purple-700 mb-2">4</p>
+              <p className="text-base text-slate-600 font-medium">Адмін. райони</p>
             </CardContent>
           </Card>
 
@@ -134,10 +134,12 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <Activity className="h-8 w-8 text-amber-600" />
-                <Badge className="bg-amber-100 text-amber-700 text-sm">Оцінка</Badge>
+                <Badge className="bg-amber-100 text-amber-700 text-base">Оцінка</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">⭐ 4.2</p>
-              <p className="text-sm text-slate-600">Сер. рейтинг</p>
+              <p className="text-5xl font-bold text-amber-600 mb-2">
+                <Star className="h-10 w-10 inline text-yellow-500 fill-yellow-500 -mt-2" /> 4.2
+              </p>
+              <p className="text-base text-slate-600 font-medium">Сер. рейтинг</p>
             </CardContent>
           </Card>
         </div>
