@@ -90,8 +90,8 @@ const AdvancedClusterVisualization = () => {
             Що цікавого на Житомирщині?
           </h2>
           <p className="text-xl sm:text-2xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
-            Тут зібрано <strong className="text-emerald-700">{total > 0 ? total.toLocaleString('uk-UA') : '1,864'}</strong> туристичних місць, 
-            розподілених на 7 зручних категорій для вашого вибору
+            Тут зібрано <strong className="text-emerald-700 text-3xl">1,864</strong> туристичних місця, 
+            розподілених на <strong className="text-emerald-700">7 зручних категорій</strong> для вашого вибору
           </p>
         </div>
 
