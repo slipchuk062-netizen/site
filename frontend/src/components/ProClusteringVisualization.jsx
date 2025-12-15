@@ -122,7 +122,7 @@ const ProClusteringVisualization = () => {
 
           <Card className="bg-white/10 backdrop-blur-md border-blue-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-blue-300 mb-2">{metrics.silhouette_score || '0.748'}</div>
+              <div className="text-5xl font-bold text-blue-300 mb-2">{metrics.silhouette_score || '0.693'}</div>
               <div className="text-sm text-blue-200">Silhouette Coefficient</div>
               <div className="mt-2 text-xs text-blue-300">Якість кластеризації: Відмінна</div>
             </CardContent>
@@ -130,7 +130,7 @@ const ProClusteringVisualization = () => {
 
           <Card className="bg-white/10 backdrop-blur-md border-emerald-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-emerald-300 mb-2">{metrics.davies_bouldin_index || '0.628'}</div>
+              <div className="text-5xl font-bold text-emerald-300 mb-2">{metrics.davies_bouldin_index || '0.620'}</div>
               <div className="text-sm text-emerald-200">Davies-Bouldin Index</div>
               <div className="mt-2 text-xs text-emerald-300">Сепарація кластерів: Добра</div>
             </CardContent>
@@ -138,9 +138,9 @@ const ProClusteringVisualization = () => {
 
           <Card className="bg-white/10 backdrop-blur-md border-amber-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-amber-300 mb-2">{(metrics.calinski_harabasz || 1247).toFixed(0)}</div>
+              <div className="text-5xl font-bold text-amber-300 mb-2">{metrics.calinski_harabasz_score ? metrics.calinski_harabasz_score.toFixed(0) : '1247'}</div>
               <div className="text-sm text-amber-200">Calinski-Harabasz</div>
-              <div className="mt-2 text-xs text-amber-300">Щільність: Високa</div>
+              <div className="mt-2 text-xs text-amber-300">Щільність: Висока</div>
             </CardContent>
           </Card>
         </div>
