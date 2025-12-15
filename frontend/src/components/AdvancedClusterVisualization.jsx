@@ -82,16 +82,16 @@ const AdvancedClusterVisualization = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-lg px-6 py-2">
-            <Sparkles className="h-5 w-5 mr-2 inline" />
-            Кластерна візуалізація
+          <Badge className="mb-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xl px-8 py-3">
+            <Sparkles className="h-6 w-6 mr-2 inline" />
+            Статистика
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-emerald-800 to-teal-800 bg-clip-text text-transparent">
-            Інтелектуальний аналіз туристичних даних
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-emerald-800 to-teal-800 bg-clip-text text-transparent">
+            Що цікавого на Житомирщині?
           </h2>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-            Автоматична кластеризація та аналіз {total.toLocaleString()} туристичних об'єктів 
-            для виявлення патернів та рекомендацій
+          <p className="text-xl sm:text-2xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
+            Ми проаналізували {total.toLocaleString()} туристичних місць і розподілили їх на категорії, 
+            щоб ви легко знайшли те, що вам подобається
           </p>
         </div>
 
