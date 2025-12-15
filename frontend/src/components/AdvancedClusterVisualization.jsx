@@ -145,17 +145,17 @@ const AdvancedClusterVisualization = () => {
         {/* Tabbed Visualizations */}
         <Tabs defaultValue="categories" className="mb-12">
           <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="categories">
-              <PieChart className="h-4 w-4 mr-2" />
-              Розподіл по категоріях
+            <TabsTrigger value="categories" className="text-base">
+              <PieChart className="h-5 w-5 mr-2" />
+              Що тут є?
             </TabsTrigger>
-            <TabsTrigger value="districts">
-              <MapPin className="h-4 w-4 mr-2" />
-              Щільність по районах
+            <TabsTrigger value="districts" className="text-base">
+              <MapPin className="h-5 w-5 mr-2" />
+              Де знаходиться?
             </TabsTrigger>
-            <TabsTrigger value="metrics">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Метрики якості
+            <TabsTrigger value="metrics" className="text-base">
+              <TrendingUp className="h-5 w-5 mr-2" />
+              Топ місця
             </TabsTrigger>
           </TabsList>
 
