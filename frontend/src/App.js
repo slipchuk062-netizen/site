@@ -19,7 +19,6 @@ import PersonalizedRecommendations from './components/PersonalizedRecommendation
 import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
-import BeautifulClustering from './components/BeautifulClustering';
 import ProClusteringVisualization from './components/ProClusteringVisualization';
 import TopPlaces from './components/TopPlaces';
 import EnhancedMapFilters from './components/EnhancedMapFilters';
@@ -51,7 +50,6 @@ const HomePage = () => {
       <Header />
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
-        <BeautifulClustering />
         <ProClusteringVisualization />
         
         {/* Map Section with Filters */}
