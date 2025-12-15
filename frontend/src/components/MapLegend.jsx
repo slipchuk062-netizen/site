@@ -26,14 +26,14 @@ const districtColors = {
   "zhytomyr": "#10b981",
   "berdychiv": "#f59e0b",
   "korosten": "#3b82f6",
-  "novohrad": "#8b5cf6"
+  "zviahel": "#8b5cf6"
 };
 
 const districtNames = {
-  "zhytomyr": "Житомир",
-  "berdychiv": "Бердичів",
-  "korosten": "Коростень",
-  "novohrad": "Новоград"
+  "zhytomyr": "Житомирський",
+  "berdychiv": "Бердичівський",
+  "korosten": "Коростенський",
+  "zviahel": "Звягельський"
 };
 
 const MapLegend = () => {
