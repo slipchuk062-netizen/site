@@ -266,20 +266,20 @@ const ClusteringAnalytics = () => {
 
         <Tabs defaultValue="elbow" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="elbow">
-              <TrendingDown className="h-4 w-4 mr-2" />
-              Elbow Method
+            <TabsTrigger value="elbow" className="text-base">
+              <TrendingDown className="h-5 w-5 mr-2" />
+              Підбір кількості
             </TabsTrigger>
-            <TabsTrigger value="silhouette">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Silhouette Analysis
+            <TabsTrigger value="silhouette" className="text-base">
+              <BarChart3 className="h-5 w-5 mr-2" />
+              Якість розподілу
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="elbow">
             <Card>
               <CardHeader>
-                <CardTitle>Метод ліктя (Elbow Method)</CardTitle>
+                <CardTitle className="text-2xl">Як ми вибрали 7 категорій</CardTitle>
               </CardHeader>
               <CardContent>
                 <ElbowChart data={elbowData} />
@@ -290,7 +290,7 @@ const ClusteringAnalytics = () => {
           <TabsContent value="silhouette">
             <Card>
               <CardHeader>
-                <CardTitle>Silhouette аналіз для K={kValue}</CardTitle>
+                <CardTitle className="text-2xl">Наскільки добре розподілені категорії (K={kValue})</CardTitle>
               </CardHeader>
               <CardContent>
                 <SilhouettePlot data={silhouetteData} k={kValue} />
