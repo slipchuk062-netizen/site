@@ -1376,3 +1376,19 @@ async def download_presentation_html():
         )
     else:
         raise HTTPException(status_code=404, detail="Presentation HTML file not found")
+
+@app.get("/api/download-presentation-pptx")
+async def download_presentation_pptx():
+    """Download the presentation PowerPoint"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    pptx_path = "/app/Zhytomyr_Tourism_Presentation.pptx"
+    if os.path.exists(pptx_path):
+        return FileResponse(
+            path=pptx_path,
+            filename="Zhytomyr_Tourism_Presentation.pptx",
+            media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Presentation PowerPoint file not found")
