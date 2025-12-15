@@ -1408,3 +1408,19 @@ async def download_defence_guide():
         )
     else:
         raise HTTPException(status_code=404, detail="Defence guide not found")
+
+@app.get("/api/download-scientific-novelty")
+async def download_scientific_novelty():
+    """Download the scientific novelty document"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    novelty_path = "/app/SCIENTIFIC_NOVELTY.md"
+    if os.path.exists(novelty_path):
+        return FileResponse(
+            path=novelty_path,
+            filename="Scientific_Novelty.md",
+            media_type="text/markdown"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Scientific novelty document not found")
