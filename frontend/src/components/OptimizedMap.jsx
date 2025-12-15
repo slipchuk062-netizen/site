@@ -249,11 +249,11 @@ const DistrictBoundaries = ({ showBoundaries, densityStats }) => {
 
   const districtStyle = (feature) => ({
     fillColor: districtColors[feature.properties.id] || '#6b7280',
-    fillOpacity: 0.08,
+    fillOpacity: 0.2,
     color: districtColors[feature.properties.id] || '#6b7280',
-    weight: 2,
-    opacity: 0.7,
-    dashArray: '5, 5',
+    weight: 3,
+    opacity: 0.9,
+    dashArray: 'none',
   });
 
   const onEachDistrict = (feature, layer) => {
@@ -273,11 +273,11 @@ const DistrictBoundaries = ({ showBoundaries, densityStats }) => {
     );
 
     layer.on('mouseover', function() {
-      this.setStyle({ fillOpacity: 0.15, weight: 3 });
+      this.setStyle({ fillOpacity: 0.35, weight: 4 });
     });
 
     layer.on('mouseout', function() {
-      this.setStyle({ fillOpacity: 0.08, weight: 2 });
+      this.setStyle({ fillOpacity: 0.2, weight: 3 });
     });
   };
 
