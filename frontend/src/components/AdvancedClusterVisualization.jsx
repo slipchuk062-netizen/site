@@ -5,7 +5,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { 
   BarChart3, PieChart, TrendingUp, MapPin, Activity, 
-  Target, Layers, Sparkles, Filter, Download
+  Target, Layers, Sparkles, Filter, Download, Star
 } from 'lucide-react';
 import axios from 'axios';
 
