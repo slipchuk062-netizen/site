@@ -86,17 +86,17 @@ const PersonalizedRecommendations = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 text-purple-700 border-purple-300 bg-purple-50">
-            <Sparkles className="h-3 w-3 mr-1 inline" />
-            AI-рекомендації
+          <Badge className="mb-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xl px-8 py-3">
+            <Heart className="h-6 w-6 mr-2 inline" />
+            Для вас
           </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
             <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
-              Персоналізовані рекомендації
+              Що вам сподобається?
             </span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Налаштуйте свої вподобання, і ми підберемо найкращі місця спеціально для вас
+          <p className="text-xl sm:text-2xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
+            Оберіть що вам цікаво, і ми покажемо найкращі місця саме для вас
           </p>
         </div>
 
