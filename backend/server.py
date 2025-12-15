@@ -1379,11 +1379,11 @@ async def download_presentation_html():
 
 @app.get("/api/download-presentation-pptx")
 async def download_presentation_pptx():
-    """Download the presentation PowerPoint"""
+    """Download the presentation PowerPoint with visualizations"""
     from fastapi.responses import FileResponse
     import os
     
-    pptx_path = "/app/Zhytomyr_Tourism_Presentation.pptx"
+    pptx_path = "/app/Zhytomyr_Tourism_Presentation_FINAL.pptx"
     if os.path.exists(pptx_path):
         return FileResponse(
             path=pptx_path,
