@@ -1345,3 +1345,34 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+@app.get("/api/download-presentation")
+async def download_presentation():
+    """Download the presentation PDF"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    pdf_path = "/app/presentation.pdf"
+    if os.path.exists(pdf_path):
+        return FileResponse(
+            path=pdf_path,
+            filename="Zhytomyr_Tourism_Presentation.pdf",
+            media_type="application/pdf"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Presentation file not found")
+
+@app.get("/api/download-presentation-html")
+async def download_presentation_html():
+    """Download the presentation HTML"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    html_path = "/app/presentation.html"
+    if os.path.exists(html_path):
+        return FileResponse(
+            path=html_path,
+            filename="Zhytomyr_Tourism_Presentation.html",
+            media_type="text/html"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Presentation HTML file not found")
