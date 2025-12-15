@@ -334,3 +334,315 @@ add_slide_number(slide, 5, 11)
 # Save presentation
 prs.save('/app/Zhytomyr_Tourism_Presentation.pptx')
 print("✓ Презентація створена: /app/Zhytomyr_Tourism_Presentation.pptx")
+
+# Continue with slide 6-11
+prs2 = Presentation('/app/Zhytomyr_Tourism_Presentation.pptx')
+
+# SLIDE 6: Проблеми та Рішення
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+add_header(slide, "ПРОБЛЕМИ ТА РІШЕННЯ")
+
+# Problems header
+prob_header = add_rounded_box(
+    slide,
+    Inches(0.7), Inches(1.3),
+    Inches(4), Inches(0.4),
+    "❌ ПРОБЛЕМИ",
+    RGBColor(139, 0, 0), COLOR_WHITE, 14
+)
+prob_header.text_frame.paragraphs[0].font.bold = True
+
+problems = [
+    "Відсутність комплексного аналізу туристичних об'єктів",
+    "Неможливість виявлення географічних закономірностей",
+    "Відсутність наукових метрик якості кластеризації",
+    "Неточні межі адміністративних районів",
+]
+
+y_pos = 1.8
+for prob in problems:
+    add_rounded_box(
+        slide,
+        Inches(0.7), Inches(y_pos),
+        Inches(4), Inches(0.7),
+        prob,
+        COLOR_DARK_GREY, COLOR_LIGHT_GREY, 11
+    )
+    y_pos += 0.8
+
+# Solutions header
+sol_header = add_rounded_box(
+    slide,
+    Inches(5.2), Inches(1.3),
+    Inches(4), Inches(0.4),
+    "✓ РІШЕННЯ",
+    COLOR_GREEN, COLOR_WHITE, 14
+)
+sol_header.text_frame.paragraphs[0].font.bold = True
+
+solutions = [
+    "K-means кластеризація 1,864 об'єктів",
+    "Інтерактивна карта з GeoJSON полігонами",
+    "Silhouette Score (0.693), Davies-Bouldin (0.62)",
+    "Точні дані з OpenStreetMap (OSM ID: 11812881, 11952329, 11809205, 11952373)",
+]
+
+y_pos = 1.8
+for sol in solutions:
+    add_rounded_box(
+        slide,
+        Inches(5.2), Inches(y_pos),
+        Inches(4), Inches(0.7),
+        sol,
+        RGBColor(220, 252, 231), RGBColor(20, 20, 20), 11
+    )
+    y_pos += 0.8
+
+add_slide_number(slide, 6, 11)
+
+# SLIDE 7: Реалізація
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+add_header(slide, "РЕАЛІЗАЦІЯ")
+
+implementations = [
+    ("1", "BACKEND (СЕРВЕРНА ЧАСТИНА)", "FastAPI • Python 3.9+ • MongoDB", "RESTful API архітектура • Async/await • Scikit-learn"),
+    ("2", "FRONTEND (КЛІЄНТСЬКА ЧАСТИНА)", "React 19 • Tailwind CSS • Recharts", "Компонентний підхід • Responsive дизайн • shadcn/ui"),
+    ("3", "КАРТОГРАФІЯ", "Leaflet.js • GeoJSON • OpenStreetMap", "Інтерактивні карти • Marker clustering • Heatmap"),
+    ("4", "AI ТА ІНТЕГРАЦІЇ", "Claude Sonnet 4 • Google Places API", "AI-асистент • Real-time дані • Валідація"),
+]
+
+y_pos = 1.3
+for num, title, tech1, tech2 in implementations:
+    # Number
+    num_box = add_rounded_box(
+        slide,
+        Inches(0.7), Inches(y_pos),
+        Inches(0.5), Inches(0.5),
+        num, COLOR_GREEN, COLOR_WHITE, 20
+    )
+    num_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+    num_box.text_frame.paragraphs[0].font.bold = True
+    
+    # Title and main tech
+    content_box = add_rounded_box(
+        slide,
+        Inches(1.4), Inches(y_pos),
+        Inches(4), Inches(1.1),
+        f"{title}\n{tech1}",
+        COLOR_DARK_GREY, COLOR_LIGHT_GREY, 11
+    )
+    content_box.text_frame.paragraphs[0].font.bold = True
+    content_box.text_frame.paragraphs[0].font.size = Pt(12)
+    content_box.text_frame.paragraphs[0].font.color.rgb = COLOR_GREEN
+    
+    # Technologies
+    tech_box = add_rounded_box(
+        slide,
+        Inches(5.6), Inches(y_pos),
+        Inches(3.7), Inches(1.1),
+        tech2,
+        RGBColor(220, 252, 231), RGBColor(20, 20, 20), 10
+    )
+    
+    y_pos += 1.25
+
+add_slide_number(slide, 7, 11)
+
+# SLIDE 8: Демонстрація
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+add_header(slide, "ДЕМОНСТРАЦІЯ ВЗАЄМОДІЇ КОРИСТУВАЧА З СИСТЕМОЮ")
+
+# Video placeholder
+video_box = add_rounded_box(
+    slide,
+    Inches(2), Inches(1.5),
+    Inches(6), Inches(3),
+    "📹 МІСЦЕ ДЛЯ ВІДЕО ДЕМОНСТРАЦІЇ\n\n(Додайте скріншот або відео вашої системи)",
+    COLOR_DARK_GREY, COLOR_GREEN, 18
+)
+video_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+# Statistics
+stats = [
+    ("1,864", "Туристичних\nоб'єктів"),
+    ("7", "Категорій\nкластерів"),
+    ("4", "Райони\nобласті"),
+    ("100%", "Responsive\nдизайн"),
+]
+
+x_pos = 1.5
+for num, label in stats:
+    # Number box
+    num_shape = add_rounded_box(
+        slide,
+        Inches(x_pos), Inches(5),
+        Inches(1.5), Inches(0.7),
+        num,
+        COLOR_GREEN, COLOR_WHITE, 28
+    )
+    num_shape.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+    num_shape.text_frame.paragraphs[0].font.bold = True
+    
+    # Label
+    label_box = slide.shapes.add_textbox(
+        Inches(x_pos), Inches(5.8), Inches(1.5), Inches(0.6)
+    )
+    p = label_box.text_frame.paragraphs[0]
+    p.text = label
+    p.font.size = Pt(10)
+    p.font.color.rgb = COLOR_LIGHT_GREY
+    p.alignment = PP_ALIGN.CENTER
+    
+    x_pos += 2
+
+add_slide_number(slide, 8, 11)
+
+# SLIDE 9: Тестування
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+add_header(slide, "ТЕСТУВАННЯ ІНФОРМАЦІЙНОЇ СИСТЕМИ")
+
+tests = [
+    ("1", "ПРОДУКТИВНІСТЬ", "Frontend Testing Agent", "100% - Усі тести пройдено успішно. Responsive дизайн працює на всіх пристроях."),
+    ("2", "КОРИСНІСТЬ", "Backend API Testing", "90% - 9/10 тестів успішні. Всі основні API endpoints працюють коректно."),
+    ("3", "БЕЗПЕКА", "Security Best Practices", "✓ Пройдено - Використання .env файлів, валідація даних, безпечні API calls."),
+]
+
+y_pos = 1.3
+for num, title, tester, result in tests:
+    # Number
+    num_box = add_rounded_box(
+        slide,
+        Inches(0.7), Inches(y_pos),
+        Inches(0.5), Inches(0.5),
+        num, COLOR_GREEN, COLOR_WHITE, 18
+    )
+    num_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+    num_box.text_frame.paragraphs[0].font.bold = True
+    
+    # Title
+    title_box = add_rounded_box(
+        slide,
+        Inches(1.4), Inches(y_pos),
+        Inches(2.5), Inches(0.5),
+        title,
+        COLOR_GREEN, COLOR_WHITE, 12
+    )
+    title_box.text_frame.paragraphs[0].font.bold = True
+    
+    # Tester
+    tester_box = add_rounded_box(
+        slide,
+        Inches(4.1), Inches(y_pos),
+        Inches(2.3), Inches(0.5),
+        tester,
+        COLOR_DARK_GREY, COLOR_LIGHT_GREY, 11
+    )
+    
+    # Result
+    result_box = add_rounded_box(
+        slide,
+        Inches(1.4), Inches(y_pos + 0.6),
+        Inches(7.9), Inches(0.8),
+        result,
+        RGBColor(220, 252, 231), RGBColor(20, 20, 20), 10
+    )
+    
+    y_pos += 1.6
+
+add_slide_number(slide, 9, 11)
+
+# SLIDE 10: Висновки
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+add_header(slide, "ВИСНОВКИ")
+
+conclusion_text = """Розроблена інтелектуальна платформа туристичної аналітики повністю відповідає поставленим завданням та забезпечує:
+
+✓ Комплексний геоінформаційний аналіз 1,864 туристичних об'єктів
+
+✓ Автоматичну кластеризацію по 7 категоріях з високими метриками якості
+   • Silhouette Coefficient: 0.693 (Висока якість кластерів)
+   • Davies-Bouldin Index: 0.620 (Добра сепарація кластерів)
+   • Calinski-Harabasz Score: 1247 (Висока щільність)
+
+✓ Професійну візуалізацію з Elbow Method, Silhouette Score, PCA проекцією
+
+✓ Інтерактивну карту з точними GeoJSON межами 4 районів
+
+✓ AI-асистента для персоналізованих рекомендацій туристам
+
+✓ Інтеграцію з Google Places API для актуальних даних
+
+✓ Детальну аналітику щільності та популярності місць"""
+
+conclusion_box = add_rounded_box(
+    slide,
+    Inches(0.7), Inches(1.3),
+    Inches(8.6), Inches(4.5),
+    conclusion_text,
+    COLOR_DARK_GREY, COLOR_LIGHT_GREY, 11
+)
+
+# Final note
+note_box = add_rounded_box(
+    slide,
+    Inches(0.7), Inches(5.9),
+    Inches(8.6), Inches(0.8),
+    "Система сприяє науково обґрунтованому плануванню розвитку туристичної інфраструктури Житомирської області, прийняттю ефективних управлінських рішень та оптимізації розміщення туристичних об'єктів.",
+    COLOR_GREEN, COLOR_WHITE, 12
+)
+note_box.text_frame.paragraphs[0].font.bold = True
+note_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+add_slide_number(slide, 10, 11)
+
+# SLIDE 11: Дякую
+slide = prs2.slides.add_slide(prs2.slide_layouts[6])
+add_bg_rectangle(slide)
+
+# Thank you text
+thank_box = add_rounded_box(
+    slide,
+    Inches(2), Inches(2.5),
+    Inches(6), Inches(1.5),
+    "Дякую за увагу!",
+    RGBColor(0, 0, 0, 0), COLOR_GREEN, 48
+)
+thank_box.line.fill.background()
+thank_box.fill.background()
+thank_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+thank_box.text_frame.paragraphs[0].font.bold = True
+
+# Ready for questions
+ready_box = slide.shapes.add_textbox(
+    Inches(2.5), Inches(4.2), Inches(5), Inches(0.5)
+)
+p = ready_box.text_frame.paragraphs[0]
+p.text = "Готовий відповісти на запитання"
+p.font.size = Pt(20)
+p.font.color.rgb = COLOR_LIGHT_GREY
+p.alignment = PP_ALIGN.CENTER
+
+# Project link
+link_box = add_rounded_box(
+    slide,
+    Inches(2.5), Inches(5.2),
+    Inches(5), Inches(0.8),
+    "🔗 Посилання на проект:\n[Ваше посилання на GitHub або демо]",
+    COLOR_DARK_GREY, COLOR_GREEN, 12
+)
+link_box.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+
+add_slide_number(slide, 11, 11)
+
+# Save final presentation
+prs2.save('/app/Zhytomyr_Tourism_Presentation.pptx')
+print("✓ Презентація завершена з усіма 11 слайдами!")
+
+import os
+size = os.path.getsize('/app/Zhytomyr_Tourism_Presentation.pptx')
+print(f"✓ Розмір файлу: {size:,} bytes ({size/1024:.1f} KB)")
