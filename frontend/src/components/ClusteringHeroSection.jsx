@@ -58,20 +58,19 @@ const ClusteringHeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Content */}
         <div className="text-center mb-16">
-          <Badge className="mb-6 bg-emerald-600 text-white border-emerald-500 text-lg px-6 py-2">
-            <Brain className="h-5 w-5 mr-2 inline" />
-            Розумний пошук
+          <Badge className="mb-6 bg-emerald-600 text-white border-emerald-500 text-xl px-8 py-3">
+            <MapPin className="h-6 w-6 mr-2 inline" />
+            7 категорій для вашого вибору
           </Badge>
           
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900 bg-clip-text text-transparent">
-              Відкрийте найкращі місця Житомирщини
+              Оберіть що вам подобається
             </span>
           </h1>
           
           <p className="text-xl sm:text-2xl text-slate-700 max-w-4xl mx-auto mb-8 leading-relaxed">
-            Знайдіть ідеальні місця для відпочинку серед 1,864 туристичних локацій. 
-            Ми автоматично класифікували їх у 7 категорій для зручного пошуку
+            Історія, природа, культура, розваги - тут знайдете все для ідеальної подорожі Житомирщиною
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
