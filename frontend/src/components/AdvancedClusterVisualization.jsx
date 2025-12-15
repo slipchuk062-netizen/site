@@ -123,10 +123,10 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <Target className="h-8 w-8 text-purple-600" />
-                <Badge className="bg-purple-100 text-purple-700 text-sm">Якість</Badge>
+                <Badge className="bg-purple-100 text-purple-700 text-sm">Райони</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">{metrics.silhouette_score || '0.75'}</p>
-              <p className="text-sm text-slate-600">Silhouette Score</p>
+              <p className="text-3xl font-bold text-slate-900 mb-1">4</p>
+              <p className="text-sm text-slate-600">Адмін. райони</p>
             </CardContent>
           </Card>
 
@@ -134,10 +134,10 @@ const AdvancedClusterVisualization = () => {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
                 <Activity className="h-8 w-8 text-amber-600" />
-                <Badge className="bg-amber-100 text-amber-700 text-sm">Індекс</Badge>
+                <Badge className="bg-amber-100 text-amber-700 text-sm">Оцінка</Badge>
               </div>
-              <p className="text-3xl font-bold text-slate-900 mb-1">{metrics.davies_bouldin_index || '0.62'}</p>
-              <p className="text-sm text-slate-600">Davies-Bouldin</p>
+              <p className="text-3xl font-bold text-slate-900 mb-1">⭐ 4.2</p>
+              <p className="text-sm text-slate-600">Сер. рейтинг</p>
             </CardContent>
           </Card>
         </div>
