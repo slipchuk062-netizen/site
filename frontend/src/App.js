@@ -19,8 +19,7 @@ import PersonalizedRecommendations from './components/PersonalizedRecommendation
 import VisitStatistics from './components/VisitStatistics';
 import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
-import AdvancedClusterVisualization from './components/AdvancedClusterVisualization';
-import ClusteringAnalytics from './components/ClusteringAnalytics';
+import BeautifulClustering from './components/BeautifulClustering';
 import TopPlaces from './components/TopPlaces';
 import EnhancedMapFilters from './components/EnhancedMapFilters';
 import MapLegend from './components/MapLegend';
@@ -51,8 +50,7 @@ const HomePage = () => {
       <Header />
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
-        <AdvancedClusterVisualization />
-        <ClusteringHeroSection />
+        <BeautifulClustering />
         
         {/* Map Section with Filters */}
         <section className="py-12 bg-slate-50">
