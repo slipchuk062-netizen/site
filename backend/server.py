@@ -1392,3 +1392,19 @@ async def download_presentation_pptx():
         )
     else:
         raise HTTPException(status_code=404, detail="Presentation PowerPoint file not found")
+
+@app.get("/api/download-defence-guide")
+async def download_defence_guide():
+    """Download the defence preparation guide"""
+    from fastapi.responses import FileResponse
+    import os
+    
+    guide_path = "/app/DEFENCE_GUIDE.md"
+    if os.path.exists(guide_path):
+        return FileResponse(
+            path=guide_path,
+            filename="Defence_Guide.md",
+            media_type="text/markdown"
+        )
+    else:
+        raise HTTPException(status_code=404, detail="Defence guide not found")
