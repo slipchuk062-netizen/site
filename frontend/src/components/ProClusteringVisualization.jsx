@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Badge } from './ui/badge';
@@ -6,11 +7,12 @@ import { Button } from './ui/button';
 import { Slider } from './ui/slider';
 import { 
   Activity, BarChart3, TrendingDown, Sparkles, Download, 
-  GitBranch, Layers, Target, Brain, RefreshCw, Zap
+  GitBranch, Layers, Target, Brain, RefreshCw, Zap, ExternalLink
 } from 'lucide-react';
 import axios from 'axios';
 
 const ProClusteringVisualization = () => {
+  const navigate = useNavigate();
   const [kValue, setKValue] = useState(7);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -508,11 +510,22 @@ const ProClusteringVisualization = () => {
           </CardContent>
         </Card>
 
-        {/* Export Button */}
-        <div className="text-center mt-8">
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
           <Button 
             size="lg"
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg px-8 py-6"
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-lg px-8 py-6 shadow-xl"
+            onClick={() => navigate('/analytics')}
+          >
+            <BarChart3 className="h-5 w-5 mr-2" />
+            Переглянути детальну аналітику
+            <ExternalLink className="h-4 w-4 ml-2" />
+          </Button>
+          
+          <Button 
+            size="lg"
+            variant="outline"
+            className="border-2 border-purple-600 text-purple-600 hover:bg-purple-50 text-lg px-8 py-6"
             onClick={() => {
               const data = { kValue, metrics, silhouetteData, elbowData };
               const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -524,7 +537,7 @@ const ProClusteringVisualization = () => {
             }}
           >
             <Download className="h-5 w-5 mr-2" />
-            Експортувати результати аналізу
+            Експортувати дані
           </Button>
         </div>
       </div>
