@@ -52,7 +52,6 @@ const HomePage = () => {
       <main>
         <DynamicHeroSection attractionsCount={attractions.length} />
         <AdvancedClusterVisualization />
-        <ClusteringAnalytics />
         <ClusteringHeroSection />
         
         {/* Map Section with Filters */}
