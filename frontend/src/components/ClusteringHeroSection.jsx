@@ -76,24 +76,26 @@ const ClusteringHeroSection = () => {
           <div className="flex flex-wrap gap-4 justify-center">
             <Button 
               size="lg"
-              onClick={() => navigate('/analytics')}
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-slate-900 text-lg px-8 py-6 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
+              onClick={() => {
+                const mapSection = document.querySelector('section.py-12.bg-slate-50');
+                if (mapSection) mapSection.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xl px-10 py-7 shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300"
             >
-              <Brain className="h-6 w-6 mr-2" />
-              Переглянути аналітику
+              <MapPin className="h-7 w-7 mr-2" />
+              Переглянути на карті
             </Button>
             
             <Button 
               size="lg"
-              variant="outline"
               onClick={() => {
-                const mapSection = document.getElementById('map');
-                if (mapSection) mapSection.scrollIntoView({ behavior: 'smooth' });
+                const topSection = document.querySelector('section.py-20.bg-gradient-to-b');
+                if (topSection) topSection.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-900 text-lg px-8 py-6 shadow-lg"
+              className="border-2 border-emerald-600 bg-white hover:bg-emerald-50 text-emerald-700 text-xl px-10 py-7 shadow-lg"
             >
-              <MapPin className="h-6 w-6 mr-2" />
-              Дослідити карту
+              <TrendingUp className="h-7 w-7 mr-2" />
+              Топ-10 місць
             </Button>
           </div>
         </div>
