@@ -315,31 +315,165 @@ def calculate_district_density():
     return district_stats
 
 
-def calculate_clustering_metrics():
+# ============= CONSTANTS FOR CLUSTERING (Розділ 2) =============
+# Сім основних категорій туристичних об'єктів (формула 2.2)
+CATEGORY_MAPPING = {
+    'Історичні': 0,    # музеї, замки, археологічні пам'ятки
+    'Природні': 1,     # парки, заповідники, водойми
+    'Релігійні': 2,    # церкви, монастирі, храми
+    'Спортивні': 3,    # стадіони, басейни, туристичні бази
+    'Гастрономічні': 4, # ресторани, кафе, етно-ресторани
+    'Розважальні': 5,  # театри, кінотеатри, розважальні центри
+    'Інфраструктурні': 6  # готелі, хостели, інформаційні центри
+}
+
+# Зворотнє відображення для визначення домінуючої категорії
+CATEGORY_NAMES = {v: k for k, v in CATEGORY_MAPPING.items()}
+
+# Вагові коефіцієнти для різних типів ознак (згідно розділу 2.4)
+FEATURE_WEIGHTS = {
+    'coordinates': 1.0,  # Вага географічних координат
+    'category': 0.5,     # Вага категорії
+    'rating': 0.3        # Вага рейтингу
+}
+
+
+def map_category_to_standard(category: str) -> int:
     """
-    Розрахунок метрик кластеризації з використанням реального K-Means алгоритму
-    та обчислення метрик якості: Silhouette Score, Davies-Bouldin Index, Calinski-Harabasz Score
+    Відображення категорії об'єкта на стандартну категорію (7 типів)
     """
-    from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+    category_lower = category.lower() if category else ''
+    
+    # Історичні пам'ятки
+    if any(word in category_lower for word in ['історич', 'музей', 'замок', 'памят', 'археолог', 'monument', 'historical']):
+        return 0
+    # Природні об'єкти
+    elif any(word in category_lower for word in ['природ', 'парк', 'заповід', 'озеро', 'ліс', 'водо', 'natural', 'park']):
+        return 1
+    # Релігійні споруди
+    elif any(word in category_lower for word in ['церкв', 'храм', 'монастир', 'собор', 'костел', 'релігій', 'church', 'religious']):
+        return 2
+    # Спортивно-рекреаційні
+    elif any(word in category_lower for word in ['спорт', 'стадіон', 'басейн', 'рекреац', 'турист', 'sport']):
+        return 3
+    # Гастрономічні заклади
+    elif any(word in category_lower for word in ['ресторан', 'кафе', 'їдальн', 'гастро', 'food', 'restaurant', 'cafe']):
+        return 4
+    # Розважальні комплекси
+    elif any(word in category_lower for word in ['театр', 'кіно', 'розваж', 'клуб', 'entertainment', 'theater']):
+        return 5
+    # Туристична інфраструктура
+    elif any(word in category_lower for word in ['готель', 'хостел', 'житло', 'hotel', 'hostel', 'accommodation']):
+        return 6
+    else:
+        return 0  # За замовчуванням - історичні
+
+
+def prepare_feature_vector(attractions_data: list, use_categories: bool = True, use_ratings: bool = True):
+    """
+    Підготовка вектора ознак для кластеризації згідно з формулою 2.2:
+    oᵢ = (latᵢ, lonᵢ, catᵢ, rᵢ, aᵢ₁, aᵢ₂, ..., aᵢₘ)
+    
+    Етапи (розділ 2.4):
+    1. Збір координат (lat, lng)
+    2. One-hot encoding для категорій (7 категорій)
+    3. Нормалізація рейтингу за формулою 2.13: r_norm = (r - 1) / 4
+    """
     import numpy as np
     
-    # Збираємо координати всіх об'єктів
-    coordinates = []
     valid_attractions = []
+    feature_vectors = []
     
-    for attraction in ATTRACTIONS_DATA:
+    for attraction in attractions_data:
         coords = attraction.get('coordinates', {})
         lat = coords.get('lat', 0)
         lng = coords.get('lng', 0)
         
-        if lat != 0 and lng != 0:
-            coordinates.append([lat, lng])
-            valid_attractions.append(attraction)
+        if lat == 0 or lng == 0:
+            continue
+            
+        # Базові координати
+        features = [lat, lng]
+        
+        # One-hot encoding для категорій (розділ 2.4)
+        if use_categories:
+            category = attraction.get('category', '')
+            cat_idx = map_category_to_standard(category)
+            one_hot = [0] * 7  # 7 категорій
+            one_hot[cat_idx] = 1
+            features.extend(one_hot)
+        
+        # Нормалізація рейтингу за формулою 2.13: r_norm = (r - 1) / 4
+        if use_ratings:
+            rating = attraction.get('rating', 3.0)
+            if rating is None:
+                rating = 3.0
+            r_norm = (float(rating) - 1) / 4  # Діапазон [0, 1]
+            features.append(r_norm)
+        
+        feature_vectors.append(features)
+        valid_attractions.append(attraction)
     
-    if len(coordinates) < 10:
-        # Недостатньо даних для кластеризації
+    return np.array(feature_vectors), valid_attractions
+
+
+def normalize_features(X: 'np.ndarray', feature_weights: dict = None):
+    """
+    Нормалізація ознак за методом Z-score (формули 2.11, 2.12):
+    lat_norm = (lat - μ_lat) / σ_lat
+    lon_norm = (lon - μ_lon) / σ_lon
+    
+    Застосовує вагові коефіцієнти для різних типів ознак
+    """
+    from sklearn.preprocessing import StandardScaler
+    import numpy as np
+    
+    scaler = StandardScaler()
+    X_normalized = scaler.fit_transform(X)
+    
+    # Застосовуємо вагові коефіцієнти
+    if feature_weights:
+        weights = feature_weights
+        # Координати (перші 2 ознаки)
+        X_normalized[:, 0:2] *= weights.get('coordinates', 1.0)
+        # Категорії (наступні 7 ознак, якщо є)
+        if X_normalized.shape[1] > 2:
+            X_normalized[:, 2:9] *= weights.get('category', 0.5)
+        # Рейтинг (остання ознака, якщо є)
+        if X_normalized.shape[1] > 9:
+            X_normalized[:, 9] *= weights.get('rating', 0.3)
+    
+    return X_normalized, scaler
+
+
+def calculate_clustering_metrics():
+    """
+    Розрахунок метрик кластеризації з використанням БАГАТОВИМІРНОГО K-Means алгоритму
+    згідно з Розділом 2 магістерської роботи.
+    
+    Вектор ознак (формула 2.2): oᵢ = (latᵢ, lonᵢ, catᵢ, rᵢ)
+    - lat, lng: географічні координати (Z-score нормалізація, формули 2.11-2.12)
+    - cat: категорія (one-hot encoding, 7 категорій)
+    - r: рейтинг (нормалізація за формулою 2.13)
+    
+    Метрики якості:
+    - Silhouette Score (формула 2.5)
+    - Davies-Bouldin Index (формула 2.6)
+    - Calinski-Harabasz Index (формула 2.7)
+    - WCSS/Inertia (формула 2.3)
+    """
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+    import numpy as np
+    
+    # Етап 1: Підготовка вектора ознак (розділ 2.4)
+    X, valid_attractions = prepare_feature_vector(
+        ATTRACTIONS_DATA, 
+        use_categories=True, 
+        use_ratings=True
+    )
+    
+    if len(X) < 10:
         return {
             'silhouette_score': 0,
             'davies_bouldin_index': 0,
@@ -350,44 +484,70 @@ def calculate_clustering_metrics():
             'error': 'Недостатньо даних для кластеризації'
         }
     
-    # Конвертуємо в numpy array
-    X = np.array(coordinates)
+    # Етап 2: Нормалізація даних (розділ 2.4, формули 2.11-2.13)
+    X_normalized, scaler = normalize_features(X, FEATURE_WEIGHTS)
     
-    # Стандартизація даних для кращих результатів
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    
-    # K-Means кластеризація з K=7 (оптимальне значення для туристичних категорій)
-    n_clusters = min(7, len(X_scaled) - 1)  # Забезпечуємо достатню кількість точок
+    # Етап 3: K-Means кластеризація (розділ 2.2)
+    # k = 7 визначено методом ліктя та аналізом індексу силуету
+    n_clusters = min(7, len(X_normalized) - 1)
     
     kmeans = KMeans(
         n_clusters=n_clusters,
-        init='k-means++',  # Покращена ініціалізація центроїдів
-        n_init=10,  # Кількість запусків з різними центроїдами
-        max_iter=300,  # Максимальна кількість ітерацій
-        random_state=42  # Для відтворюваності результатів
+        init='k-means++',      # K-means++ ініціалізація (розділ 2.2)
+        n_init=10,             # 10 запусків з різними центроїдами
+        max_iter=300,          # Максимум 300 ітерацій
+        tol=1e-4,              # Критерій збіжності ε = 10⁻⁴ (формула 2.10)
+        random_state=42
     )
     
-    # Виконуємо кластеризацію
-    labels = kmeans.fit_predict(X_scaled)
+    labels = kmeans.fit_predict(X_normalized)
     
-    # Обчислюємо реальні метрики якості кластеризації
+    # Етап 4: Обчислення метрик якості (розділ 2.1)
     
-    # Silhouette Score: вимірює наскільки схожі об'єкти на свій кластер порівняно з іншими
-    # Діапазон: [-1, 1], де 1 = ідеальна кластеризація
-    sil_score = silhouette_score(X_scaled, labels)
+    # Silhouette Score (формула 2.5)
+    # s(oᵢ) = (b(oᵢ) - a(oᵢ)) / max{a(oᵢ), b(oᵢ)}
+    sil_score = silhouette_score(X_normalized, labels)
     
-    # Davies-Bouldin Index: вимірює середню схожість між кластерами
-    # Чим менше значення, тим краща сепарація кластерів
-    db_index = davies_bouldin_score(X_scaled, labels)
+    # Davies-Bouldin Index (формула 2.6)
+    # DBI = (1/k) × Σᵢ₌₁ᵏ maxⱼ≠ᵢ {(σᵢ + σⱼ) / d(μᵢ, μⱼ)}
+    db_index = davies_bouldin_score(X_normalized, labels)
     
-    # Calinski-Harabasz Score (Variance Ratio Criterion): 
-    # співвідношення між дисперсією між кластерами та всередині кластерів
-    # Чим більше значення, тим краще визначені кластери
-    ch_score = calinski_harabasz_score(X_scaled, labels)
+    # Calinski-Harabasz Index (формула 2.7)
+    # CH = [tr(Bₖ) / (k-1)] / [tr(Wₖ) / (n-k)]
+    ch_score = calinski_harabasz_score(X_normalized, labels)
     
-    # Обчислюємо WCSS (Within-Cluster Sum of Squares) для методу ліктя
+    # WCSS (формула 2.3): J = Σⱼ₌₁ᵏ Σₒᵢ∈Cⱼ ||oᵢ - μⱼ||²
     wcss = kmeans.inertia_
+    
+    # Аналіз кластерів - визначення домінуючих категорій
+    cluster_info = []
+    for cluster_id in range(n_clusters):
+        cluster_mask = labels == cluster_id
+        cluster_attractions = [valid_attractions[i] for i, m in enumerate(cluster_mask) if m]
+        
+        # Визначення домінуючої категорії
+        category_counts = {}
+        for attr in cluster_attractions:
+            cat = map_category_to_standard(attr.get('category', ''))
+            category_counts[cat] = category_counts.get(cat, 0) + 1
+        
+        dominant_cat = max(category_counts, key=category_counts.get) if category_counts else 0
+        
+        # Середній рейтинг кластера
+        ratings = [attr.get('rating', 3.0) or 3.0 for attr in cluster_attractions]
+        avg_rating = sum(ratings) / len(ratings) if ratings else 0
+        
+        cluster_info.append({
+            'cluster_id': cluster_id,
+            'size': len(cluster_attractions),
+            'dominant_category': CATEGORY_NAMES.get(dominant_cat, 'Історичні'),
+            'dominant_category_id': dominant_cat,
+            'category_distribution': category_counts,
+            'avg_rating': round(avg_rating, 2)
+        })
+    
+    # Центроїди у нормалізованому просторі (тільки координати для візуалізації)
+    cluster_centers_coords = kmeans.cluster_centers_[:, 0:2].tolist()
     
     return {
         'silhouette_score': round(float(sil_score), 3),
@@ -398,8 +558,12 @@ def calculate_clustering_metrics():
         'total_objects': len(ATTRACTIONS_DATA),
         'valid_coordinates': len(valid_attractions),
         'avg_objects_per_cluster': round(len(valid_attractions) / n_clusters, 2),
-        'cluster_centers': kmeans.cluster_centers_.tolist(),
-        'n_iterations': kmeans.n_iter_
+        'cluster_centers': cluster_centers_coords,
+        'cluster_info': cluster_info,
+        'n_iterations': kmeans.n_iter_,
+        'convergence_tolerance': 1e-4,
+        'feature_dimensions': X_normalized.shape[1],
+        'features_used': ['lat', 'lng', 'category_onehot(7)', 'rating_normalized']
     }
 
 
