@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формули та діаграми до Розділу 2</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14pt;
+            line-height: 1.5;
+            padding: 40px;
+            background: #fff;
+            color: #000;
+        }
+        h1 {
+            text-align: center;
+            font-size: 18pt;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 16pt;
+            margin: 30px 0 20px 0;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 14pt;
+            margin: 20px 0 15px 0;
+            font-weight: bold;
+        }
+        .formula-block {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .formula-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .formula-description {
+            text-align: left;
+            margin-top: 15px;
+            font-size: 12pt;
+            color: #555;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 12pt;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px 15px;
+            text-align: center;
+        }
+        th {
+            background: #e8e8e8;
+            font-weight: bold;
+        }
+        .diagram-container {
+            background: #fff;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        .diagram-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14pt;
+        }
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 11pt;
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .architecture-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .arch-level {
+            width: 90%;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .arch-level-title {
+            font-weight: bold;
+            font-size: 14pt;
+            margin-bottom: 15px;
+            background: #333;
+            color: #fff;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .arch-components {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .arch-component {
+            background: #e8f4e8;
+            border: 1px solid #4a7c4a;
+            border-radius: 8px;
+            padding: 15px 25px;
+            min-width: 150px;
+        }
+        .arch-arrow {
+            font-size: 24pt;
+            color: #333;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 50px;
+            border-top: 3px double #333;
+            padding-top: 30px;
+        }
+        .note {
+            font-style: italic;
+            font-size: 11pt;
+            color: #666;
+            margin-top: 10px;
+        }
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>ФОРМУЛИ ТА ДІАГРАМИ ДО РОЗДІЛУ 2</h1>
+<p style="text-align: center; margin-bottom: 40px;">Магістерська кваліфікаційна робота<br>«Розробка алгоритму побудови туристичних кластерів регіону з використанням ГІС»</p>
+
+<!-- ===================== ФОРМУЛИ ===================== -->
+
+<h2>ФОРМУЛИ</h2>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.1 — Множина туристичних об'єктів</div>
+    <div style="font-size: 18pt;">
+        \[ D = \{o_1, o_2, \ldots, o_n\} \]
+    </div>
+    <div class="formula-description">де \(n\) — загальна кількість туристичних об'єктів.</div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.2 — Вектор ознак туристичного об'єкта</div>
+    <div style="font-size: 18pt;">
+        \[ o_i = (lat_i, lon_i, cat_i, r_i, a_{i1}, a_{i2}, \ldots, a_{im}) \]
+    </div>
+    <div class="formula-description">
+        де \(lat_i\) — географічна широта; \(lon_i\) — географічна довгота; \(cat_i\) — категорія об'єкта; \(r_i\) — рейтинг; \(a_{i1}, \ldots, a_{im}\) — додаткові атрибути.
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.3 — Цільова функція алгоритму K-means</div>
+    <div style="font-size: 18pt;">
+        \[ J = \sum_{j=1}^{k} \sum_{o_i \in C_j} \|o_i - \mu_j\|^2 \]
+    </div>
+    <div class="formula-description">де \(\mu_j\) — центроїд кластера \(C_j\); \(k\) — кількість кластерів.</div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.4 — Обчислення центроїда кластера</div>
+    <div style="font-size: 18pt;">
+        \[ \mu_j = \frac{1}{|C_j|} \sum_{o_i \in C_j} o_i \]
+    </div>
+    <div class="formula-description">де \(|C_j|\) — кількість об'єктів у кластері \(C_j\).</div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.5 — Індекс силуету (Silhouette Score)</div>
+    <div style="font-size: 18pt;">
+        \[ s(o_i) = \frac{b(o_i) - a(o_i)}{\max\{a(o_i), b(o_i)\}} \]
+    </div>
+    <div class="formula-description">
+        де \(a(o_i)\) — середня відстань від об'єкта до об'єктів того самого кластера;<br>
+        \(b(o_i)\) — мінімальна середня відстань до об'єктів іншого кластера.<br>
+        Діапазон значень: від −1 до 1.
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.6 — Індекс Девіса-Болдіна (Davies-Bouldin Index)</div>
+    <div style="font-size: 18pt;">
+        \[ DBI = \frac{1}{k} \sum_{i=1}^{k} \max_{j \neq i} \left\{ \frac{\sigma_i + \sigma_j}{d(\mu_i, \mu_j)} \right\} \]
+    </div>
+    <div class="formula-description">
+        де \(\sigma_i\) — середня відстань від об'єктів кластера \(i\) до центроїда;<br>
+        \(d(\mu_i, \mu_j)\) — відстань між центроїдами кластерів \(i\) та \(j\).<br>
+        Менші значення → краща якість.
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.7 — Індекс Калінського-Харабаша (Calinski-Harabasz Index)</div>
+    <div style="font-size: 18pt;">
+        \[ CH = \frac{tr(B_k) / (k-1)}{tr(W_k) / (n-k)} \]
+    </div>
+    <div class="formula-description">
+        де \(tr(B_k)\) — слід матриці міжкластерної дисперсії;<br>
+        \(tr(W_k)\) — слід матриці внутрішньокластерної дисперсії;<br>
+        \(k\) — кількість кластерів; \(n\) — кількість об'єктів.<br>
+        Більші значення → краща якість.
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.8 — Призначення об'єктів до кластерів</div>
+    <div style="font-size: 18pt;">
+        \[ C_j^{(t)} = \{o_i : \|o_i - \mu_j^{(t)}\| \leq \|o_i - \mu_l^{(t)}\| \text{ для всіх } l = 1, \ldots, k\} \]
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.9 — Оновлення центроїдів</div>
+    <div style="font-size: 18pt;">
+        \[ \mu_j^{(t+1)} = \frac{1}{|C_j^{(t)}|} \sum_{o_i \in C_j^{(t)}} o_i \]
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.10 — Критерій збіжності</div>
+    <div style="font-size: 18pt;">
+        \[ \|\mu_j^{(t+1)} - \mu_j^{(t)}\| < \varepsilon \text{ для всіх } j = 1, \ldots, k \]
+    </div>
+    <div class="formula-description">де \(\varepsilon\) — поріг збіжності (зазвичай \(10^{-4}\)).</div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формули 2.11–2.12 — Z-score нормалізація координат</div>
+    <div style="font-size: 18pt;">
+        \[ lat_{norm} = \frac{lat - \mu_{lat}}{\sigma_{lat}} \]
+        \[ lon_{norm} = \frac{lon - \mu_{lon}}{\sigma_{lon}} \]
+    </div>
+    <div class="formula-description">
+        де \(\mu_{lat}, \mu_{lon}\) — середні значення широти та довготи;<br>
+        \(\sigma_{lat}, \sigma_{lon}\) — стандартні відхилення.
+    </div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.13 — Нормалізація рейтингу</div>
+    <div style="font-size: 18pt;">
+        \[ r_{norm} = \frac{r - 1}{4} \]
+    </div>
+    <div class="formula-description">де \(r\) — рейтинг за шкалою від 1 до 5.</div>
+</div>
+
+<div class="formula-block">
+    <div class="formula-title">Формула 2.14 — Інерція (для методу ліктя)</div>
+    <div style="font-size: 18pt;">
+        \[ Inertia(k) = \sum_{j=1}^{k} \sum_{o_i \in C_j} \|o_i - \mu_j\|^2 \]
+    </div>
+</div>
+
+
+<!-- ===================== ТАБЛИЦЯ ===================== -->
+
+<div class="page-break">
+<h2>ТАБЛИЦЯ</h2>
+
+<h3>Таблиця 2.1 — Порівняльний аналіз алгоритмів кластеризації</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Критерій</th>
+            <th>K-means</th>
+            <th>DBSCAN</th>
+            <th>Агломеративна</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Обчислювальна складність</strong></td>
+            <td>O(n×k×i)</td>
+            <td>O(n²)</td>
+            <td>O(n³)</td>
+        </tr>
+        <tr>
+            <td><strong>Необхідність задання k</strong></td>
+            <td>Так</td>
+            <td>Ні</td>
+            <td>Так</td>
+        </tr>
+        <tr>
+            <td><strong>Форма кластерів</strong></td>
+            <td>Сферична</td>
+            <td>Довільна</td>
+            <td>Довільна</td>
+        </tr>
+        <tr>
+            <td><strong>Робота з шумом</strong></td>
+            <td>Погана</td>
+            <td>Відмінна</td>
+            <td>Задовільна</td>
+        </tr>
+        <tr>
+            <td><strong>Масштабованість</strong></td>
+            <td>Висока</td>
+            <td>Середня</td>
+            <td>Низька</td>
+        </tr>
+        <tr>
+            <td><strong>Інтерпретованість</strong></td>
+            <td>Висока</td>
+            <td>Середня</td>
+            <td>Висока</td>
+        </tr>
+        <tr>
+            <td><strong>Стабільність результатів</strong></td>
+            <td>Залежить від ініціалізації</td>
+            <td>Висока</td>
+            <td>Висока</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="note">Примітка: n — кількість об'єктів, k — кількість кластерів, i — кількість ітерацій</p>
+</div>
+
+
+<!-- ===================== ДІАГРАМИ ===================== -->
+
+<div class="page-break">
+<h2>ДІАГРАМИ ТА СХЕМИ</h2>
+
+<h3>Рисунок 2.1 — Схема загальної архітектури системи</h3>
+
+<div class="diagram-container">
+    <div class="architecture-diagram">
+        <!-- Рівень представлення -->
+        <div class="arch-level" style="background: #e8f4fc; border-color: #2196F3;">
+            <div class="arch-level-title" style="background: #2196F3;">РІВЕНЬ ПРЕДСТАВЛЕННЯ</div>
+            <div class="arch-components">
+                <div class="arch-component" style="background: #bbdefb; border-color: #1976D2;">
+                    <strong>React 18</strong><br>
+                    <small>Frontend</small>
+                </div>
+                <div class="arch-component" style="background: #bbdefb; border-color: #1976D2;">
+                    <strong>Leaflet.js</strong><br>
+                    <small>Карти</small>
+                </div>
+                <div class="arch-component" style="background: #bbdefb; border-color: #1976D2;">
+                    <strong>Chart.js</strong><br>
+                    <small>Діаграми</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arch-arrow">▼ REST API</div>
+        
+        <!-- Рівень обробки -->
+        <div class="arch-level" style="background: #e8f5e9; border-color: #4CAF50;">
+            <div class="arch-level-title" style="background: #4CAF50;">РІВЕНЬ ОБРОБКИ</div>
+            <div class="arch-components">
+                <div class="arch-component" style="background: #c8e6c9; border-color: #388E3C;">
+                    <strong>FastAPI</strong><br>
+                    <small>Backend</small>
+                </div>
+                <div class="arch-component" style="background: #c8e6c9; border-color: #388E3C;">
+                    <strong>Scikit-learn</strong><br>
+                    <small>Кластеризація</small>
+                </div>
+                <div class="arch-component" style="background: #c8e6c9; border-color: #388E3C;">
+                    <strong>GeoPandas</strong><br>
+                    <small>Геоаналіз</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="arch-arrow">▼ MongoDB Driver</div>
+        
+        <!-- Рівень даних -->
+        <div class="arch-level" style="background: #fff3e0; border-color: #FF9800;">
+            <div class="arch-level-title" style="background: #FF9800;">РІВЕНЬ ДАНИХ</div>
+            <div class="arch-components">
+                <div class="arch-component" style="background: #ffe0b2; border-color: #F57C00;">
+                    <strong>MongoDB</strong><br>
+                    <small>База даних</small>
+                </div>
+                <div class="arch-component" style="background: #ffe0b2; border-color: #F57C00;">
+                    <strong>GeoJSON</strong><br>
+                    <small>Межі районів</small>
+                </div>
+                <div class="arch-component" style="background: #ffe0b2; border-color: #F57C00;">
+                    <strong>Google API</strong><br>
+                    <small>Зовнішні дані</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="page-break">
+<h3>Рисунок 2.2 — Блок-схема алгоритму побудови туристичних кластерів</h3>
+
+<div class="diagram-container">
+<svg viewBox="0 0 600 1100" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 600px; margin: 0 auto; display: block;">
+    <!-- Стилі -->
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+        </marker>
+    </defs>
+    
+    <!-- ПОЧАТОК -->
+    <ellipse cx="300" cy="30" rx="60" ry="25" fill="#90EE90" stroke="#333" stroke-width="2"/>
+    <text x="300" y="35" text-anchor="middle" font-size="14" font-weight="bold">ПОЧАТОК</text>
+    
+    <line x1="300" y1="55" x2="300" y2="80" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Завантаження даних -->
+    <rect x="100" y="90" width="400" height="60" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="115" text-anchor="middle" font-size="12" font-weight="bold">Завантаження даних з MongoDB</text>
+    <text x="300" y="135" text-anchor="middle" font-size="11">D = {o₁, o₂, ..., oₙ}</text>
+    
+    <line x1="300" y1="150" x2="300" y2="175" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Попередня обробка -->
+    <rect x="100" y="185" width="400" height="80" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="210" text-anchor="middle" font-size="12" font-weight="bold">Попередня обробка даних</text>
+    <text x="300" y="230" text-anchor="middle" font-size="10">• Видалення аномалій</text>
+    <text x="300" y="245" text-anchor="middle" font-size="10">• Нормалізація координат</text>
+    <text x="300" y="260" text-anchor="middle" font-size="10">• Кодування категорій</text>
+    
+    <line x1="300" y1="265" x2="300" y2="290" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Визначення K -->
+    <rect x="100" y="300" width="400" height="50" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="320" text-anchor="middle" font-size="12" font-weight="bold">Визначення оптимального K</text>
+    <text x="300" y="340" text-anchor="middle" font-size="10">(метод ліктя + Silhouette Score)</text>
+    
+    <line x1="300" y1="350" x2="300" y2="375" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Ініціалізація -->
+    <rect x="100" y="385" width="400" height="50" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="405" text-anchor="middle" font-size="12" font-weight="bold">Ініціалізація K центроїдів</text>
+    <text x="300" y="425" text-anchor="middle" font-size="10">(метод K-means++)</text>
+    
+    <line x1="300" y1="435" x2="300" y2="460" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Призначення -->
+    <rect x="100" y="470" width="400" height="60" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="495" text-anchor="middle" font-size="12" font-weight="bold">Призначення об'єктів до кластерів</text>
+    <text x="300" y="515" text-anchor="middle" font-size="10">за мінімальною відстанню до центроїда</text>
+    
+    <line x1="300" y1="530" x2="300" y2="555" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Перерахунок -->
+    <rect x="100" y="565" width="400" height="50" fill="#87CEEB" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="585" text-anchor="middle" font-size="12" font-weight="bold">Перерахунок центроїдів</text>
+    <text x="300" y="605" text-anchor="middle" font-size="10">μⱼ = (1/|Cⱼ|) × Σ oᵢ</text>
+    
+    <line x1="300" y1="615" x2="300" y2="645" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Ромб - перевірка збіжності -->
+    <polygon points="300,655 400,710 300,765 200,710" fill="#FFEB3B" stroke="#333" stroke-width="2"/>
+    <text x="300" y="700" text-anchor="middle" font-size="11" font-weight="bold">Збіжність?</text>
+    <text x="300" y="720" text-anchor="middle" font-size="10">||Δμ|| &lt; ε</text>
+    
+    <!-- НІ - повернення -->
+    <text x="145" y="705" font-size="12" font-weight="bold">НІ</text>
+    <line x1="200" y1="710" x2="70" y2="710" stroke="#333" stroke-width="2"/>
+    <line x1="70" y1="710" x2="70" y2="500" stroke="#333" stroke-width="2"/>
+    <line x1="70" y1="500" x2="100" y2="500" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- ТАК -->
+    <text x="310" y="785" font-size="12" font-weight="bold">ТАК</text>
+    <line x1="300" y1="765" x2="300" y2="810" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Обчислення метрик -->
+    <rect x="100" y="820" width="400" height="50" fill="#98FB98" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="840" text-anchor="middle" font-size="12" font-weight="bold">Обчислення метрик якості</text>
+    <text x="300" y="860" text-anchor="middle" font-size="10">Silhouette, DBI, CH Index</text>
+    
+    <line x1="300" y1="870" x2="300" y2="895" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Формування результатів -->
+    <rect x="100" y="905" width="400" height="70" fill="#98FB98" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="925" text-anchor="middle" font-size="12" font-weight="bold">Формування результатів</text>
+    <text x="300" y="945" text-anchor="middle" font-size="10">• Список кластерів C = {C₁, ..., Cₖ}</text>
+    <text x="300" y="960" text-anchor="middle" font-size="10">• Координати центроїдів • Статистика</text>
+    
+    <line x1="300" y1="975" x2="300" y2="1000" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- Збереження -->
+    <rect x="100" y="1010" width="400" height="40" fill="#98FB98" stroke="#333" stroke-width="2" rx="5"/>
+    <text x="300" y="1035" text-anchor="middle" font-size="12" font-weight="bold">Збереження в БД та GeoJSON</text>
+    
+    <line x1="300" y1="1050" x2="300" y2="1075" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+    
+    <!-- КІНЕЦЬ -->
+    <ellipse cx="300" cy="1095" rx="60" ry="25" fill="#FFB6C1" stroke="#333" stroke-width="2"/>
+    <text x="300" y="1100" text-anchor="middle" font-size="14" font-weight="bold">КІНЕЦЬ</text>
+</svg>
+</div>
+</div>
+
+
+<div class="page-break">
+<h3>Рисунок 2.3 — UML-діаграма класів системи кластеризації</h3>
+
+<div class="diagram-container">
+<svg viewBox="0 0 700 750" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 700px; margin: 0 auto; display: block;">
+    
+    <!-- TouristObject -->
+    <rect x="220" y="20" width="260" height="200" fill="#fff" stroke="#333" stroke-width="2"/>
+    <rect x="220" y="20" width="260" height="30" fill="#d4edda" stroke="#333" stroke-width="2"/>
+    <text x="350" y="42" text-anchor="middle" font-size="14" font-weight="bold">TouristObject</text>
+    
+    <line x1="220" y1="50" x2="480" y2="50" stroke="#333" stroke-width="1"/>
+    <text x="230" y="70" font-size="11">- id: string</text>
+    <text x="230" y="85" font-size="11">- name: string</text>
+    <text x="230" y="100" font-size="11">- latitude: float</text>
+    <text x="230" y="115" font-size="11">- longitude: float</text>
+    <text x="230" y="130" font-size="11">- category: string</text>
+    <text x="230" y="145" font-size="11">- rating: float</text>
+    <text x="230" y="160" font-size="11">- district: string</text>
+    <text x="230" y="175" font-size="11">- attributes: dict</text>
+    
+    <line x1="220" y1="185" x2="480" y2="185" stroke="#333" stroke-width="1"/>
+    <text x="230" y="202" font-size="11">+ get_coordinates(): tuple</text>
+    <text x="230" y="215" font-size="11">+ get_feature_vector(): array</text>
+    
+    <!-- Стрілка від TouristObject до Cluster -->
+    <line x1="350" y1="220" x2="350" y2="280" stroke="#333" stroke-width="2"/>
+    <text x="360" y="250" font-size="10">1..*</text>
+    <polygon points="350,280 345,270 355,270" fill="#333"/>
+    
+    <!-- Cluster -->
+    <rect x="220" y="290" width="260" height="160" fill="#fff" stroke="#333" stroke-width="2"/>
+    <rect x="220" y="290" width="260" height="30" fill="#cce5ff" stroke="#333" stroke-width="2"/>
+    <text x="350" y="312" text-anchor="middle" font-size="14" font-weight="bold">Cluster</text>
+    
+    <line x1="220" y1="320" x2="480" y2="320" stroke="#333" stroke-width="1"/>
+    <text x="230" y="340" font-size="11">- id: int</text>
+    <text x="230" y="355" font-size="11">- centroid: tuple</text>
+    <text x="230" y="370" font-size="11">- objects: List[TouristObject]</text>
+    <text x="230" y="385" font-size="11">- label: string</text>
+    
+    <line x1="220" y1="395" x2="480" y2="395" stroke="#333" stroke-width="1"/>
+    <text x="230" y="412" font-size="11">+ add_object(obj): void</text>
+    <text x="230" y="427" font-size="11">+ calculate_centroid(): tuple</text>
+    <text x="230" y="442" font-size="11">+ get_statistics(): dict</text>
+    
+    <!-- Стрілка від Cluster до ClusteringEngine -->
+    <line x1="350" y1="450" x2="350" y2="510" stroke="#333" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="360" y="480" font-size="10">uses</text>
+    <polygon points="350,510 345,500 355,500" fill="#333"/>
+    
+    <!-- ClusteringEngine -->
+    <rect x="220" y="520" width="260" height="180" fill="#fff" stroke="#333" stroke-width="2"/>
+    <rect x="220" y="520" width="260" height="30" fill="#f8d7da" stroke="#333" stroke-width="2"/>
+    <text x="350" y="542" text-anchor="middle" font-size="14" font-weight="bold">ClusteringEngine</text>
+    
+    <line x1="220" y1="550" x2="480" y2="550" stroke="#333" stroke-width="1"/>
+    <text x="230" y="570" font-size="11">- data: DataFrame</text>
+    <text x="230" y="585" font-size="11">- n_clusters: int</text>
+    <text x="230" y="600" font-size="11">- max_iterations: int</text>
+    <text x="230" y="615" font-size="11">- tolerance: float</text>
+    <text x="230" y="630" font-size="11">- random_state: int</text>
+    
+    <line x1="220" y1="640" x2="480" y2="640" stroke="#333" stroke-width="1"/>
+    <text x="230" y="657" font-size="11">+ fit(data): self</text>
+    <text x="230" y="672" font-size="11">+ predict(data): array</text>
+    <text x="230" y="687" font-size="11">+ find_optimal_k(k_range): int</text>
+    <text x="230" y="702" font-size="11">+ calculate_metrics(): dict</text>
+    
+    <!-- GeoAnalyzer (справа) -->
+    <rect x="520" y="520" width="170" height="140" fill="#fff" stroke="#333" stroke-width="2"/>
+    <rect x="520" y="520" width="170" height="30" fill="#fff3cd" stroke="#333" stroke-width="2"/>
+    <text x="605" y="542" text-anchor="middle" font-size="14" font-weight="bold">GeoAnalyzer</text>
+    
+    <line x1="520" y1="550" x2="690" y2="550" stroke="#333" stroke-width="1"/>
+    <text x="530" y="570" font-size="11">- geojson_data: dict</text>
+    <text x="530" y="585" font-size="11">- crs: string</text>
+    
+    <line x1="520" y1="595" x2="690" y2="595" stroke="#333" stroke-width="1"/>
+    <text x="530" y="615" font-size="11">+ load_boundaries()</text>
+    <text x="530" y="630" font-size="11">+ calculate_density()</text>
+    <text x="530" y="645" font-size="11">+ get_district_stats()</text>
+    
+    <!-- Стрілка від ClusteringEngine до GeoAnalyzer -->
+    <line x1="480" y1="590" x2="520" y2="590" stroke="#333" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="485" y="580" font-size="10">depends on</text>
+    <polygon points="520,590 510,585 510,595" fill="#333"/>
+    
+</svg>
+</div>
+</div>
+
+<div style="margin-top: 50px; text-align: center; font-size: 12pt; color: #666;">
+    <p>Для збереження формул та діаграм як зображень:</p>
+    <p>1. Відкрийте цю сторінку в браузері</p>
+    <p>2. Використайте Ctrl+P → Зберегти як PDF</p>
+    <p>3. Або зробіть скріншот потрібного елемента</p>
+</div>
+
+</body>
+</html>
