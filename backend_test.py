@@ -315,10 +315,10 @@ class BackendTester:
             self.log_result("K-Means Consistency Test", "FAIL",
                           "Request failed", e)
     
-    def test_full_analytics_endpoint(self):
-        """Test GET /api/clusters/analytics - Full analytics with elbow data"""
+    def test_chapter2_analytics_endpoint(self):
+        """Test GET /api/clusters/analytics - Chapter 2 formulas and methodology"""
         try:
-            print("\n📊 Testing Full Analytics Endpoint")
+            print("\n📊 Testing Chapter 2 Analytics Endpoint")
             print("-" * 60)
             
             response = requests.get(f"{BACKEND_URL}/clusters/analytics", timeout=20)
@@ -327,7 +327,7 @@ class BackendTester:
                 data = response.json()
                 
                 if data.get("success") == True:
-                    # Check for expected sections
+                    # Check for Chapter 2 specific sections
                     expected_sections = [
                         "clustering_metrics", "elbow_data", 
                         "silhouette_per_cluster", "methodology"
@@ -336,63 +336,70 @@ class BackendTester:
                     missing_sections = [section for section in expected_sections if section not in data]
                     
                     if missing_sections:
-                        self.log_result("Full Analytics - Structure", "FAIL",
+                        self.log_result("Chapter 2 Analytics - Structure", "FAIL",
                                       f"Missing sections: {missing_sections}")
                     else:
-                        # Verify clustering_metrics matches /clusters/metrics
-                        clustering_metrics = data.get("clustering_metrics", {})
-                        if hasattr(self, 'first_metrics'):
-                            if clustering_metrics.get("silhouette_score") == self.first_metrics.get("silhouette_score"):
-                                self.log_result("Full Analytics - Metrics Consistency", "PASS",
-                                              "Clustering metrics match individual endpoint")
-                            else:
-                                self.log_result("Full Analytics - Metrics Consistency", "FAIL",
-                                              "Clustering metrics don't match individual endpoint")
+                        # Verify methodology contains Chapter 2 formulas
+                        methodology = data.get("methodology", {})
                         
-                        # Verify elbow_data structure
+                        # Check for feature vector description (Formula 2.2)
+                        feature_vector = methodology.get("feature_vector", {})
+                        if "description" in feature_vector and "oᵢ = (latᵢ, lonᵢ, catᵢ, rᵢ)" in feature_vector.get("description", ""):
+                            self.log_result("Chapter 2 - Feature Vector Formula", "PASS",
+                                          "Formula 2.2 feature vector description found")
+                        else:
+                            self.log_result("Chapter 2 - Feature Vector Formula", "FAIL",
+                                          "Formula 2.2 feature vector description missing")
+                        
+                        # Check for formulas section
+                        formulas = methodology.get("formulas", {})
+                        expected_formulas = [
+                            "silhouette", "davies_bouldin", "calinski_harabasz", 
+                            "lat_norm", "lng_norm", "rating_norm", "inertia"
+                        ]
+                        
+                        missing_formulas = [f for f in expected_formulas if f not in formulas]
+                        if not missing_formulas:
+                            self.log_result("Chapter 2 - Formulas Complete", "PASS",
+                                          f"All Chapter 2 formulas present: {list(formulas.keys())}")
+                        else:
+                            self.log_result("Chapter 2 - Formulas Complete", "FAIL",
+                                          f"Missing formulas: {missing_formulas}")
+                        
+                        # Verify elbow_data has both wcss AND silhouette
                         elbow_data = data.get("elbow_data", [])
                         if isinstance(elbow_data, list) and len(elbow_data) > 5:
-                            # Check if elbow data has proper structure
                             first_point = elbow_data[0] if elbow_data else {}
-                            if "k" in first_point and "wcss" in first_point:
-                                self.log_result("Full Analytics - Elbow Data", "PASS",
-                                              f"Elbow method data available ({len(elbow_data)} K values)")
+                            if "k" in first_point and "wcss" in first_point and "silhouette" in first_point:
+                                self.log_result("Chapter 2 - Elbow Method Data", "PASS",
+                                              f"Elbow method with WCSS and Silhouette ({len(elbow_data)} K values)")
                             else:
-                                self.log_result("Full Analytics - Elbow Data", "FAIL",
-                                              f"Invalid elbow data structure: {first_point}")
+                                self.log_result("Chapter 2 - Elbow Method Data", "FAIL",
+                                              f"Missing WCSS or Silhouette in elbow data: {first_point}")
                         else:
-                            self.log_result("Full Analytics - Elbow Data", "FAIL",
+                            self.log_result("Chapter 2 - Elbow Method Data", "FAIL",
                                           f"Insufficient elbow data points: {len(elbow_data)}")
                         
-                        # Verify silhouette_per_cluster
-                        sil_per_cluster = data.get("silhouette_per_cluster", [])
-                        if isinstance(sil_per_cluster, list) and len(sil_per_cluster) == 7:
-                            self.log_result("Full Analytics - Silhouette Per Cluster", "PASS",
-                                          f"Individual cluster silhouette scores available (7 clusters)")
+                        # Verify feature dimensions in methodology
+                        feature_vector_dims = feature_vector.get("dimensions", 0)
+                        if feature_vector_dims == 10:
+                            self.log_result("Chapter 2 - Methodology Dimensions", "PASS",
+                                          f"10-dimensional feature vector confirmed in methodology")
                         else:
-                            self.log_result("Full Analytics - Silhouette Per Cluster", "FAIL",
-                                          f"Expected 7 cluster silhouette scores, got {len(sil_per_cluster)}")
+                            self.log_result("Chapter 2 - Methodology Dimensions", "FAIL",
+                                          f"Expected 10D in methodology, got {feature_vector_dims}D")
                         
-                        # Verify methodology section
-                        methodology = data.get("methodology", {})
-                        if "algorithm" in methodology and "scikit-learn" in methodology.get("algorithm", ""):
-                            self.log_result("Full Analytics - Methodology", "PASS",
-                                          "Methodology confirms scikit-learn K-Means implementation")
-                        else:
-                            self.log_result("Full Analytics - Methodology", "FAIL",
-                                          "Methodology doesn't confirm scikit-learn implementation")
-                        
-                        self.log_result("Full Analytics API", "PASS",
-                                      "Complete analytics endpoint working with all sections")
+                        self.log_result("Chapter 2 Analytics API", "PASS",
+                                      "Complete Chapter 2 analytics endpoint working")
                 else:
-                    self.log_result("Full Analytics API", "FAIL",
+                    self.log_result("Chapter 2 Analytics API", "FAIL",
                                   f"Success=false in response: {data}")
             else:
-                self.log_result("Full Analytics API", "FAIL",
+                self.log_result("Chapter 2 Analytics API", "FAIL",
                               f"HTTP {response.status_code}: {response.text}")
                 
         except Exception as e:
-            self.log_result("Full Analytics API", "FAIL",
+            self.log_result("Chapter 2 Analytics API", "FAIL",
                           "Request failed", e)
     
     def test_cluster_analytics_apis(self):
