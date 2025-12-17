@@ -311,9 +311,9 @@ const ProClusteringVisualization = () => {
                                   />
                                   {d.k === kValue && (
                                     <>
-                                      <line x1={`${x}%`} y1={`${y}%`} x2={`${x}%`} y2="5%" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5,5" />
-                                      <text x={`${x}%`} y="3%" textAnchor="middle" className="text-sm font-bold fill-amber-300">
-                                        ⬇ K=7 (WCSS={d.wcss})
+                                      <line x1={x} y1={y} x2={x} y2={5} stroke="#fbbf24" strokeWidth="0.5" strokeDasharray="2,2" vectorEffect="non-scaling-stroke" />
+                                      <text x={x} y={2} textAnchor="middle" fill="#fbbf24" fontSize="4">
+                                        K={d.k}
                                       </text>
                                     </>
                                   )}
