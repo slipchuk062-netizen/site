@@ -12,7 +12,7 @@ from datetime import datetime
 import sys
 
 # Backend URL from environment
-BACKEND_URL = "https://tourist-map.preview.emergentagent.com/api"
+BACKEND_URL = "https://zhytomyr-tourism.preview.emergentagent.com/api"
 ADMIN_PASSWORD = "zhytomyr2024admin"
 
 class BackendTester:
