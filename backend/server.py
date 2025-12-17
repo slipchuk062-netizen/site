@@ -1268,31 +1268,139 @@ async def get_clustering_metrics():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def calculate_elbow_data():
+    """
+    Розрахунок даних для методу ліктя (Elbow Method)
+    Визначає оптимальну кількість кластерів за зміною WCSS
+    """
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    import numpy as np
+    
+    # Збираємо координати
+    coordinates = []
+    for attraction in ATTRACTIONS_DATA:
+        coords = attraction.get('coordinates', {})
+        lat = coords.get('lat', 0)
+        lng = coords.get('lng', 0)
+        if lat != 0 and lng != 0:
+            coordinates.append([lat, lng])
+    
+    if len(coordinates) < 10:
+        return []
+    
+    X = np.array(coordinates)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    elbow_data = []
+    max_k = min(15, len(X_scaled) - 1)
+    
+    for k in range(2, max_k + 1):
+        kmeans = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
+        kmeans.fit(X_scaled)
+        elbow_data.append({
+            'k': k,
+            'wcss': round(float(kmeans.inertia_), 2)
+        })
+    
+    return elbow_data
+
+
+def calculate_silhouette_per_cluster():
+    """
+    Розрахунок Silhouette Score для кожного кластера окремо
+    """
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.metrics import silhouette_samples
+    import numpy as np
+    
+    # Збираємо координати
+    coordinates = []
+    for attraction in ATTRACTIONS_DATA:
+        coords = attraction.get('coordinates', {})
+        lat = coords.get('lat', 0)
+        lng = coords.get('lng', 0)
+        if lat != 0 and lng != 0:
+            coordinates.append([lat, lng])
+    
+    if len(coordinates) < 10:
+        return []
+    
+    X = np.array(coordinates)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    n_clusters = min(7, len(X_scaled) - 1)
+    kmeans = KMeans(n_clusters=n_clusters, init='k-means++', n_init=10, random_state=42)
+    labels = kmeans.fit_predict(X_scaled)
+    
+    # Обчислюємо silhouette для кожної точки
+    sample_silhouette_values = silhouette_samples(X_scaled, labels)
+    
+    cluster_silhouettes = []
+    for i in range(n_clusters):
+        cluster_mask = labels == i
+        cluster_scores = sample_silhouette_values[cluster_mask]
+        cluster_silhouettes.append({
+            'cluster': i,
+            'size': int(np.sum(cluster_mask)),
+            'avg_score': round(float(np.mean(cluster_scores)), 3),
+            'min_score': round(float(np.min(cluster_scores)), 3),
+            'max_score': round(float(np.max(cluster_scores)), 3),
+            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20]  # Top 20 для візуалізації
+        })
+    
+    return cluster_silhouettes
+
+
 @api_router.get("/clusters/analytics")
 async def get_full_analytics():
     """
     Повна аналітика кластеризації для магістерської роботи
+    Включає реальні розрахунки K-Means з scikit-learn
     """
     try:
+        clustering_metrics = calculate_clustering_metrics()
+        elbow_data = calculate_elbow_data()
+        silhouette_per_cluster = calculate_silhouette_per_cluster()
+        
         return {
             "success": True,
             "cluster_statistics": calculate_cluster_statistics(),
             "district_density": calculate_district_density(),
-            "clustering_metrics": calculate_clustering_metrics(),
+            "clustering_metrics": clustering_metrics,
+            "elbow_data": elbow_data,
+            "silhouette_per_cluster": silhouette_per_cluster,
             "methodology": {
-                "algorithm": "Комбінований підхід: K-means + Геопросторова кластеризація",
-                "description": "Тематична класифікація об'єктів з урахуванням географічного розподілу",
+                "algorithm": "K-Means кластеризація з scikit-learn",
+                "description": "Геопросторова кластеризація туристичних об'єктів на основі координат з використанням алгоритму K-Means",
+                "implementation_details": {
+                    "library": "scikit-learn (Python)",
+                    "initialization": "k-means++ (покращений вибір початкових центроїдів)",
+                    "n_init": 10,
+                    "max_iterations": 300,
+                    "preprocessing": "StandardScaler (нормалізація координат)"
+                },
                 "steps": [
-                    "1. Збір та очищення даних туристичних об'єктів",
-                    "2. Класифікація за тематичними категоріями",
-                    "3. Розрахунок щільності об'єктів по районах",
-                    "4. Визначення популярних зон методом heat mapping",
-                    "5. Оцінка якості кластеризації метриками Silhouette та Davies-Bouldin"
+                    "1. Збір координат туристичних об'єктів з бази даних",
+                    "2. Стандартизація даних (StandardScaler) для уникнення впливу масштабу",
+                    "3. Визначення оптимального K методом ліктя (Elbow Method)",
+                    "4. Виконання K-Means кластеризації з k-means++ ініціалізацією",
+                    "5. Обчислення метрик якості: Silhouette, Davies-Bouldin, Calinski-Harabasz",
+                    "6. Візуалізація результатів та аналіз розподілу по кластерах"
                 ],
                 "metrics_explanation": {
-                    "silhouette_score": "Оцінка згуртованості кластерів (0.65-0.85 - добре)",
-                    "davies_bouldin_index": "Індекс розподілу кластерів (< 1.0 - добре)",
-                    "density": "Кількість об'єктів на км² території району"
+                    "silhouette_score": "Оцінка згуртованості кластерів. Діапазон [-1, 1]. Значення > 0.5 вказує на хорошу кластеризацію, > 0.7 - відмінну.",
+                    "davies_bouldin_index": "Індекс розділення кластерів. Менші значення (< 1.0) означають кращу сепарацію між кластерами.",
+                    "calinski_harabasz_score": "Співвідношення дисперсії між кластерами до внутрішньої. Більші значення означають краще визначені кластери.",
+                    "wcss": "Within-Cluster Sum of Squares - сума квадратів відстаней від точок до їх центроїдів. Використовується для методу ліктя."
+                },
+                "formulas": {
+                    "silhouette": "s(i) = (b(i) - a(i)) / max(a(i), b(i)), де a(i) - середня відстань до точок свого кластера, b(i) - до найближчого іншого",
+                    "davies_bouldin": "DB = (1/k) * Σ max_{j≠i}((σ_i + σ_j) / d(c_i, c_j)), де σ - середня відстань до центроїда, d - відстань між центроїдами",
+                    "calinski_harabasz": "CH = (B_k / W_k) * (n - k) / (k - 1), де B_k - дисперсія між кластерами, W_k - всередині кластерів"
                 }
             }
         }
