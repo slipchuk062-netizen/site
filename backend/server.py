@@ -317,23 +317,89 @@ def calculate_district_density():
 
 def calculate_clustering_metrics():
     """
-    Розрахунок метрик кластеризації
-    Використовує принципи K-means та DBSCAN
+    Розрахунок метрик кластеризації з використанням реального K-Means алгоритму
+    та обчислення метрик якості: Silhouette Score, Davies-Bouldin Index, Calinski-Harabasz Score
     """
-    import random
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+    import numpy as np
     
-    # Метрики якості кластеризації
-    silhouette_score = random.uniform(0.65, 0.85)  # Чим ближче до 1, тим краще
-    davies_bouldin_index = random.uniform(0.4, 0.7)  # Чим менше, тим краще
-    calinski_harabasz_score = random.uniform(300, 500)  # Чим більше, тим краще
+    # Збираємо координати всіх об'єктів
+    coordinates = []
+    valid_attractions = []
+    
+    for attraction in ATTRACTIONS_DATA:
+        coords = attraction.get('coordinates', {})
+        lat = coords.get('lat', 0)
+        lng = coords.get('lng', 0)
+        
+        if lat != 0 and lng != 0:
+            coordinates.append([lat, lng])
+            valid_attractions.append(attraction)
+    
+    if len(coordinates) < 10:
+        # Недостатньо даних для кластеризації
+        return {
+            'silhouette_score': 0,
+            'davies_bouldin_index': 0,
+            'calinski_harabasz_score': 0,
+            'total_clusters': 0,
+            'total_objects': len(ATTRACTIONS_DATA),
+            'avg_objects_per_cluster': 0,
+            'error': 'Недостатньо даних для кластеризації'
+        }
+    
+    # Конвертуємо в numpy array
+    X = np.array(coordinates)
+    
+    # Стандартизація даних для кращих результатів
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    # K-Means кластеризація з K=7 (оптимальне значення для туристичних категорій)
+    n_clusters = min(7, len(X_scaled) - 1)  # Забезпечуємо достатню кількість точок
+    
+    kmeans = KMeans(
+        n_clusters=n_clusters,
+        init='k-means++',  # Покращена ініціалізація центроїдів
+        n_init=10,  # Кількість запусків з різними центроїдами
+        max_iter=300,  # Максимальна кількість ітерацій
+        random_state=42  # Для відтворюваності результатів
+    )
+    
+    # Виконуємо кластеризацію
+    labels = kmeans.fit_predict(X_scaled)
+    
+    # Обчислюємо реальні метрики якості кластеризації
+    
+    # Silhouette Score: вимірює наскільки схожі об'єкти на свій кластер порівняно з іншими
+    # Діапазон: [-1, 1], де 1 = ідеальна кластеризація
+    sil_score = silhouette_score(X_scaled, labels)
+    
+    # Davies-Bouldin Index: вимірює середню схожість між кластерами
+    # Чим менше значення, тим краща сепарація кластерів
+    db_index = davies_bouldin_score(X_scaled, labels)
+    
+    # Calinski-Harabasz Score (Variance Ratio Criterion): 
+    # співвідношення між дисперсією між кластерами та всередині кластерів
+    # Чим більше значення, тим краще визначені кластери
+    ch_score = calinski_harabasz_score(X_scaled, labels)
+    
+    # Обчислюємо WCSS (Within-Cluster Sum of Squares) для методу ліктя
+    wcss = kmeans.inertia_
     
     return {
-        'silhouette_score': round(silhouette_score, 3),
-        'davies_bouldin_index': round(davies_bouldin_index, 3),
-        'calinski_harabasz_score': round(calinski_harabasz_score, 2),
-        'total_clusters': 7,
+        'silhouette_score': round(float(sil_score), 3),
+        'davies_bouldin_index': round(float(db_index), 3),
+        'calinski_harabasz_score': round(float(ch_score), 2),
+        'wcss': round(float(wcss), 2),
+        'total_clusters': n_clusters,
         'total_objects': len(ATTRACTIONS_DATA),
-        'avg_objects_per_cluster': round(len(ATTRACTIONS_DATA) / 7, 2)
+        'valid_coordinates': len(valid_attractions),
+        'avg_objects_per_cluster': round(len(valid_attractions) / n_clusters, 2),
+        'cluster_centers': kmeans.cluster_centers_.tolist(),
+        'n_iterations': kmeans.n_iter_
     }
 
 
