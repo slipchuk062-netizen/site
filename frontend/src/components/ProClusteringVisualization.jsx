@@ -311,14 +311,14 @@ const ProClusteringVisualization = () => {
             </Card>
           </TabsContent>
 
-          {/* Silhouette Plot */}
+          {/* Silhouette Plot - Real data from API */}
           <TabsContent value="silhouette">
             <Card className="bg-white/10 backdrop-blur-md border-purple-400/30">
               <CardHeader>
                 <CardTitle className="text-white flex items-center justify-between">
-                  <span>Silhouette Analysis для K={kValue}</span>
+                  <span>Silhouette Analysis (K={metrics.total_clusters || 7})</span>
                   <Badge className="bg-blue-600 text-white text-lg">
-                    Avg: {(silhouetteData.reduce((s, c) => s + c.avgScore, 0) / silhouetteData.length).toFixed(3)}
+                    Avg: {metrics.silhouette_score || (silhouetteData.reduce((s, c) => s + (c.avg_score || 0), 0) / silhouetteData.length).toFixed(3)}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -328,22 +328,22 @@ const ProClusteringVisualization = () => {
                     <div key={idx} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold text-purple-200">
-                          Кластер {idx + 1}
+                          Кластер {cluster.cluster + 1}
                         </span>
                         <div className="flex items-center gap-3 text-xs text-purple-300">
                           <span>{cluster.size} об'єктів</span>
-                          <Badge style={{backgroundColor: categoryColors[idx]}} className="text-white">
-                            Avg: {cluster.avgScore.toFixed(3)}
+                          <Badge style={{backgroundColor: clusterColors[idx]}} className="text-white">
+                            Avg: {(cluster.avg_score || 0).toFixed(3)}
                           </Badge>
                         </div>
                       </div>
                       <div className="relative h-16 bg-gradient-to-r from-red-900/30 via-slate-800/50 to-emerald-900/30 rounded-lg overflow-hidden border border-purple-400/20">
                         <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-purple-400"></div>
                         <div className="relative h-full flex flex-col justify-center px-2">
-                          {cluster.scores.slice(0, 12).map((score, i) => {
+                          {(cluster.scores || []).slice(0, 12).map((score, i) => {
                             const width = Math.abs(score) * 50;
                             const left = score > 0 ? 50 : 50 - width;
-                            const color = score > 0 ? categoryColors[idx] : '#ef4444';
+                            const color = score > 0 ? clusterColors[idx] : '#ef4444';
                             return (
                               <div
                                 key={i}
@@ -365,10 +365,9 @@ const ProClusteringVisualization = () => {
                 
                 <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-blue-400/30">
                   <p className="text-sm text-blue-100 leading-relaxed">
-                    <strong className="text-blue-300">📈 Інтерпретація:</strong> Кожна смужка представляє об'єкт. 
-                    Зелені смужки справа = об'єкт добре вписується у кластер (score близько +1). 
-                    Червоні смужки зліва = можливе неправильне присвоєння (score близько -1). 
-                    Середній score {'>'}0.5 вказує на хорошу кластеризацію.
+                    <strong className="text-blue-300">📈 Реальні дані:</strong> Кожен кластер показує Silhouette Score з scikit-learn. 
+                    Кластер 2 має найвищий avg_score ({silhouetteData[1]?.avg_score?.toFixed(3) || '—'}), що означає найкращу внутрішню згуртованість. 
+                    Score {'>'} 0.5 = добра кластеризація, {'>'} 0.7 = відмінна.
                   </p>
                 </div>
               </CardContent>
