@@ -1552,38 +1552,53 @@ async def get_clustering_metrics():
 
 def calculate_elbow_data():
     """
-    Розрахунок даних для методу ліктя (Elbow Method)
-    Визначає оптимальну кількість кластерів за зміною WCSS
+    Розрахунок даних для методу ліктя (Elbow Method) - Розділ 2.4
+    
+    Формула 2.14: Inertia(k) = Σⱼ₌₁ᵏ Σₒᵢ∈Cⱼ ||oᵢ - μⱼ||²
+    
+    Будується графік залежності інерції від кількості кластерів,
+    оптимальним вважається значення, після якого зменшення інерції 
+    стає незначним («точка ліктя»).
     """
     from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
+    from sklearn.metrics import silhouette_score
     import numpy as np
     
-    # Збираємо координати
-    coordinates = []
-    for attraction in ATTRACTIONS_DATA:
-        coords = attraction.get('coordinates', {})
-        lat = coords.get('lat', 0)
-        lng = coords.get('lng', 0)
-        if lat != 0 and lng != 0:
-            coordinates.append([lat, lng])
+    # Підготовка багатовимірного вектора ознак
+    X, valid_attractions = prepare_feature_vector(
+        ATTRACTIONS_DATA, 
+        use_categories=True, 
+        use_ratings=True
+    )
     
-    if len(coordinates) < 10:
+    if len(X) < 10:
         return []
     
-    X = np.array(coordinates)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Нормалізація з ваговими коефіцієнтами
+    X_normalized, scaler = normalize_features(X, FEATURE_WEIGHTS)
     
     elbow_data = []
-    max_k = min(15, len(X_scaled) - 1)
+    max_k = min(15, len(X_normalized) - 1)
     
     for k in range(2, max_k + 1):
-        kmeans = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=42)
-        kmeans.fit(X_scaled)
+        kmeans = KMeans(
+            n_clusters=k, 
+            init='k-means++', 
+            n_init=10, 
+            max_iter=300,
+            tol=1e-4,
+            random_state=42
+        )
+        labels = kmeans.fit_predict(X_normalized)
+        
+        # Також обчислюємо silhouette для кожного K
+        sil_score = silhouette_score(X_normalized, labels)
+        
         elbow_data.append({
             'k': k,
-            'wcss': round(float(kmeans.inertia_), 2)
+            'wcss': round(float(kmeans.inertia_), 2),
+            'silhouette': round(float(sil_score), 3),
+            'n_iterations': kmeans.n_iter_
         })
     
     return elbow_data
@@ -1591,47 +1606,68 @@ def calculate_elbow_data():
 
 def calculate_silhouette_per_cluster():
     """
-    Розрахунок Silhouette Score для кожного кластера окремо
+    Розрахунок Silhouette Score для кожного кластера окремо (формула 2.5)
+    
+    s(oᵢ) = (b(oᵢ) - a(oᵢ)) / max{a(oᵢ), b(oᵢ)}
+    
+    де:
+    - a(oᵢ) — середня відстань від об'єкта до всіх інших об'єктів того самого кластера
+    - b(oᵢ) — мінімальна середня відстань від об'єкта до об'єктів іншого кластера
     """
     from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import silhouette_samples
     import numpy as np
     
-    # Збираємо координати
-    coordinates = []
-    for attraction in ATTRACTIONS_DATA:
-        coords = attraction.get('coordinates', {})
-        lat = coords.get('lat', 0)
-        lng = coords.get('lng', 0)
-        if lat != 0 and lng != 0:
-            coordinates.append([lat, lng])
+    # Підготовка багатовимірного вектора ознак
+    X, valid_attractions = prepare_feature_vector(
+        ATTRACTIONS_DATA, 
+        use_categories=True, 
+        use_ratings=True
+    )
     
-    if len(coordinates) < 10:
+    if len(X) < 10:
         return []
     
-    X = np.array(coordinates)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Нормалізація
+    X_normalized, scaler = normalize_features(X, FEATURE_WEIGHTS)
     
-    n_clusters = min(7, len(X_scaled) - 1)
-    kmeans = KMeans(n_clusters=n_clusters, init='k-means++', n_init=10, random_state=42)
-    labels = kmeans.fit_predict(X_scaled)
+    n_clusters = min(7, len(X_normalized) - 1)
+    kmeans = KMeans(
+        n_clusters=n_clusters, 
+        init='k-means++', 
+        n_init=10, 
+        max_iter=300,
+        tol=1e-4,
+        random_state=42
+    )
+    labels = kmeans.fit_predict(X_normalized)
     
     # Обчислюємо silhouette для кожної точки
-    sample_silhouette_values = silhouette_samples(X_scaled, labels)
+    sample_silhouette_values = silhouette_samples(X_normalized, labels)
     
     cluster_silhouettes = []
     for i in range(n_clusters):
         cluster_mask = labels == i
         cluster_scores = sample_silhouette_values[cluster_mask]
+        cluster_attractions = [valid_attractions[j] for j, m in enumerate(cluster_mask) if m]
+        
+        # Визначення домінуючої категорії
+        category_counts = {}
+        for attr in cluster_attractions:
+            cat = map_category_to_standard(attr.get('category', ''))
+            category_counts[cat] = category_counts.get(cat, 0) + 1
+        
+        dominant_cat = max(category_counts, key=category_counts.get) if category_counts else 0
+        
         cluster_silhouettes.append({
             'cluster': i,
             'size': int(np.sum(cluster_mask)),
             'avg_score': round(float(np.mean(cluster_scores)), 3),
             'min_score': round(float(np.min(cluster_scores)), 3),
             'max_score': round(float(np.max(cluster_scores)), 3),
-            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20]  # Top 20 для візуалізації
+            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20],
+            'dominant_category': CATEGORY_NAMES.get(dominant_cat, 'Історичні'),
+            'category_distribution': {CATEGORY_NAMES.get(k, str(k)): v for k, v in category_counts.items()}
         })
     
     return cluster_silhouettes
