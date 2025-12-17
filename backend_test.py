@@ -459,17 +459,23 @@ class BackendTester:
         """Run all backend tests"""
         print("🚀 Starting Comprehensive Backend Testing for Zhytomyr Tourism Website")
         print(f"Backend URL: {BACKEND_URL}")
+        print("🎯 FOCUS: Testing REAL K-Means Clustering Implementation (scikit-learn)")
         print("=" * 80)
         
         # Core functionality tests
         self.test_backend_health()
         
-        # High priority tests from review request
+        # HIGH PRIORITY: K-Means Clustering Tests (Review Request Focus)
+        self.test_kmeans_clustering_metrics()
+        self.test_kmeans_consistency()
+        self.test_full_analytics_endpoint()
+        
+        # Additional analytics tests
+        self.test_cluster_analytics_apis()
+        
+        # Other API tests
         self.test_data_upload_api()
         self.test_google_places_api()
-        
-        # Additional API tests
-        self.test_cluster_analytics_apis()
         self.test_contact_form_api()
         self.test_chat_api()
         
