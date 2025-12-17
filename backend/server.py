@@ -1385,49 +1385,79 @@ async def get_visit_statistics():
 
 def calculate_clustering_for_k(k_value: int):
     """
-    Розрахунок метрик кластеризації для заданого значення K
+    БАГАТОВИМІРНА кластеризація для заданого значення K
+    згідно з Розділом 2 магістерської роботи.
+    
+    Вектор ознак (формула 2.2): oᵢ = (latᵢ, lonᵢ, catᵢ, rᵢ)
     """
     from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score, silhouette_samples
     import numpy as np
     
-    coordinates = []
-    for attraction in ATTRACTIONS_DATA:
-        coords = attraction.get('coordinates', {})
-        lat = coords.get('lat', 0)
-        lng = coords.get('lng', 0)
-        if lat != 0 and lng != 0:
-            coordinates.append([lat, lng])
+    # Етап 1: Підготовка багатовимірного вектора ознак
+    X, valid_attractions = prepare_feature_vector(
+        ATTRACTIONS_DATA, 
+        use_categories=True, 
+        use_ratings=True
+    )
     
-    if len(coordinates) < k_value + 1:
+    if len(X) < k_value + 1:
         return None
     
-    X = np.array(coordinates)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Етап 2: Нормалізація з ваговими коефіцієнтами
+    X_normalized, scaler = normalize_features(X, FEATURE_WEIGHTS)
     
-    kmeans = KMeans(n_clusters=k_value, init='k-means++', n_init=10, max_iter=300, random_state=42)
-    labels = kmeans.fit_predict(X_scaled)
+    # Етап 3: K-Means++ кластеризація
+    kmeans = KMeans(
+        n_clusters=k_value, 
+        init='k-means++', 
+        n_init=10, 
+        max_iter=300, 
+        tol=1e-4,  # Критерій збіжності (формула 2.10)
+        random_state=42
+    )
+    labels = kmeans.fit_predict(X_normalized)
     
-    sil_score = silhouette_score(X_scaled, labels)
-    db_index = davies_bouldin_score(X_scaled, labels)
-    ch_score = calinski_harabasz_score(X_scaled, labels)
+    # Етап 4: Метрики якості
+    sil_score = silhouette_score(X_normalized, labels)
+    db_index = davies_bouldin_score(X_normalized, labels)
+    ch_score = calinski_harabasz_score(X_normalized, labels)
     
-    # Silhouette per cluster
-    sample_silhouette_values = silhouette_samples(X_scaled, labels)
+    # Silhouette per cluster з інформацією про категорії
+    sample_silhouette_values = silhouette_samples(X_normalized, labels)
     cluster_silhouettes = []
+    
     for i in range(k_value):
         cluster_mask = labels == i
         cluster_scores = sample_silhouette_values[cluster_mask]
+        cluster_attractions = [valid_attractions[j] for j, m in enumerate(cluster_mask) if m]
+        
+        # Визначення домінуючої категорії кластера
+        category_counts = {}
+        for attr in cluster_attractions:
+            cat = map_category_to_standard(attr.get('category', ''))
+            category_counts[cat] = category_counts.get(cat, 0) + 1
+        
+        dominant_cat = max(category_counts, key=category_counts.get) if category_counts else 0
+        
+        # Середній рейтинг кластера
+        ratings = [attr.get('rating', 3.0) or 3.0 for attr in cluster_attractions]
+        avg_rating = sum(ratings) / len(ratings) if ratings else 0
+        
         cluster_silhouettes.append({
             'cluster': i,
             'size': int(np.sum(cluster_mask)),
             'avg_score': round(float(np.mean(cluster_scores)), 3),
             'min_score': round(float(np.min(cluster_scores)), 3),
             'max_score': round(float(np.max(cluster_scores)), 3),
-            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20]
+            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20],
+            'dominant_category': CATEGORY_NAMES.get(dominant_cat, 'Історичні'),
+            'category_distribution': {CATEGORY_NAMES.get(k, str(k)): v for k, v in category_counts.items()},
+            'avg_rating': round(avg_rating, 2)
         })
+    
+    # Центроїди (тільки координати для візуалізації)
+    cluster_centers_coords = kmeans.cluster_centers_[:, 0:2].tolist()
     
     return {
         'k': k_value,
@@ -1437,11 +1467,13 @@ def calculate_clustering_for_k(k_value: int):
         'wcss': round(float(kmeans.inertia_), 2),
         'total_clusters': k_value,
         'total_objects': len(ATTRACTIONS_DATA),
-        'valid_coordinates': len(coordinates),
-        'avg_objects_per_cluster': round(len(coordinates) / k_value, 2),
-        'cluster_centers': kmeans.cluster_centers_.tolist(),
+        'valid_coordinates': len(valid_attractions),
+        'avg_objects_per_cluster': round(len(valid_attractions) / k_value, 2),
+        'cluster_centers': cluster_centers_coords,
         'n_iterations': kmeans.n_iter_,
-        'silhouette_per_cluster': cluster_silhouettes
+        'silhouette_per_cluster': cluster_silhouettes,
+        'feature_dimensions': X_normalized.shape[1],
+        'features_used': ['lat', 'lng', 'category_onehot(7)', 'rating_normalized']
     }
 
 
