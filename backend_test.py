@@ -503,10 +503,11 @@ class BackendTester:
         # Core functionality tests
         self.test_backend_health()
         
-        # HIGH PRIORITY: K-Means Clustering Tests (Review Request Focus)
-        self.test_kmeans_clustering_metrics()
+        # HIGH PRIORITY: Multidimensional K-Means Clustering Tests (Chapter 2 Focus)
+        self.test_multidimensional_kmeans_metrics()
         self.test_kmeans_consistency()
-        self.test_full_analytics_endpoint()
+        self.test_chapter2_analytics_endpoint()
+        self.test_dynamic_clustering_endpoints()
         
         # Additional analytics tests
         self.test_cluster_analytics_apis()
