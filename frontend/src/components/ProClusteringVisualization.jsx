@@ -270,7 +270,7 @@ const ProClusteringVisualization = () => {
                     ))}
                     
                     {/* Line */}
-                    <svg className="absolute inset-0 w-full h-full">
+                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                       <defs>
                         <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stopColor="#a855f7" />
@@ -287,11 +287,12 @@ const ProClusteringVisualization = () => {
                               points={elbowData.map((d, i) => {
                                 const x = (i / (elbowData.length - 1)) * 100;
                                 const y = 100 - ((d.wcss - minWcss) / range) * 90 - 5;
-                                return `${x}%,${y}%`;
+                                return `${x},${y}`;
                               }).join(' ')}
                               fill="none"
                               stroke="url(#lineGradient)"
-                              strokeWidth="4"
+                              strokeWidth="1"
+                              vectorEffect="non-scaling-stroke"
                               className="drop-shadow-2xl"
                             />
                             {elbowData.map((d, i) => {
@@ -300,14 +301,15 @@ const ProClusteringVisualization = () => {
                               return (
                                 <g key={i}>
                                   <circle
-                                    cx={`${x}%`}
-                                    cy={`${y}%`}
-                                    r={d.k === 7 ? "8" : "5"}
-                                    fill={d.k === 7 ? "#fbbf24" : "#a855f7"}
+                                    cx={x}
+                                    cy={y}
+                                    r={d.k === kValue ? 3 : 2}
+                                    fill={d.k === kValue ? "#fbbf24" : "#a855f7"}
                                     stroke="white"
-                                    strokeWidth="2"
+                                    strokeWidth="0.5"
+                                    vectorEffect="non-scaling-stroke"
                                   />
-                                  {d.k === 7 && (
+                                  {d.k === kValue && (
                                     <>
                                       <line x1={`${x}%`} y1={`${y}%`} x2={`${x}%`} y2="5%" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5,5" />
                                       <text x={`${x}%`} y="3%" textAnchor="middle" className="text-sm font-bold fill-amber-300">
