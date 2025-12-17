@@ -80,12 +80,14 @@ const ProClusteringVisualization = () => {
     size: 100
   }));
 
-  // Cluster colors for visualizations
-  const clusterLabels = ['Зона 1', 'Зона 2', 'Зона 3', 'Зона 4', 'Зона 5', 'Зона 6', 'Зона 7'];
-  const clusterColors = ['#f59e0b', '#10b981', '#8b5cf6', '#14b8a6', '#f43f5e', '#3b82f6', '#6366f1'];
+  // Cluster colors for visualizations - extended for up to 15 clusters
+  const clusterLabelsBase = ['Зона 1', 'Зона 2', 'Зона 3', 'Зона 4', 'Зона 5', 'Зона 6', 'Зона 7', 'Зона 8', 'Зона 9', 'Зона 10', 'Зона 11', 'Зона 12', 'Зона 13', 'Зона 14', 'Зона 15'];
+  const clusterColorsBase = ['#f59e0b', '#10b981', '#8b5cf6', '#14b8a6', '#f43f5e', '#3b82f6', '#6366f1', '#ec4899', '#84cc16', '#06b6d4', '#a855f7', '#ef4444', '#22c55e', '#0ea5e9', '#d946ef'];
+  const clusterLabels = clusterLabelsBase.slice(0, kValue);
+  const clusterColors = clusterColorsBase.slice(0, kValue);
 
   // Generate 2D Scatter plot data from cluster centers (normalized to 0-100 range)
-  const clusterCenters = metrics.cluster_centers || [];
+  const clusterCenters = currentMetrics.cluster_centers || [];
   const scatterData = clusterCenters.map((center, idx) => {
     // Normalize coordinates to 0-100 range for visualization
     const x = ((center[0] + 2) / 4) * 100;
@@ -96,7 +98,7 @@ const ProClusteringVisualization = () => {
       x: Math.max(5, Math.min(95, x)),
       y: Math.max(5, Math.min(95, y)),
       label: clusterLabels[idx] || `Кластер ${idx + 1}`,
-      color: clusterColors[idx] || '#6366f1',
+      color: clusterColorsBase[idx] || '#6366f1',
       count: clusterSize
     };
   });
