@@ -217,13 +217,18 @@ const ProClusteringVisualization = () => {
               </CardHeader>
               <CardContent>
                 <div className="relative h-96 bg-gradient-to-br from-slate-800/50 to-purple-900/50 rounded-lg p-6">
-                  {/* Y-axis */}
-                  <div className="absolute left-0 top-0 bottom-0 w-20 flex flex-col justify-between text-xs text-purple-200 p-2">
-                    <span>50000</span>
-                    <span>35000</span>
-                    <span>20000</span>
-                    <span>5000</span>
-                  </div>
+                  {/* Y-axis - dynamic based on real WCSS values */}
+                  {(() => {
+                    const maxWcss = Math.max(...elbowData.map(d => d.wcss || 0));
+                    const minWcss = Math.min(...elbowData.map(d => d.wcss || 0));
+                    return (
+                      <div className="absolute left-0 top-0 bottom-0 w-20 flex flex-col justify-between text-xs text-purple-200 p-2">
+                        <span>{maxWcss.toFixed(0)}</span>
+                        <span>{((maxWcss + minWcss) / 2).toFixed(0)}</span>
+                        <span>{minWcss.toFixed(0)}</span>
+                      </div>
+                    );
+                  })()}
                   
                   {/* Chart */}
                   <div className="ml-20 mr-4 h-full relative">
@@ -240,41 +245,50 @@ const ProClusteringVisualization = () => {
                           <stop offset="100%" stopColor="#ec4899" />
                         </linearGradient>
                       </defs>
-                      <polyline
-                        points={elbowData.map((d, i) => {
-                          const x = (i / (elbowData.length - 1)) * 100;
-                          const y = 100 - ((parseFloat(d.inertia) - 5000) / 45000) * 100;
-                          return `${x}%,${y}%`;
-                        }).join(' ')}
-                        fill="none"
-                        stroke="url(#lineGradient)"
-                        strokeWidth="4"
-                        className="drop-shadow-2xl"
-                      />
-                      {elbowData.map((d, i) => {
-                        const x = (i / (elbowData.length - 1)) * 100;
-                        const y = 100 - ((parseFloat(d.inertia) - 5000) / 45000) * 100;
+                      {(() => {
+                        const maxWcss = Math.max(...elbowData.map(d => d.wcss || 0));
+                        const minWcss = Math.min(...elbowData.map(d => d.wcss || 0));
+                        const range = maxWcss - minWcss || 1;
                         return (
-                          <g key={i}>
-                            <circle
-                              cx={`${x}%`}
-                              cy={`${y}%`}
-                              r={d.k === 7 ? "8" : "5"}
-                              fill={d.k === 7 ? "#fbbf24" : "#a855f7"}
-                              stroke="white"
-                              strokeWidth="2"
+                          <>
+                            <polyline
+                              points={elbowData.map((d, i) => {
+                                const x = (i / (elbowData.length - 1)) * 100;
+                                const y = 100 - ((d.wcss - minWcss) / range) * 90 - 5;
+                                return `${x}%,${y}%`;
+                              }).join(' ')}
+                              fill="none"
+                              stroke="url(#lineGradient)"
+                              strokeWidth="4"
+                              className="drop-shadow-2xl"
                             />
-                            {d.k === 7 && (
-                              <>
-                                <line x1={`${x}%`} y1={`${y}%`} x2={`${x}%`} y2="0%" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5,5" />
-                                <text x={`${x}%`} y="5%" textAnchor="middle" className="text-sm font-bold fill-amber-300">
-                                  ⬇ Optimal K=7
-                                </text>
-                              </>
-                            )}
-                          </g>
+                            {elbowData.map((d, i) => {
+                              const x = (i / (elbowData.length - 1)) * 100;
+                              const y = 100 - ((d.wcss - minWcss) / range) * 90 - 5;
+                              return (
+                                <g key={i}>
+                                  <circle
+                                    cx={`${x}%`}
+                                    cy={`${y}%`}
+                                    r={d.k === 7 ? "8" : "5"}
+                                    fill={d.k === 7 ? "#fbbf24" : "#a855f7"}
+                                    stroke="white"
+                                    strokeWidth="2"
+                                  />
+                                  {d.k === 7 && (
+                                    <>
+                                      <line x1={`${x}%`} y1={`${y}%`} x2={`${x}%`} y2="5%" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5,5" />
+                                      <text x={`${x}%`} y="3%" textAnchor="middle" className="text-sm font-bold fill-amber-300">
+                                        ⬇ K=7 (WCSS={d.wcss})
+                                      </text>
+                                    </>
+                                  )}
+                                </g>
+                              );
+                            })}
+                          </>
                         );
-                      })}
+                      })()}
                     </svg>
                   </div>
                   
