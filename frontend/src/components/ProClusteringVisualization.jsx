@@ -34,37 +34,39 @@ const ProClusteringVisualization = () => {
     }
   };
 
-  // Generate Elbow data
-  const elbowData = Array.from({length: 14}, (_, i) => {
+  // Get Elbow data from API response
+  const elbowData = analyticsData?.elbow_data || Array.from({length: 14}, (_, i) => {
     const k = i + 2;
-    const inertia = 50000 / Math.pow(k, 1.2) + Math.random() * 1000;
-    return { k, inertia: inertia.toFixed(0) };
+    return { k, wcss: 50000 / Math.pow(k, 1.2) };
   });
 
-  // Generate Silhouette data
-  const silhouetteData = Array.from({length: kValue}, (_, i) => {
-    const samples = Math.floor(Math.random() * 50) + 30;
-    const scores = Array.from({length: samples}, () => 
-      0.3 + Math.random() * 0.5 + (Math.random() > 0.9 ? -0.4 : 0)
-    ).sort((a, b) => b - a);
+  // Get Silhouette data per cluster from API
+  const silhouetteData = analyticsData?.silhouette_per_cluster || Array.from({length: kValue}, (_, i) => ({
+    cluster: i,
+    scores: [0.5],
+    avg_score: 0.5,
+    size: 100
+  }));
+
+  // Generate 2D Scatter plot data from cluster centers (normalized to 0-100 range)
+  const clusterCenters = metrics.cluster_centers || [];
+  const clusterLabels = ['Зона 1', 'Зона 2', 'Зона 3', 'Зона 4', 'Зона 5', 'Зона 6', 'Зона 7'];
+  const clusterColors = ['#f59e0b', '#10b981', '#8b5cf6', '#14b8a6', '#f43f5e', '#3b82f6', '#6366f1'];
+  
+  const scatterData = clusterCenters.map((center, idx) => {
+    // Normalize coordinates to 0-100 range for visualization
+    const x = ((center[0] + 2) / 4) * 100;
+    const y = ((center[1] + 2) / 4) * 100;
+    const clusterSize = silhouetteData[idx]?.size || 100;
     return {
-      cluster: i,
-      scores,
-      avgScore: scores.reduce((a, b) => a + b, 0) / scores.length,
-      size: samples
+      cluster: idx,
+      x: Math.max(5, Math.min(95, x)),
+      y: Math.max(5, Math.min(95, y)),
+      label: clusterLabels[idx] || `Кластер ${idx + 1}`,
+      color: clusterColors[idx] || '#6366f1',
+      count: clusterSize
     };
   });
-
-  // 2D Scatter plot data (PCA projection)
-  const scatterData = [
-    { cluster: 0, x: 20, y: 30, label: 'Історія', color: '#f59e0b', count: 342 },
-    { cluster: 1, x: 60, y: 70, label: 'Парки', color: '#10b981', count: 287 },
-    { cluster: 2, x: 80, y: 20, label: 'Культура', color: '#8b5cf6', count: 234 },
-    { cluster: 3, x: 30, y: 80, label: 'Природа', color: '#14b8a6', count: 298 },
-    { cluster: 4, x: 70, y: 45, label: 'Гастро', color: '#f43f5e', count: 412 },
-    { cluster: 5, x: 50, y: 15, label: 'Шопінг', color: '#3b82f6', count: 189 },
-    { cluster: 6, x: 15, y: 55, label: 'Готелі', color: '#6366f1', count: 102 }
-  ];
 
   const categoryColors = {
     0: '#f59e0b', 1: '#10b981', 2: '#8b5cf6', 3: '#14b8a6',
