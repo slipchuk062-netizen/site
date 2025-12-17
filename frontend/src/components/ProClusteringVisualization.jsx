@@ -112,39 +112,47 @@ const ProClusteringVisualization = () => {
           </p>
         </div>
 
-        {/* Key Metrics */}
+        {/* Key Metrics - Real values from K-Means */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           <Card className="bg-white/10 backdrop-blur-md border-purple-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-purple-300 mb-2">7</div>
-              <div className="text-sm text-purple-200">Оптимальні кластери (K)</div>
-              <div className="mt-2 h-2 bg-purple-900/50 rounded-full overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-full animate-pulse"></div>
+              <div className="text-5xl font-bold text-purple-300 mb-2">{metrics.total_clusters || 7}</div>
+              <div className="text-sm text-purple-200">Кластери (K)</div>
+              <div className="mt-2 text-xs text-purple-300">
+                Ітерацій: {metrics.n_iterations || '—'}
               </div>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-blue-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-blue-300 mb-2">{metrics.silhouette_score || '0.693'}</div>
-              <div className="text-sm text-blue-200">Silhouette Coefficient</div>
-              <div className="mt-2 text-xs text-blue-300">Якість кластеризації: Відмінна</div>
+              <div className="text-5xl font-bold text-blue-300 mb-2">{metrics.silhouette_score || '—'}</div>
+              <div className="text-sm text-blue-200">Silhouette Score</div>
+              <div className="mt-2 text-xs text-blue-300">
+                {metrics.silhouette_score > 0.5 ? '✓ Добра якість' : metrics.silhouette_score > 0.25 ? '○ Середня якість' : '✗ Слабка якість'}
+              </div>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-emerald-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-emerald-300 mb-2">{metrics.davies_bouldin_index || '0.620'}</div>
-              <div className="text-sm text-emerald-200">Davies-Bouldin Index</div>
-              <div className="mt-2 text-xs text-emerald-300">Сепарація кластерів: Добра</div>
+              <div className="text-5xl font-bold text-emerald-300 mb-2">{metrics.davies_bouldin_index || '—'}</div>
+              <div className="text-sm text-emerald-200">Davies-Bouldin</div>
+              <div className="mt-2 text-xs text-emerald-300">
+                {metrics.davies_bouldin_index < 1.0 ? '✓ Добра сепарація' : '○ Помірна сепарація'}
+              </div>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-amber-400/30">
             <CardContent className="pt-6">
-              <div className="text-5xl font-bold text-amber-300 mb-2">{metrics.calinski_harabasz_score ? metrics.calinski_harabasz_score.toFixed(0) : '1247'}</div>
+              <div className="text-5xl font-bold text-amber-300 mb-2">
+                {metrics.calinski_harabasz_score ? metrics.calinski_harabasz_score.toFixed(0) : '—'}
+              </div>
               <div className="text-sm text-amber-200">Calinski-Harabasz</div>
-              <div className="mt-2 text-xs text-amber-300">Щільність: Висока</div>
+              <div className="mt-2 text-xs text-amber-300">
+                WCSS: {metrics.wcss || '—'}
+              </div>
             </CardContent>
           </Card>
         </div>
