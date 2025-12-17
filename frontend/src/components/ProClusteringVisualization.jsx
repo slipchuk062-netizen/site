@@ -15,18 +15,45 @@ const ProClusteringVisualization = () => {
   const navigate = useNavigate();
   const [kValue, setKValue] = useState(7);
   const [analyticsData, setAnalyticsData] = useState(null);
+  const [dynamicData, setDynamicData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dynamicLoading, setDynamicLoading] = useState(false);
   const [activeVisualization, setActiveVisualization] = useState('distribution');
+
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
   useEffect(() => {
     fetchAnalytics();
   }, []);
 
+  // Fetch dynamic data when K value changes
+  useEffect(() => {
+    const fetchDynamicData = async () => {
+      setDynamicLoading(true);
+      try {
+        const response = await axios.get(`${backendUrl}/api/clusters/dynamic/${kValue}`);
+        setDynamicData(response.data.data);
+      } catch (error) {
+        console.error('Failed to fetch dynamic clustering:', error);
+      } finally {
+        setDynamicLoading(false);
+      }
+    };
+    
+    if (analyticsData) {
+      fetchDynamicData();
+    }
+  }, [kValue, backendUrl, analyticsData]);
+
   const fetchAnalytics = async () => {
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
       const response = await axios.get(`${backendUrl}/api/clusters/analytics`);
       setAnalyticsData(response.data);
+      // Set initial dynamic data from analytics
+      setDynamicData({
+        ...response.data.clustering_metrics,
+        silhouette_per_cluster: response.data.silhouette_per_cluster
+      });
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
     } finally {
@@ -34,19 +61,19 @@ const ProClusteringVisualization = () => {
     }
   };
 
-  // Define metrics and stats early (before they are used)
+  // Use dynamic data if available, otherwise fall back to initial analytics
+  const currentMetrics = dynamicData || analyticsData?.clustering_metrics || {};
   const clusterStats = analyticsData?.cluster_statistics || [];
-  const metrics = analyticsData?.clustering_metrics || {};
-  const total = metrics.total_objects || 1864;
+  const total = currentMetrics.total_objects || 1864;
   
-  // Get Elbow data from API response
+  // Get Elbow data from API response (static - doesn't change with K)
   const elbowData = analyticsData?.elbow_data || Array.from({length: 14}, (_, i) => {
     const k = i + 2;
     return { k, wcss: 50000 / Math.pow(k, 1.2) };
   });
 
-  // Get Silhouette data per cluster from API
-  const silhouetteData = analyticsData?.silhouette_per_cluster || Array.from({length: kValue}, (_, i) => ({
+  // Get Silhouette data per cluster - use dynamic data
+  const silhouetteData = dynamicData?.silhouette_per_cluster || analyticsData?.silhouette_per_cluster || Array.from({length: kValue}, (_, i) => ({
     cluster: i,
     scores: [0.5],
     avg_score: 0.5,
