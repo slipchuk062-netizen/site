@@ -34,6 +34,11 @@ const ProClusteringVisualization = () => {
     }
   };
 
+  // Define metrics and stats early (before they are used)
+  const clusterStats = analyticsData?.cluster_statistics || [];
+  const metrics = analyticsData?.clustering_metrics || {};
+  const total = metrics.total_objects || 1864;
+  
   // Get Elbow data from API response
   const elbowData = analyticsData?.elbow_data || Array.from({length: 14}, (_, i) => {
     const k = i + 2;
@@ -48,11 +53,12 @@ const ProClusteringVisualization = () => {
     size: 100
   }));
 
-  // Generate 2D Scatter plot data from cluster centers (normalized to 0-100 range)
-  const clusterCenters = metrics.cluster_centers || [];
+  // Cluster colors for visualizations
   const clusterLabels = ['Зона 1', 'Зона 2', 'Зона 3', 'Зона 4', 'Зона 5', 'Зона 6', 'Зона 7'];
   const clusterColors = ['#f59e0b', '#10b981', '#8b5cf6', '#14b8a6', '#f43f5e', '#3b82f6', '#6366f1'];
-  
+
+  // Generate 2D Scatter plot data from cluster centers (normalized to 0-100 range)
+  const clusterCenters = metrics.cluster_centers || [];
   const scatterData = clusterCenters.map((center, idx) => {
     // Normalize coordinates to 0-100 range for visualization
     const x = ((center[0] + 2) / 4) * 100;
@@ -68,11 +74,6 @@ const ProClusteringVisualization = () => {
     };
   });
 
-  const categoryColors = {
-    0: '#f59e0b', 1: '#10b981', 2: '#8b5cf6', 3: '#14b8a6',
-    4: '#f43f5e', 5: '#3b82f6', 6: '#6366f1'
-  };
-
   if (loading) {
     return (
       <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
@@ -82,10 +83,6 @@ const ProClusteringVisualization = () => {
       </section>
     );
   }
-
-  const clusterStats = analyticsData?.cluster_statistics || {};
-  const metrics = analyticsData?.clustering_metrics || {};
-  const total = clusterStats.total_objects || 1864;
 
   return (
     <section className="py-20 bg-gradient-to-b from-slate-900 via-indigo-900 to-slate-900 relative overflow-hidden">
