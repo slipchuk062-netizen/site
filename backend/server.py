@@ -1219,6 +1219,92 @@ async def get_visit_statistics():
 
 # ============= CLUSTER ANALYTICS ENDPOINTS =============
 
+def calculate_clustering_for_k(k_value: int):
+    """
+    Розрахунок метрик кластеризації для заданого значення K
+    """
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score, silhouette_samples
+    import numpy as np
+    
+    coordinates = []
+    for attraction in ATTRACTIONS_DATA:
+        coords = attraction.get('coordinates', {})
+        lat = coords.get('lat', 0)
+        lng = coords.get('lng', 0)
+        if lat != 0 and lng != 0:
+            coordinates.append([lat, lng])
+    
+    if len(coordinates) < k_value + 1:
+        return None
+    
+    X = np.array(coordinates)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    kmeans = KMeans(n_clusters=k_value, init='k-means++', n_init=10, max_iter=300, random_state=42)
+    labels = kmeans.fit_predict(X_scaled)
+    
+    sil_score = silhouette_score(X_scaled, labels)
+    db_index = davies_bouldin_score(X_scaled, labels)
+    ch_score = calinski_harabasz_score(X_scaled, labels)
+    
+    # Silhouette per cluster
+    sample_silhouette_values = silhouette_samples(X_scaled, labels)
+    cluster_silhouettes = []
+    for i in range(k_value):
+        cluster_mask = labels == i
+        cluster_scores = sample_silhouette_values[cluster_mask]
+        cluster_silhouettes.append({
+            'cluster': i,
+            'size': int(np.sum(cluster_mask)),
+            'avg_score': round(float(np.mean(cluster_scores)), 3),
+            'min_score': round(float(np.min(cluster_scores)), 3),
+            'max_score': round(float(np.max(cluster_scores)), 3),
+            'scores': sorted(cluster_scores.tolist(), reverse=True)[:20]
+        })
+    
+    return {
+        'k': k_value,
+        'silhouette_score': round(float(sil_score), 3),
+        'davies_bouldin_index': round(float(db_index), 3),
+        'calinski_harabasz_score': round(float(ch_score), 2),
+        'wcss': round(float(kmeans.inertia_), 2),
+        'total_clusters': k_value,
+        'total_objects': len(ATTRACTIONS_DATA),
+        'valid_coordinates': len(coordinates),
+        'avg_objects_per_cluster': round(len(coordinates) / k_value, 2),
+        'cluster_centers': kmeans.cluster_centers_.tolist(),
+        'n_iterations': kmeans.n_iter_,
+        'silhouette_per_cluster': cluster_silhouettes
+    }
+
+
+@api_router.get("/clusters/dynamic/{k_value}")
+async def get_dynamic_clustering(k_value: int):
+    """
+    Динамічний розрахунок метрик для заданого K
+    """
+    try:
+        if k_value < 2 or k_value > 15:
+            raise HTTPException(status_code=400, detail="K must be between 2 and 15")
+        
+        result = calculate_clustering_for_k(k_value)
+        if result is None:
+            raise HTTPException(status_code=400, detail="Not enough data for clustering")
+        
+        return {
+            "success": True,
+            "data": result
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Dynamic clustering error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @api_router.get("/clusters/statistics")
 async def get_cluster_statistics():
     """
