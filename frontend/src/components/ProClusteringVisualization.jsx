@@ -418,26 +418,34 @@ const ProClusteringVisualization = () => {
             <Card className="bg-white/10 backdrop-blur-md border-purple-400/30">
               <CardHeader>
                 <CardTitle className="text-white flex items-center justify-between">
-                  <span>2D Проекція кластерів (PCA)</span>
-                  <Badge className="bg-emerald-600 text-white">Feature Space Visualization</Badge>
+                  <span>2D Проекція кластерів (K={kValue})</span>
+                  <Badge className={`bg-emerald-600 text-white ${dynamicLoading ? 'animate-pulse' : ''}`}>
+                    {dynamicLoading ? 'Оновлення...' : `${scatterData.length} кластерів`}
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="relative h-96 bg-gradient-to-br from-slate-900/80 to-purple-900/80 rounded-lg p-8 border border-purple-400/30">
+                  {dynamicLoading ? (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <RefreshCw className="h-10 w-10 animate-spin text-purple-400" />
+                    </div>
+                  ) : (
+                  <>
                   {/* Axes */}
                   <div className="absolute left-8 top-8 bottom-8 w-0.5 bg-purple-400/50"></div>
                   <div className="absolute left-8 bottom-8 right-8 h-0.5 bg-purple-400/50"></div>
                   
                   {/* Axis labels */}
-                  <div className="absolute left-2 top-1/2 -rotate-90 text-xs text-purple-300">PC1 (Географія)</div>
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-purple-300">PC2 (Популярність)</div>
+                  <div className="absolute left-2 top-1/2 -rotate-90 text-xs text-purple-300">PC1 (Широта)</div>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-purple-300">PC2 (Довгота)</div>
                   
                   {/* Scatter points */}
                   <div className="absolute inset-8">
                     {scatterData.map((point, i) => (
                       <div
                         key={i}
-                        className="absolute group cursor-pointer"
+                        className="absolute group cursor-pointer transition-all duration-500"
                         style={{
                           left: `${point.x}%`,
                           top: `${100 - point.y}%`,
@@ -445,7 +453,7 @@ const ProClusteringVisualization = () => {
                         }}
                       >
                         <div
-                          className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white shadow-2xl transition-all duration-300 group-hover:scale-125 group-hover:z-50"
+                          className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-2xl transition-all duration-300 group-hover:scale-125 group-hover:z-50"
                           style={{
                             backgroundColor: point.color,
                             boxShadow: `0 0 30px ${point.color}80`
@@ -454,19 +462,21 @@ const ProClusteringVisualization = () => {
                           {point.count}
                         </div>
                         <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-900/90 px-3 py-1 rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                          {point.label}
+                          {point.label} ({point.count} об'єктів)
                         </div>
                       </div>
                     ))}
                   </div>
+                  </>
+                  )}
                 </div>
                 
                 {/* Legend */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="mt-6 grid grid-cols-3 md:grid-cols-5 gap-2">
                   {scatterData.map((point) => (
                     <div key={point.cluster} className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded-full" style={{backgroundColor: point.color}}></div>
-                      <span className="text-sm text-purple-200">{point.label}</span>
+                      <div className="w-3 h-3 rounded-full" style={{backgroundColor: point.color}}></div>
+                      <span className="text-xs text-purple-200">{point.label}</span>
                     </div>
                   ))}
                 </div>
