@@ -165,13 +165,13 @@ class BackendTester:
             self.log_result("Google Places API Integration", "FAIL",
                           "Request failed", e)
     
-    def test_kmeans_clustering_metrics(self):
-        """Test REAL K-Means clustering implementation - HIGH PRIORITY"""
+    def test_multidimensional_kmeans_metrics(self):
+        """Test MULTIDIMENSIONAL K-Means clustering implementation - Chapter 2 compliance"""
         try:
-            print("\n🔬 Testing REAL K-Means Clustering Implementation")
+            print("\n🔬 Testing MULTIDIMENSIONAL K-Means Clustering (Chapter 2)")
             print("-" * 60)
             
-            # Test 1: GET /api/clusters/metrics - Real K-Means metrics
+            # Test 1: GET /api/clusters/metrics - Multidimensional K-Means metrics
             response = requests.get(f"{BACKEND_URL}/clusters/metrics", timeout=15)
             
             if response.status_code == 200:
@@ -180,36 +180,67 @@ class BackendTester:
                 if data.get("success") == True and "data" in data:
                     metrics = data["data"]
                     
-                    # Verify expected fields are present
+                    # Verify Chapter 2 specific fields
                     expected_fields = [
                         "silhouette_score", "davies_bouldin_index", 
                         "calinski_harabasz_score", "wcss", "total_clusters",
-                        "n_iterations", "cluster_centers"
+                        "feature_dimensions", "features_used", "cluster_info"
                     ]
                     
                     missing_fields = [field for field in expected_fields if field not in metrics]
                     
                     if missing_fields:
-                        self.log_result("K-Means Metrics - Structure", "FAIL",
-                                      f"Missing fields: {missing_fields}")
+                        self.log_result("Multidimensional K-Means - Structure", "FAIL",
+                                      f"Missing Chapter 2 fields: {missing_fields}")
                     else:
-                        # Verify expected values (approximately)
+                        # Verify 10-dimensional feature vector (2 coords + 7 categories + 1 rating)
+                        feature_dims = metrics.get("feature_dimensions", 0)
+                        features_used = metrics.get("features_used", [])
+                        
+                        if feature_dims == 10:
+                            self.log_result("Feature Vector Dimensions", "PASS",
+                                          f"10-dimensional feature vector confirmed: {feature_dims}D")
+                        else:
+                            self.log_result("Feature Vector Dimensions", "FAIL",
+                                          f"Expected 10D, got {feature_dims}D")
+                        
+                        # Verify feature composition
+                        expected_features = ['lat', 'lng', 'category_onehot(7)', 'rating_normalized']
+                        if features_used == expected_features:
+                            self.log_result("Feature Composition", "PASS",
+                                          f"Correct features: {features_used}")
+                        else:
+                            self.log_result("Feature Composition", "FAIL",
+                                          f"Expected {expected_features}, got {features_used}")
+                        
+                        # Verify cluster_info has dominant_category
+                        cluster_info = metrics.get("cluster_info", [])
+                        if cluster_info and isinstance(cluster_info, list):
+                            first_cluster = cluster_info[0] if cluster_info else {}
+                            if "dominant_category" in first_cluster:
+                                self.log_result("Cluster Category Analysis", "PASS",
+                                              f"Dominant categories identified for {len(cluster_info)} clusters")
+                            else:
+                                self.log_result("Cluster Category Analysis", "FAIL",
+                                              "Missing dominant_category in cluster_info")
+                        else:
+                            self.log_result("Cluster Category Analysis", "FAIL",
+                                          "cluster_info not available or invalid")
+                        
+                        # Verify metric values are reasonable for multidimensional clustering
                         sil_score = metrics.get("silhouette_score", 0)
                         db_index = metrics.get("davies_bouldin_index", 0)
                         ch_score = metrics.get("calinski_harabasz_score", 0)
-                        total_clusters = metrics.get("total_clusters", 0)
                         
-                        # Check if values are in expected ranges for real K-Means
-                        if (0.4 <= sil_score <= 0.8 and 
-                            0.3 <= db_index <= 1.0 and 
-                            ch_score > 1000 and 
-                            total_clusters == 7):
+                        if (0.2 <= sil_score <= 1.0 and 
+                            0.1 <= db_index <= 2.0 and 
+                            ch_score > 100):
                             
-                            self.log_result("K-Means Metrics - Real Values", "PASS",
+                            self.log_result("Multidimensional Metrics Values", "PASS",
                                           f"Silhouette: {sil_score}, Davies-Bouldin: {db_index}, "
-                                          f"Calinski-Harabasz: {ch_score}, Clusters: {total_clusters}")
+                                          f"Calinski-Harabasz: {ch_score}")
                         else:
-                            self.log_result("K-Means Metrics - Real Values", "FAIL",
+                            self.log_result("Multidimensional Metrics Values", "FAIL",
                                           f"Values outside expected ranges. Silhouette: {sil_score}, "
                                           f"Davies-Bouldin: {db_index}, Calinski-Harabasz: {ch_score}")
                         
@@ -217,14 +248,14 @@ class BackendTester:
                         self.first_metrics = metrics
                         
                 else:
-                    self.log_result("K-Means Metrics API", "FAIL",
+                    self.log_result("Multidimensional K-Means API", "FAIL",
                                   f"Invalid response structure: {data}")
             else:
-                self.log_result("K-Means Metrics API", "FAIL",
+                self.log_result("Multidimensional K-Means API", "FAIL",
                               f"HTTP {response.status_code}: {response.text}")
                 
         except Exception as e:
-            self.log_result("K-Means Metrics API", "FAIL",
+            self.log_result("Multidimensional K-Means API", "FAIL",
                           "Request failed", e)
     
     def test_kmeans_consistency(self):
