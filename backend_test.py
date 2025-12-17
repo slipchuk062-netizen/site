@@ -584,7 +584,11 @@ class BackendTester:
         """Run all backend tests"""
         print("🚀 Starting Comprehensive Backend Testing for Zhytomyr Tourism Website")
         print(f"Backend URL: {BACKEND_URL}")
-        print("🎯 FOCUS: Testing REAL K-Means Clustering Implementation (scikit-learn)")
+        print("🎯 FOCUS: Testing MULTIDIMENSIONAL K-Means Clustering (Chapter 2 Compliance)")
+        print("📋 Key Requirements:")
+        print("   - 10-dimensional feature vector: 2 coordinates + 7 categories + 1 rating")
+        print("   - Chapter 2 formulas implementation (2.2, 2.5, 2.6, 2.7, 2.11-2.14)")
+        print("   - Dynamic clustering for K=3, K=7, K=10")
         print("=" * 80)
         
         # Core functionality tests
