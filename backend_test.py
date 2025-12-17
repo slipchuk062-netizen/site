@@ -402,6 +402,93 @@ class BackendTester:
             self.log_result("Chapter 2 Analytics API", "FAIL",
                           "Request failed", e)
     
+    def test_dynamic_clustering_endpoints(self):
+        """Test dynamic clustering endpoints for different K values"""
+        try:
+            print("\n🔄 Testing Dynamic Clustering Endpoints")
+            print("-" * 60)
+            
+            # Test K=3, K=7, K=10 as specified in review request
+            k_values = [3, 7, 10]
+            
+            for k in k_values:
+                try:
+                    response = requests.get(f"{BACKEND_URL}/clusters/dynamic/{k}", timeout=15)
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        
+                        if data.get("success") == True and "data" in data:
+                            cluster_data = data["data"]
+                            
+                            # Verify K value matches
+                            if cluster_data.get("k") == k:
+                                self.log_result(f"Dynamic Clustering K={k} - Structure", "PASS",
+                                              f"K={k} clustering data returned correctly")
+                            else:
+                                self.log_result(f"Dynamic Clustering K={k} - Structure", "FAIL",
+                                              f"Expected K={k}, got K={cluster_data.get('k')}")
+                            
+                            # Verify different metrics for different K values
+                            sil_score = cluster_data.get("silhouette_score", 0)
+                            db_index = cluster_data.get("davies_bouldin_index", 0)
+                            
+                            # Store metrics for comparison
+                            if not hasattr(self, 'dynamic_metrics'):
+                                self.dynamic_metrics = {}
+                            self.dynamic_metrics[k] = {
+                                'silhouette': sil_score,
+                                'davies_bouldin': db_index
+                            }
+                            
+                            # Check for dominant_category and category_distribution
+                            silhouette_per_cluster = cluster_data.get("silhouette_per_cluster", [])
+                            if silhouette_per_cluster:
+                                first_cluster = silhouette_per_cluster[0] if silhouette_per_cluster else {}
+                                if "dominant_category" in first_cluster and "category_distribution" in first_cluster:
+                                    self.log_result(f"Dynamic Clustering K={k} - Categories", "PASS",
+                                                  f"Dominant categories and distributions available")
+                                else:
+                                    self.log_result(f"Dynamic Clustering K={k} - Categories", "FAIL",
+                                                  f"Missing dominant_category or category_distribution")
+                            
+                            self.log_result(f"Dynamic Clustering K={k}", "PASS",
+                                          f"Silhouette: {sil_score}, Davies-Bouldin: {db_index}")
+                        else:
+                            self.log_result(f"Dynamic Clustering K={k}", "FAIL",
+                                          f"Invalid response structure: {data}")
+                    else:
+                        self.log_result(f"Dynamic Clustering K={k}", "FAIL",
+                                      f"HTTP {response.status_code}: {response.text}")
+                        
+                except Exception as e:
+                    self.log_result(f"Dynamic Clustering K={k}", "FAIL",
+                                  f"Request failed: {e}")
+            
+            # Verify that different K values produce different metrics
+            if hasattr(self, 'dynamic_metrics') and len(self.dynamic_metrics) >= 2:
+                k_values_tested = list(self.dynamic_metrics.keys())
+                metrics_different = False
+                
+                for i in range(len(k_values_tested)):
+                    for j in range(i+1, len(k_values_tested)):
+                        k1, k2 = k_values_tested[i], k_values_tested[j]
+                        if (self.dynamic_metrics[k1]['silhouette'] != self.dynamic_metrics[k2]['silhouette'] or
+                            self.dynamic_metrics[k1]['davies_bouldin'] != self.dynamic_metrics[k2]['davies_bouldin']):
+                            metrics_different = True
+                            break
+                
+                if metrics_different:
+                    self.log_result("Dynamic Clustering - Different Metrics", "PASS",
+                                  "Different K values produce different metrics as expected")
+                else:
+                    self.log_result("Dynamic Clustering - Different Metrics", "FAIL",
+                                  "All K values produce identical metrics (unexpected)")
+                
+        except Exception as e:
+            self.log_result("Dynamic Clustering Endpoints", "FAIL",
+                          f"General error: {e}")
+
     def test_cluster_analytics_apis(self):
         """Test cluster analytics endpoints"""
         endpoints = [
