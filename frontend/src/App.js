@@ -21,6 +21,7 @@ import DataUploadSection from './components/DataUploadSection';
 import EnhancedClusterViz from './components/EnhancedClusterViz';
 import ProClusteringVisualization from './components/ProClusteringVisualization';
 import TopPlaces from './components/TopPlaces';
+import WeatherSection from './components/WeatherSection';
 import EnhancedMapFilters from './components/EnhancedMapFilters';
 import MapLegend from './components/MapLegend';
 import attractionsData from './data/attractions.json';
@@ -70,6 +71,7 @@ const HomePage = () => {
             <OptimizedMap attractions={filteredAttractions} showHeatmap={showHeatmap} />
           </div>
         </section>
+        <WeatherSection />
         <TopPlaces />
         <PersonalizedRecommendations />
         <DataUploadSection />
