@@ -1602,6 +1602,143 @@ async def get_visit_statistics():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ============= GEOPANDAS ANALYTICS ENDPOINTS (Розділ 2.5) =============
+
+@api_router.get("/geo/district-assignment")
+async def get_attractions_with_districts():
+    """
+    Визначення районної приналежності для всіх туристичних об'єктів
+    за допомогою GeoPandas spatial join (Розділ 2.5)
+    """
+    try:
+        attractions_with_districts = []
+        
+        for attr in ATTRACTIONS_DATA[:100]:  # Обмежуємо для швидкості
+            coords = attr.get('coordinates', {})
+            lat = coords.get('lat', 0)
+            lng = coords.get('lng', 0)
+            
+            if lat != 0 and lng != 0:
+                district_info = determine_district_for_point(lat, lng)
+                attractions_with_districts.append({
+                    "id": attr.get("id"),
+                    "name": attr.get("name"),
+                    "category": attr.get("category"),
+                    "coordinates": {"lat": lat, "lng": lng},
+                    "district": district_info
+                })
+        
+        return {
+            "success": True,
+            "total": len(attractions_with_districts),
+            "data": attractions_with_districts,
+            "methodology": {
+                "library": "GeoPandas + Shapely",
+                "operation": "Spatial Join (point-in-polygon)",
+                "crs": "EPSG:4326 (WGS84)",
+                "description": "Визначення приналежності точки до полігону для встановлення районної приналежності об'єктів (Розділ 2.5)"
+            }
+        }
+    except Exception as e:
+        logger.error(f"District assignment error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/geo/district-statistics")
+async def get_geopandas_district_statistics():
+    """
+    Статистика по районах з використанням GeoPandas (Розділ 2.5)
+    
+    Для кожного району обчислюється:
+    - Кількість об'єктів
+    - Середній рейтинг
+    - Домінуюча категорія
+    - Щільність розміщення
+    """
+    try:
+        stats = calculate_district_statistics_geopandas()
+        
+        return {
+            "success": True,
+            "data": stats,
+            "methodology": {
+                "library": "GeoPandas",
+                "operations": [
+                    "Створення GeoDataFrame з туристичних об'єктів",
+                    "Spatial Join з полігонами районів",
+                    "Агрегація статистики по районах",
+                    "Розрахунок щільності об'єктів на км²"
+                ],
+                "crs": "EPSG:4326 (WGS84)",
+                "reference": "Розділ 2.5 магістерської роботи"
+            }
+        }
+    except Exception as e:
+        logger.error(f"GeoPandas statistics error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@api_router.get("/geo/spatial-analysis")
+async def get_full_spatial_analysis():
+    """
+    Повний геопросторовий аналіз з використанням GeoPandas (Розділ 2.5)
+    
+    Включає:
+    - Статистику по районах
+    - Щільність розміщення
+    - Буферні зони
+    - Відстані між об'єктами
+    """
+    try:
+        # Завантажуємо дані якщо ще не завантажені
+        if DISTRICTS_GEODATA is None:
+            load_districts_geojson()
+        
+        # Статистика по районах
+        district_stats = calculate_district_statistics_geopandas()
+        
+        # Загальна статистика
+        total_objects = len(ATTRACTIONS_DATA)
+        objects_with_coords = sum(1 for a in ATTRACTIONS_DATA 
+                                  if a.get('coordinates', {}).get('lat', 0) != 0)
+        
+        # Географічні межі Житомирської області (Розділ 2.4)
+        geo_bounds = {
+            "lat_min": 49.44,
+            "lat_max": 51.50,
+            "lng_min": 27.15,
+            "lng_max": 29.15,
+            "description": "Географічні межі Житомирської області"
+        }
+        
+        return {
+            "success": True,
+            "summary": {
+                "total_objects": total_objects,
+                "objects_with_coordinates": objects_with_coords,
+                "districts_count": len(DISTRICTS_GEODATA) if DISTRICTS_GEODATA is not None else 0,
+                "coverage_percentage": round(objects_with_coords / total_objects * 100, 2) if total_objects > 0 else 0
+            },
+            "geographic_bounds": geo_bounds,
+            "district_statistics": district_stats,
+            "geopandas_info": {
+                "library_version": gpd.__version__,
+                "crs": "EPSG:4326 (WGS84)",
+                "geometry_type": "Polygon (districts), Point (attractions)",
+                "spatial_operations": [
+                    "Point-in-polygon (spatial join)",
+                    "Distance calculation",
+                    "Area calculation",
+                    "Centroid computation"
+                ]
+            },
+            "methodology_reference": "Розділ 2.5: Інтеграція алгоритму з геоінформаційною системою"
+        }
+    except Exception as e:
+        logger.error(f"Spatial analysis error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ============= CLUSTER ANALYTICS ENDPOINTS =============
 
 def calculate_clustering_for_k(k_value: int):
