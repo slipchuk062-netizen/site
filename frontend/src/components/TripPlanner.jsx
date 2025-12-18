@@ -43,11 +43,11 @@ const TripPlanner = () => {
   
   const addPlace = (attraction) => {
     setSelectedPlaces([...selectedPlaces, {
-      place_id: attraction.id,
+      place_id: String(attraction.id),
       name: attraction.name,
-      address: attraction.address,
-      coordinates: attraction.coordinates,
-      category: attraction.category,
+      address: attraction.address || '',
+      coordinates: attraction.coordinates || { lat: 0, lng: 0 },
+      category: attraction.category || '',
       order: selectedPlaces.length
     }]);
     setSearchQuery('');
