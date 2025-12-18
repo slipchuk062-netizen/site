@@ -814,17 +814,24 @@ class BackendTester:
         """Run all backend tests"""
         print("🚀 Starting Comprehensive Backend Testing for Zhytomyr Tourism Website")
         print(f"Backend URL: {BACKEND_URL}")
-        print("🎯 FOCUS: Testing MULTIDIMENSIONAL K-Means Clustering (Chapter 2 Compliance)")
+        print("🎯 NEW FOCUS: Testing GeoPandas Integration for Spatial Analysis (Розділ 2.5)")
         print("📋 Key Requirements:")
-        print("   - 10-dimensional feature vector: 2 coordinates + 7 categories + 1 rating")
-        print("   - Chapter 2 formulas implementation (2.2, 2.5, 2.6, 2.7, 2.11-2.14)")
-        print("   - Dynamic clustering for K=3, K=7, K=10")
+        print("   - GeoPandas library integration with version info")
+        print("   - Spatial join operations (point-in-polygon)")
+        print("   - CRS: EPSG:4326 (WGS84)")
+        print("   - District assignment for attractions")
+        print("   - Statistical calculations per district")
         print("=" * 80)
         
         # Core functionality tests
         self.test_backend_health()
         
-        # HIGH PRIORITY: Multidimensional K-Means Clustering Tests (Chapter 2 Focus)
+        # HIGH PRIORITY: NEW GeoPandas Integration Tests (Розділ 2.5)
+        self.test_geopandas_spatial_analysis()
+        self.test_geopandas_district_assignment()
+        self.test_geopandas_district_statistics()
+        
+        # Previous K-Means Clustering Tests (Chapter 2)
         self.test_multidimensional_kmeans_metrics()
         self.test_kmeans_consistency()
         self.test_chapter2_analytics_endpoint()
