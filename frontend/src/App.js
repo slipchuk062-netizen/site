@@ -6,7 +6,7 @@ import DynamicHeroSection from './components/DynamicHeroSection';
 import ClusteringHeroSection from './components/ClusteringHeroSection';
 import ClustersSection from './components/ClustersSection';
 import OptimizedMap from './components/OptimizedMap';
-import TestimonialsSection from './components/TestimonialsSection';
+// TestimonialsSection removed per user request
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import MessagesPage from './components/MessagesPage';
