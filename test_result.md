@@ -423,7 +423,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Multidimensional K-Means Implementation (Chapter 2) - COMPLETED"
+    - "GeoPandas Spatial Analysis Integration (Розділ 2.5) - COMPLETED"
+    - "GeoPandas District Assignment (Spatial Join) - COMPLETED"
+    - "GeoPandas District Statistics - COMPLETED"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
