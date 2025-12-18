@@ -185,7 +185,7 @@ def determine_district_for_point(lat: float, lng: float) -> dict:
         return closest_district or {"district_id": "unknown", "district_name": "Невизначено"}
         
     except Exception as e:
-        logger.error(f"Error in spatial join: {str(e)}")
+        print(f"[GeoPandas] Error in spatial join: {str(e)}")
         return {"district_id": "unknown", "district_name": "Невизначено"}
 
 
