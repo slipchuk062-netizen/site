@@ -571,53 +571,336 @@ const ProClusteringVisualization = () => {
 
           {/* GeoPandas Spatial Analysis - Розділ 2.5 */}
           <TabsContent value="geopandas">
-            <Card className="bg-white/10 backdrop-blur-md border-green-400/30">
-              <CardHeader>
+            <Card className="bg-gradient-to-br from-green-900/40 via-emerald-900/30 to-teal-900/40 backdrop-blur-md border-green-400/30">
+              <CardHeader className="border-b border-green-400/20">
                 <CardTitle className="text-white flex items-center justify-between">
-                  <span>🗺️ GeoPandas Просторовий Аналіз (Розділ 2.5)</span>
-                  <Badge className="bg-green-600 text-white">
-                    {geoData?.spatial?.geopandas_info?.library_version || 'GeoPandas'}
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                      <Layers className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <span className="text-xl font-bold">GeoPandas Просторовий Аналіз</span>
+                      <p className="text-sm text-green-300 font-normal">Розділ 2.5 магістерської роботи</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 text-sm">
+                    v{geoData?.spatial?.geopandas_info?.library_version || '1.1.1'}
                   </Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                {/* Summary Statistics */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
-                    <div className="text-3xl font-bold text-green-300">
-                      {geoData?.spatial?.summary?.total_objects || 0}
+              <CardContent className="pt-6">
+                {/* Hero Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-green-600/20 to-green-800/20 p-5 rounded-2xl border border-green-400/30 group hover:border-green-400/60 transition-all">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="text-4xl font-bold text-green-300 mb-1">
+                      {geoData?.spatial?.summary?.total_objects?.toLocaleString() || 0}
                     </div>
-                    <div className="text-xs text-green-200">Всього об'єктів</div>
+                    <div className="text-sm text-green-200/80">Туристичних об'єктів</div>
+                    <Activity className="absolute bottom-3 right-3 h-5 w-5 text-green-500/40 group-hover:text-green-400/60 transition-colors" />
                   </div>
-                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
-                    <div className="text-3xl font-bold text-green-300">
-                      {geoData?.spatial?.summary?.districts_count || 0}
+                  <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/20 to-blue-800/20 p-5 rounded-2xl border border-blue-400/30 group hover:border-blue-400/60 transition-all">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="text-4xl font-bold text-blue-300 mb-1">
+                      {geoData?.spatial?.summary?.districts_count || 4}
                     </div>
-                    <div className="text-xs text-green-200">Районів</div>
+                    <div className="text-sm text-blue-200/80">Районів області</div>
+                    <Target className="absolute bottom-3 right-3 h-5 w-5 text-blue-500/40 group-hover:text-blue-400/60 transition-colors" />
                   </div>
-                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
-                    <div className="text-3xl font-bold text-green-300">
-                      {geoData?.spatial?.summary?.coverage_percentage || 0}%
+                  <div className="relative overflow-hidden bg-gradient-to-br from-amber-600/20 to-amber-800/20 p-5 rounded-2xl border border-amber-400/30 group hover:border-amber-400/60 transition-all">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="text-4xl font-bold text-amber-300 mb-1">
+                      {geoData?.spatial?.summary?.coverage_percentage || 100}%
                     </div>
-                    <div className="text-xs text-green-200">Покриття</div>
+                    <div className="text-sm text-amber-200/80">Покриття даними</div>
+                    <Sparkles className="absolute bottom-3 right-3 h-5 w-5 text-amber-500/40 group-hover:text-amber-400/60 transition-colors" />
                   </div>
-                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
-                    <div className="text-3xl font-bold text-green-300">
-                      WGS84
-                    </div>
-                    <div className="text-xs text-green-200">EPSG:4326</div>
+                  <div className="relative overflow-hidden bg-gradient-to-br from-purple-600/20 to-purple-800/20 p-5 rounded-2xl border border-purple-400/30 group hover:border-purple-400/60 transition-all">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="text-4xl font-bold text-purple-300 mb-1">WGS84</div>
+                    <div className="text-sm text-purple-200/80">EPSG:4326</div>
+                    <Brain className="absolute bottom-3 right-3 h-5 w-5 text-purple-500/40 group-hover:text-purple-400/60 transition-colors" />
                   </div>
                 </div>
 
-                {/* District Statistics */}
-                <h4 className="text-lg font-semibold text-white mb-4">📊 Статистика по районах (Spatial Join)</h4>
-                <div className="space-y-3 mb-6">
+                {/* Main Content Grid */}
+                <div className="grid lg:grid-cols-2 gap-6 mb-8">
+                  {/* District Map Visualization */}
+                  <div className="bg-slate-900/50 rounded-2xl border border-green-400/20 p-5">
+                    <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-green-600/30 flex items-center justify-center">
+                        🗺️
+                      </div>
+                      Карта районів Житомирщини
+                    </h4>
+                    <div className="relative h-72 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl overflow-hidden border border-slate-700">
+                      {/* SVG Map of Districts */}
+                      <svg viewBox="0 0 200 200" className="w-full h-full">
+                        {/* Background */}
+                        <rect width="200" height="200" fill="#1e293b" />
+                        
+                        {/* Grid */}
+                        {[...Array(10)].map((_, i) => (
+                          <g key={i}>
+                            <line x1={i * 20} y1="0" x2={i * 20} y2="200" stroke="#334155" strokeWidth="0.5" />
+                            <line x1="0" y1={i * 20} x2="200" y2={i * 20} stroke="#334155" strokeWidth="0.5" />
+                          </g>
+                        ))}
+                        
+                        {/* Districts as polygons */}
+                        {geoData?.districts?.map((district, idx) => {
+                          const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+                          const positions = [
+                            { x: 100, y: 100, w: 80, h: 60 },  // Житомирський (центр)
+                            { x: 100, y: 160, w: 50, h: 35 },  // Бердичівський (південь)
+                            { x: 100, y: 40, w: 70, h: 50 },   // Коростенський (північ)
+                            { x: 30, y: 100, w: 55, h: 50 }    // Новоград (захід)
+                          ];
+                          const pos = positions[idx] || { x: 100, y: 100, w: 40, h: 40 };
+                          const size = Math.sqrt(district.objects_count) * 2;
+                          
+                          return (
+                            <g key={idx} className="cursor-pointer hover:opacity-80 transition-opacity">
+                              {/* District shape */}
+                              <ellipse
+                                cx={pos.x}
+                                cy={pos.y}
+                                rx={pos.w / 2}
+                                ry={pos.h / 2}
+                                fill={colors[idx]}
+                                fillOpacity="0.3"
+                                stroke={colors[idx]}
+                                strokeWidth="2"
+                              />
+                              {/* Object count circle */}
+                              <circle
+                                cx={pos.x}
+                                cy={pos.y}
+                                r={Math.min(size, 25)}
+                                fill={colors[idx]}
+                                fillOpacity="0.8"
+                              />
+                              {/* Label */}
+                              <text
+                                x={pos.x}
+                                y={pos.y + 4}
+                                textAnchor="middle"
+                                fill="white"
+                                fontSize="10"
+                                fontWeight="bold"
+                              >
+                                {district.objects_count}
+                              </text>
+                              {/* District name */}
+                              <text
+                                x={pos.x}
+                                y={pos.y + pos.h / 2 + 15}
+                                textAnchor="middle"
+                                fill="#94a3b8"
+                                fontSize="7"
+                              >
+                                {district.district_name.replace(' район', '')}
+                              </text>
+                            </g>
+                          );
+                        })}
+                        
+                        {/* Legend */}
+                        <text x="10" y="190" fill="#64748b" fontSize="6">Spatial Join: Point-in-Polygon</text>
+                      </svg>
+                      
+                      {/* Overlay info */}
+                      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-lg">
+                        <span className="text-xs text-green-300 font-medium">GeoPandas + Shapely</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pie Chart - Category Distribution */}
+                  <div className="bg-slate-900/50 rounded-2xl border border-green-400/20 p-5">
+                    <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-blue-600/30 flex items-center justify-center">
+                        📊
+                      </div>
+                      Розподіл по районах
+                    </h4>
+                    <div className="relative h-72 flex items-center justify-center">
+                      {/* Donut Chart */}
+                      <svg viewBox="0 0 200 200" className="w-64 h-64">
+                        {(() => {
+                          const total = geoData?.districts?.reduce((sum, d) => sum + d.objects_count, 0) || 1;
+                          const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+                          let currentAngle = -90;
+                          
+                          return geoData?.districts?.map((district, idx) => {
+                            const percentage = (district.objects_count / total) * 100;
+                            const angle = (percentage / 100) * 360;
+                            const startAngle = currentAngle;
+                            const endAngle = currentAngle + angle;
+                            currentAngle = endAngle;
+                            
+                            const startRad = (startAngle * Math.PI) / 180;
+                            const endRad = (endAngle * Math.PI) / 180;
+                            
+                            const x1 = 100 + 70 * Math.cos(startRad);
+                            const y1 = 100 + 70 * Math.sin(startRad);
+                            const x2 = 100 + 70 * Math.cos(endRad);
+                            const y2 = 100 + 70 * Math.sin(endRad);
+                            
+                            const largeArc = angle > 180 ? 1 : 0;
+                            
+                            return (
+                              <path
+                                key={idx}
+                                d={`M 100 100 L ${x1} ${y1} A 70 70 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                                fill={colors[idx]}
+                                stroke="#1e293b"
+                                strokeWidth="2"
+                                className="hover:opacity-80 transition-opacity cursor-pointer"
+                              />
+                            );
+                          });
+                        })()}
+                        {/* Center circle */}
+                        <circle cx="100" cy="100" r="40" fill="#1e293b" />
+                        <text x="100" y="95" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">
+                          {geoData?.districts?.reduce((sum, d) => sum + d.objects_count, 0)?.toLocaleString()}
+                        </text>
+                        <text x="100" y="110" textAnchor="middle" fill="#94a3b8" fontSize="8">
+                          об'єктів
+                        </text>
+                      </svg>
+                      
+                      {/* Legend */}
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 space-y-2">
+                        {geoData?.districts?.map((district, idx) => {
+                          const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+                          const total = geoData?.districts?.reduce((sum, d) => sum + d.objects_count, 0) || 1;
+                          const pct = ((district.objects_count / total) * 100).toFixed(1);
+                          return (
+                            <div key={idx} className="flex items-center gap-2">
+                              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx] }}></div>
+                              <span className="text-xs text-slate-300">{pct}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* District Statistics Cards */}
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-amber-600/30 flex items-center justify-center">
+                    📈
+                  </div>
+                  Детальна статистика районів (Spatial Join)
+                </h4>
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
                   {geoData?.districts?.map((district, idx) => {
                     const maxObjects = Math.max(...(geoData?.districts?.map(d => d.objects_count) || [1]));
                     const percentage = (district.objects_count / maxObjects) * 100;
                     const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+                    const bgColors = ['from-green-900/40 to-green-800/20', 'from-blue-900/40 to-blue-800/20', 'from-amber-900/40 to-amber-800/20', 'from-red-900/40 to-red-800/20'];
+                    const icons = ['🏛️', '🎭', '🏰', '🌳'];
                     return (
-                      <div key={idx} className="bg-slate-800/50 p-4 rounded-lg border border-green-400/20">
+                      <div key={idx} className={`bg-gradient-to-br ${bgColors[idx]} p-5 rounded-2xl border border-slate-600/30 hover:border-slate-500/50 transition-all group`}>
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl" style={{ backgroundColor: `${colors[idx]}30` }}>
+                              {icons[idx]}
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-white">{district.district_name}</h5>
+                              <p className="text-xs text-slate-400">Домінує: {district.dominant_category}</p>
+                            </div>
+                          </div>
+                          <Badge style={{ backgroundColor: colors[idx] }} className="text-white font-bold px-3 py-1">
+                            {district.objects_count}
+                          </Badge>
+                        </div>
+                        
+                        {/* Progress bar */}
+                        <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden mb-3">
+                          <div 
+                            className="h-full rounded-full transition-all duration-1000 ease-out"
+                            style={{ width: `${percentage}%`, backgroundColor: colors[idx] }}
+                          />
+                        </div>
+                        
+                        {/* Stats row */}
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-slate-400">
+                            ⭐ Рейтинг: <span className="text-white font-medium">{district.avg_rating}</span>
+                          </span>
+                          <span className="text-slate-400">
+                            📍 Щільність: <span className="text-white font-medium">{district.density_per_100km2} / 100км²</span>
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Technical Info */}
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 p-5 rounded-2xl border border-green-400/20">
+                    <h5 className="font-semibold text-green-300 mb-3 flex items-center gap-2">
+                      <span className="text-lg">🔧</span> Просторові операції
+                    </h5>
+                    <ul className="text-sm text-green-100/80 space-y-2">
+                      {geoData?.spatial?.geopandas_info?.spatial_operations?.map((op, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                          {op}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/20 p-5 rounded-2xl border border-blue-400/20">
+                    <h5 className="font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                      <span className="text-lg">📍</span> Географічні межі
+                    </h5>
+                    <ul className="text-sm text-blue-100/80 space-y-2">
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                        Широта: {geoData?.spatial?.geographic_bounds?.lat_min}° - {geoData?.spatial?.geographic_bounds?.lat_max}°
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                        Довгота: {geoData?.spatial?.geographic_bounds?.lng_min}° - {geoData?.spatial?.geographic_bounds?.lng_max}°
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                        Регіон: Житомирська область
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 p-5 rounded-2xl border border-purple-400/20">
+                    <h5 className="font-semibold text-purple-300 mb-3 flex items-center gap-2">
+                      <span className="text-lg">📚</span> Методологія
+                    </h5>
+                    <ul className="text-sm text-purple-100/80 space-y-2">
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                        Бібліотека: GeoPandas + Shapely
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                        CRS: WGS84 (EPSG:4326)
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+                        Посилання: Розділ 2.5
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-semibold text-green-200">{district.district_name}</span>
                           <div className="flex items-center gap-3">
