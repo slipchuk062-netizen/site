@@ -4,9 +4,10 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { 
   Upload, FileJson, Download, CheckCircle, AlertCircle,
-  TrendingUp, BarChart3, MapPin, Sparkles
+  TrendingUp, BarChart3, MapPin, Sparkles, FileSpreadsheet
 } from 'lucide-react';
 import axios from 'axios';
+import attractionsData from '../data/attractions.json';
 
 const DataUploadSection = () => {
   const [file, setFile] = useState(null);
