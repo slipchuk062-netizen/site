@@ -263,8 +263,7 @@ def calculate_district_statistics_geopandas():
         return []
 
 
-# Initialize GeoPandas data on startup
-load_districts_geojson()
+# GeoPandas initialization will be called later after logger is defined
 
 # Create the main app without a prefix
 app = FastAPI()
