@@ -159,24 +159,57 @@ const DataUploadSection = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
+              {/* Export Current Data */}
+              <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                <div className="flex items-start gap-3">
+                  <FileSpreadsheet className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-1" />
+                  <div className="flex-1">
+                    <h3 className="font-bold text-slate-900 mb-1">Експорт даних</h3>
+                    <p className="text-sm text-slate-600 mb-3">
+                      Експортуйте поточну базу даних ({attractionsData.length} об'єктів) у форматі CSV
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={exportToCSV}
+                      className="border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Експорт в CSV
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               {/* Template Download */}
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <div className="flex items-start gap-3">
                   <FileJson className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
                   <div className="flex-1">
-                    <h3 className="font-bold text-slate-900 mb-1">Формат даних</h3>
+                    <h3 className="font-bold text-slate-900 mb-1">Шаблони імпорту</h3>
                     <p className="text-sm text-slate-600 mb-3">
-                      Завантажте шаблон JSON файлу з прикладом структури даних
+                      Завантажте шаблон для імпорту нових даних
                     </p>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={downloadTemplate}
-                      className="border-blue-300 text-blue-700 hover:bg-blue-100"
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Завантажити шаблон
-                    </Button>
+                    <div className="flex gap-2 flex-wrap">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={downloadTemplate}
+                        className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        JSON шаблон
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={downloadCSVTemplate}
+                        className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        CSV шаблон
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
