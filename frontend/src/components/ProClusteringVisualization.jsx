@@ -901,61 +901,6 @@ const ProClusteringVisualization = () => {
               </CardContent>
             </Card>
           </TabsContent>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold text-green-200">{district.district_name}</span>
-                          <div className="flex items-center gap-3">
-                            <Badge className="bg-slate-700 text-white">{district.objects_count} об'єктів</Badge>
-                            <Badge style={{backgroundColor: colors[idx % 4]}} className="text-white">
-                              {district.dominant_category}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{width: `${percentage}%`, backgroundColor: colors[idx % 4]}}
-                          />
-                        </div>
-                        <div className="text-xs text-slate-400 mt-1">
-                          Рейтинг: ⭐ {district.avg_rating} | Щільність: {district.density_per_100km2} об/100км²
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Spatial Operations */}
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-400/30">
-                    <h5 className="font-semibold text-blue-300 mb-2">🔧 Просторові операції</h5>
-                    <ul className="text-sm text-blue-100 space-y-1">
-                      {geoData?.spatial?.geopandas_info?.spatial_operations?.map((op, i) => (
-                        <li key={i}>• {op}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="bg-amber-900/30 p-4 rounded-lg border border-amber-400/30">
-                    <h5 className="font-semibold text-amber-300 mb-2">📍 Географічні межі</h5>
-                    <ul className="text-sm text-amber-100 space-y-1">
-                      <li>• Широта: {geoData?.spatial?.geographic_bounds?.lat_min}° - {geoData?.spatial?.geographic_bounds?.lat_max}°</li>
-                      <li>• Довгота: {geoData?.spatial?.geographic_bounds?.lng_min}° - {geoData?.spatial?.geographic_bounds?.lng_max}°</li>
-                      <li>• Регіон: Житомирська область</li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Methodology Reference */}
-                <div className="p-4 bg-green-900/30 rounded-lg border border-green-400/30">
-                  <p className="text-sm text-green-100 leading-relaxed">
-                    <strong className="text-green-300">📚 Розділ 2.5:</strong> GeoPandas забезпечує виконання просторових операцій, 
-                    зокрема <strong>визначення приналежності точки до полігону</strong> (point-in-polygon) для встановлення районної 
-                    приналежності об'єктів. Використовується система координат <strong>WGS84 (EPSG:4326)</strong> та бібліотека 
-                    <strong> Shapely</strong> для геометричних обчислень.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
         </Tabs>
 
         {/* Algorithm Info */}
