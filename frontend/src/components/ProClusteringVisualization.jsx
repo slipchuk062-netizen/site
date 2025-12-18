@@ -254,6 +254,10 @@ const ProClusteringVisualization = () => {
               <GitBranch className="h-5 w-5 mr-2" />
               Dendrogram
             </TabsTrigger>
+            <TabsTrigger value="geopandas" className="data-[state=active]:bg-green-600">
+              <Layers className="h-5 w-5 mr-2" />
+              GeoPandas
+            </TabsTrigger>
           </TabsList>
 
           {/* Elbow Method */}
