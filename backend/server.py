@@ -2263,11 +2263,6 @@ async def download_presentation_html():
             media_type="text/html"
         )
     else:
-
-
-# Initialize GeoPandas data after logger is defined
-load_districts_geojson()
-logger.info("GeoPandas module initialized for spatial analysis (Розділ 2.5)")
         raise HTTPException(status_code=404, detail="Presentation HTML file not found")
 
 @app.get("/api/download-presentation-pptx")
