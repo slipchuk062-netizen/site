@@ -73,7 +73,6 @@ const HomePage = () => {
         <TopPlaces />
         <PersonalizedRecommendations />
         <DataUploadSection />
-        <TestimonialsSection />
         <ContactSection />
       </main>
       <Footer />
