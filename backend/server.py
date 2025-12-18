@@ -126,11 +126,11 @@ def load_districts_geojson():
             
             # Створюємо GeoDataFrame
             DISTRICTS_GEODATA = gpd.GeoDataFrame(features, crs="EPSG:4326")
-            logger.info(f"Loaded {len(DISTRICTS_GEODATA)} districts into GeoDataFrame")
+            print(f"[GeoPandas] Loaded {len(DISTRICTS_GEODATA)} districts into GeoDataFrame")
             return True
             
     except Exception as e:
-        logger.error(f"Error loading districts GeoJSON: {str(e)}")
+        print(f"[GeoPandas] Error loading districts GeoJSON: {str(e)}")
         return False
     
     return False
