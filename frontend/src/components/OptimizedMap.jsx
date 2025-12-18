@@ -565,6 +565,7 @@ const OptimizedMap = ({ attractions = [] }) => {
                     attribution='&copy; OpenStreetMap'
                   />
 
+                  <MapFocusController />
                   <DistrictBoundaries showBoundaries={showBoundaries} densityStats={densityStats} />
 
                   <MarkerClusterGroup
