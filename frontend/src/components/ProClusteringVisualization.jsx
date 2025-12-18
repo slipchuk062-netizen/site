@@ -237,25 +237,25 @@ const ProClusteringVisualization = () => {
 
         {/* Main Visualizations */}
         <Tabs defaultValue="elbow" className="space-y-6" onValueChange={setActiveVisualization}>
-          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-md border border-purple-400/30">
-            <TabsTrigger value="elbow" className="data-[state=active]:bg-purple-600">
-              <TrendingDown className="h-5 w-5 mr-2" />
-              Elbow Method
+          <TabsList className="grid w-full grid-cols-5 bg-white/10 backdrop-blur-md border border-purple-400/30">
+            <TabsTrigger value="elbow" className="data-[state=active]:bg-purple-600 text-white">
+              <TrendingDown className="h-4 w-4 mr-1" />
+              Elbow
             </TabsTrigger>
-            <TabsTrigger value="silhouette" className="data-[state=active]:bg-purple-600">
-              <BarChart3 className="h-5 w-5 mr-2" />
-              Silhouette Plot
+            <TabsTrigger value="silhouette" className="data-[state=active]:bg-purple-600 text-white">
+              <BarChart3 className="h-4 w-4 mr-1" />
+              Silhouette
             </TabsTrigger>
-            <TabsTrigger value="scatter" className="data-[state=active]:bg-purple-600">
-              <Sparkles className="h-5 w-5 mr-2" />
+            <TabsTrigger value="scatter" className="data-[state=active]:bg-purple-600 text-white">
+              <Sparkles className="h-4 w-4 mr-1" />
               2D Projection
             </TabsTrigger>
-            <TabsTrigger value="dendrogram" className="data-[state=active]:bg-purple-600">
-              <GitBranch className="h-5 w-5 mr-2" />
+            <TabsTrigger value="dendrogram" className="data-[state=active]:bg-purple-600 text-white">
+              <GitBranch className="h-4 w-4 mr-1" />
               Dendrogram
             </TabsTrigger>
-            <TabsTrigger value="geopandas" className="data-[state=active]:bg-green-600">
-              <Layers className="h-5 w-5 mr-2" />
+            <TabsTrigger value="geopandas" className="data-[state=active]:bg-emerald-600 text-white">
+              <Layers className="h-4 w-4 mr-1" />
               GeoPandas
             </TabsTrigger>
           </TabsList>
