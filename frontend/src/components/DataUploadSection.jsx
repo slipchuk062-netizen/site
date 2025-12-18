@@ -85,6 +85,52 @@ const DataUploadSection = () => {
     URL.revokeObjectURL(url);
   };
 
+  // Export current attractions data to CSV
+  const exportToCSV = () => {
+    const headers = ['id', 'name', 'category', 'address', 'lat', 'lng', 'rating', 'workingHours', 'phone', 'website'];
+    const csvRows = [headers.join(',')];
+
+    attractionsData.forEach(attr => {
+      const row = [
+        attr.id || '',
+        `"${(attr.name || '').replace(/"/g, '""')}"`,
+        attr.category || '',
+        `"${(attr.address || '').replace(/"/g, '""')}"`,
+        attr.coordinates?.lat || '',
+        attr.coordinates?.lng || '',
+        attr.rating || '',
+        `"${(attr.workingHours || '').replace(/"/g, '""')}"`,
+        attr.phone || '',
+        attr.website || ''
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tourism_data_zhytomyr_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Download CSV template
+  const downloadCSVTemplate = () => {
+    const headers = ['id', 'name', 'category', 'address', 'lat', 'lng', 'rating', 'workingHours', 'phone', 'website'];
+    const example = ['1', '"Приклад об\'єкта"', 'historical', '"вул. Київська, 1"', '50.2547', '28.6587', '4.5', '"9:00-18:00"', '+380412123456', 'https://example.com'];
+    
+    const csvContent = [headers.join(','), example.join(',')].join('\n');
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tourism_data_template.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section className="py-20 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
