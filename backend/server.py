@@ -259,7 +259,7 @@ def calculate_district_statistics_geopandas():
         return district_stats
         
     except Exception as e:
-        logger.error(f"Error calculating district statistics: {str(e)}")
+        print(f"[GeoPandas] Error calculating district statistics: {str(e)}")
         return []
 
 
