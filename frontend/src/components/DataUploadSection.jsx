@@ -18,14 +18,64 @@ const DataUploadSection = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.type === 'application/json' || selectedFile.name.endsWith('.json')) {
+      const isJson = selectedFile.type === 'application/json' || selectedFile.name.endsWith('.json');
+      const isCsv = selectedFile.type === 'text/csv' || selectedFile.name.endsWith('.csv');
+      
+      if (isJson || isCsv) {
         setFile(selectedFile);
         setError(null);
       } else {
-        setError('Будь ласка, завантажте JSON файл');
+        setError('Будь ласка, завантажте JSON або CSV файл');
         setFile(null);
       }
     }
+  };
+
+  // Parse CSV content to JSON
+  const parseCSV = (content) => {
+    const lines = content.split('\n').filter(line => line.trim());
+    if (lines.length < 2) return [];
+    
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+    const data = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (const char of lines[i]) {
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim().replace(/^"|"$/g, ''));
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      values.push(current.trim().replace(/^"|"$/g, ''));
+      
+      if (values.length === headers.length) {
+        const obj = {};
+        headers.forEach((header, idx) => {
+          const val = values[idx];
+          if (header === 'lat' || header === 'lng') {
+            if (!obj.coordinates) obj.coordinates = {};
+            obj.coordinates[header] = parseFloat(val) || 0;
+          } else if (header === 'rating') {
+            obj[header] = parseFloat(val) || null;
+          } else if (header === 'id') {
+            obj[header] = parseInt(val) || i;
+          } else {
+            obj[header] = val;
+          }
+        });
+        data.push(obj);
+      }
+    }
+    
+    return data;
   };
 
   const handleUpload = async () => {
