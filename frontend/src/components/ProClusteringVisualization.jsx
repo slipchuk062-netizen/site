@@ -16,6 +16,7 @@ const ProClusteringVisualization = () => {
   const [kValue, setKValue] = useState(7);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [dynamicData, setDynamicData] = useState(null);
+  const [geoData, setGeoData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dynamicLoading, setDynamicLoading] = useState(false);
   const [activeVisualization, setActiveVisualization] = useState('distribution');
@@ -24,7 +25,24 @@ const ProClusteringVisualization = () => {
 
   useEffect(() => {
     fetchAnalytics();
+    fetchGeoData();
   }, []);
+
+  // Fetch GeoPandas spatial analysis data
+  const fetchGeoData = async () => {
+    try {
+      const [spatialRes, districtRes] = await Promise.all([
+        axios.get(`${backendUrl}/api/geo/spatial-analysis`),
+        axios.get(`${backendUrl}/api/geo/district-statistics`)
+      ]);
+      setGeoData({
+        spatial: spatialRes.data,
+        districts: districtRes.data.data
+      });
+    } catch (error) {
+      console.error('Failed to fetch GeoPandas data:', error);
+    }
+  };
 
   // Fetch dynamic data when K value changes
   useEffect(() => {
