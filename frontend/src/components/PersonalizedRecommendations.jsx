@@ -262,7 +262,19 @@ const PersonalizedRecommendations = () => {
                             className="flex-1 bg-purple-600 hover:bg-purple-700"
                             onClick={(e) => {
                               e.stopPropagation();
-                              // Navigate to map with this location
+                              // Save selected location to localStorage for map to pick up
+                              if (rec.coordinates) {
+                                localStorage.setItem('showOnMap', JSON.stringify({
+                                  lat: rec.coordinates.lat,
+                                  lng: rec.coordinates.lng,
+                                  name: rec.name
+                                }));
+                                // Dispatch custom event for map component
+                                window.dispatchEvent(new CustomEvent('showOnMap', { 
+                                  detail: { lat: rec.coordinates.lat, lng: rec.coordinates.lng, name: rec.name } 
+                                }));
+                              }
+                              // Navigate to map
                               const mapSection = document.getElementById('map');
                               if (mapSection) {
                                 mapSection.scrollIntoView({ behavior: 'smooth' });
