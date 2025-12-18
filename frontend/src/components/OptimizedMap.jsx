@@ -234,6 +234,50 @@ const createClusterCustomIcon = (cluster) => {
   });
 };
 
+// Map focus controller - listens for showOnMap events
+const MapFocusController = () => {
+  const map = useMap();
+  
+  useEffect(() => {
+    const handleShowOnMap = (event) => {
+      const { lat, lng, name } = event.detail;
+      if (lat && lng) {
+        map.setView([lat, lng], 15, { animate: true });
+        // Show popup with name
+        L.popup()
+          .setLatLng([lat, lng])
+          .setContent(`<div class="p-2 font-bold">${name || 'Об\'єкт'}</div>`)
+          .openOn(map);
+      }
+    };
+    
+    // Check localStorage on mount
+    const savedLocation = localStorage.getItem('showOnMap');
+    if (savedLocation) {
+      try {
+        const { lat, lng, name } = JSON.parse(savedLocation);
+        if (lat && lng) {
+          setTimeout(() => {
+            map.setView([lat, lng], 15, { animate: true });
+            L.popup()
+              .setLatLng([lat, lng])
+              .setContent(`<div class="p-2 font-bold">${name || 'Об\'єкт'}</div>`)
+              .openOn(map);
+          }, 500);
+          localStorage.removeItem('showOnMap');
+        }
+      } catch (e) {
+        console.error('Error parsing showOnMap data:', e);
+      }
+    }
+    
+    window.addEventListener('showOnMap', handleShowOnMap);
+    return () => window.removeEventListener('showOnMap', handleShowOnMap);
+  }, [map]);
+  
+  return null;
+};
+
 // District boundaries component
 const DistrictBoundaries = ({ showBoundaries, densityStats }) => {
   if (!showBoundaries) return null;
