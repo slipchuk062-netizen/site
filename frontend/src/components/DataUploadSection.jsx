@@ -284,7 +284,7 @@ const DataUploadSection = () => {
                 <div className="flex items-center gap-3">
                   <input
                     type="file"
-                    accept=".json"
+                    accept=".json,.csv"
                     onChange={handleFileChange}
                     className="flex-1 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100 cursor-pointer"
                   />
