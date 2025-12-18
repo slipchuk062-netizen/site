@@ -580,6 +580,236 @@ class BackendTester:
             self.log_result("AI Chat API", "FAIL",
                           "Request failed", e)
     
+    def test_geopandas_spatial_analysis(self):
+        """Test GeoPandas spatial analysis endpoint (Розділ 2.5)"""
+        try:
+            print("\n🌍 Testing GeoPandas Spatial Analysis (Розділ 2.5)")
+            print("-" * 60)
+            
+            response = requests.get(f"{BACKEND_URL}/geo/spatial-analysis", timeout=20)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") == True:
+                    # Verify geopandas_info section
+                    geopandas_info = data.get("geopandas_info", {})
+                    if "library_version" in geopandas_info:
+                        self.log_result("GeoPandas - Library Integration", "PASS",
+                                      f"GeoPandas version: {geopandas_info.get('library_version')}")
+                    else:
+                        self.log_result("GeoPandas - Library Integration", "FAIL",
+                                      "Missing library_version in geopandas_info")
+                    
+                    # Verify geographic bounds for Zhytomyr region
+                    geo_bounds = data.get("geographic_bounds", {})
+                    expected_bounds = ["lat_min", "lat_max", "lng_min", "lng_max"]
+                    missing_bounds = [b for b in expected_bounds if b not in geo_bounds]
+                    
+                    if not missing_bounds:
+                        lat_range = geo_bounds.get("lat_max", 0) - geo_bounds.get("lat_min", 0)
+                        lng_range = geo_bounds.get("lng_max", 0) - geo_bounds.get("lng_min", 0)
+                        
+                        # Verify reasonable bounds for Zhytomyr region
+                        if 1.5 <= lat_range <= 3.0 and 1.5 <= lng_range <= 3.0:
+                            self.log_result("GeoPandas - Geographic Bounds", "PASS",
+                                          f"Zhytomyr region bounds: lat {geo_bounds.get('lat_min')}-{geo_bounds.get('lat_max')}, "
+                                          f"lng {geo_bounds.get('lng_min')}-{geo_bounds.get('lng_max')}")
+                        else:
+                            self.log_result("GeoPandas - Geographic Bounds", "FAIL",
+                                          f"Bounds seem incorrect: lat range {lat_range}, lng range {lng_range}")
+                    else:
+                        self.log_result("GeoPandas - Geographic Bounds", "FAIL",
+                                      f"Missing bounds: {missing_bounds}")
+                    
+                    # Verify summary statistics
+                    summary = data.get("summary", {})
+                    if ("total_objects" in summary and 
+                        "districts_count" in summary and 
+                        summary.get("districts_count") == 4):
+                        
+                        self.log_result("GeoPandas - Summary Statistics", "PASS",
+                                      f"Total objects: {summary.get('total_objects')}, "
+                                      f"Districts: {summary.get('districts_count')}")
+                    else:
+                        self.log_result("GeoPandas - Summary Statistics", "FAIL",
+                                      f"Invalid summary: {summary}")
+                    
+                    # Verify CRS information
+                    if (geopandas_info.get("crs") == "EPSG:4326 (WGS84)" and
+                        "Point-in-polygon" in str(geopandas_info.get("spatial_operations", []))):
+                        
+                        self.log_result("GeoPandas - CRS and Operations", "PASS",
+                                      "EPSG:4326 (WGS84) CRS and point-in-polygon operations confirmed")
+                    else:
+                        self.log_result("GeoPandas - CRS and Operations", "FAIL",
+                                      f"Missing or incorrect CRS/operations: {geopandas_info}")
+                    
+                    self.log_result("GeoPandas Spatial Analysis API", "PASS",
+                                  "Full spatial analysis endpoint working correctly")
+                else:
+                    self.log_result("GeoPandas Spatial Analysis API", "FAIL",
+                                  f"Success=false in response: {data}")
+            else:
+                self.log_result("GeoPandas Spatial Analysis API", "FAIL",
+                              f"HTTP {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            self.log_result("GeoPandas Spatial Analysis API", "FAIL",
+                          "Request failed", e)
+    
+    def test_geopandas_district_assignment(self):
+        """Test GeoPandas district assignment endpoint (spatial join)"""
+        try:
+            print("\n📍 Testing GeoPandas District Assignment (Spatial Join)")
+            print("-" * 60)
+            
+            response = requests.get(f"{BACKEND_URL}/geo/district-assignment", timeout=20)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") == True:
+                    attractions_data = data.get("data", [])
+                    
+                    if len(attractions_data) > 0:
+                        # Check first few attractions for proper district assignment
+                        sample_attraction = attractions_data[0]
+                        
+                        required_fields = ["id", "name", "coordinates", "district"]
+                        missing_fields = [f for f in required_fields if f not in sample_attraction]
+                        
+                        if not missing_fields:
+                            district_info = sample_attraction.get("district", {})
+                            
+                            if ("district_id" in district_info and 
+                                "district_name" in district_info):
+                                
+                                self.log_result("GeoPandas - District Assignment Structure", "PASS",
+                                              f"Attractions properly assigned to districts")
+                                
+                                # Count attractions with valid district assignments
+                                valid_assignments = sum(1 for attr in attractions_data 
+                                                      if attr.get("district", {}).get("district_id") != "unknown")
+                                
+                                assignment_rate = (valid_assignments / len(attractions_data)) * 100
+                                
+                                if assignment_rate >= 70:  # At least 70% should be assigned
+                                    self.log_result("GeoPandas - Assignment Success Rate", "PASS",
+                                                  f"{valid_assignments}/{len(attractions_data)} attractions assigned "
+                                                  f"({assignment_rate:.1f}%)")
+                                else:
+                                    self.log_result("GeoPandas - Assignment Success Rate", "FAIL",
+                                                  f"Low assignment rate: {assignment_rate:.1f}%")
+                            else:
+                                self.log_result("GeoPandas - District Assignment Structure", "FAIL",
+                                              f"Missing district_id or district_name in district info")
+                        else:
+                            self.log_result("GeoPandas - District Assignment Structure", "FAIL",
+                                          f"Missing required fields: {missing_fields}")
+                    else:
+                        self.log_result("GeoPandas - District Assignment Data", "FAIL",
+                                      "No attractions data returned")
+                    
+                    # Verify methodology mentions GeoPandas + Shapely and Spatial Join
+                    methodology = data.get("methodology", {})
+                    if ("GeoPandas + Shapely" in methodology.get("library", "") and
+                        "Spatial Join" in methodology.get("operation", "")):
+                        
+                        self.log_result("GeoPandas - Methodology Documentation", "PASS",
+                                      "GeoPandas + Shapely and Spatial Join methodology documented")
+                    else:
+                        self.log_result("GeoPandas - Methodology Documentation", "FAIL",
+                                      f"Missing or incorrect methodology: {methodology}")
+                    
+                    self.log_result("GeoPandas District Assignment API", "PASS",
+                                  f"District assignment working for {len(attractions_data)} attractions")
+                else:
+                    self.log_result("GeoPandas District Assignment API", "FAIL",
+                                  f"Success=false in response: {data}")
+            else:
+                self.log_result("GeoPandas District Assignment API", "FAIL",
+                              f"HTTP {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            self.log_result("GeoPandas District Assignment API", "FAIL",
+                          "Request failed", e)
+    
+    def test_geopandas_district_statistics(self):
+        """Test GeoPandas district statistics endpoint"""
+        try:
+            print("\n📊 Testing GeoPandas District Statistics")
+            print("-" * 60)
+            
+            response = requests.get(f"{BACKEND_URL}/geo/district-statistics", timeout=15)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") == True:
+                    district_stats = data.get("data", [])
+                    
+                    # Should have statistics for 4 districts
+                    if len(district_stats) == 4:
+                        self.log_result("GeoPandas - District Count", "PASS",
+                                      f"Statistics for all 4 districts returned")
+                        
+                        # Check each district has required statistics
+                        all_districts_valid = True
+                        required_stats = ["district_id", "district_name", "objects_count", 
+                                        "avg_rating", "dominant_category"]
+                        
+                        for district in district_stats:
+                            missing_stats = [stat for stat in required_stats if stat not in district]
+                            if missing_stats:
+                                all_districts_valid = False
+                                self.log_result(f"GeoPandas - District {district.get('district_id', 'unknown')} Stats", "FAIL",
+                                              f"Missing statistics: {missing_stats}")
+                            else:
+                                # Verify reasonable values
+                                objects_count = district.get("objects_count", 0)
+                                avg_rating = district.get("avg_rating", 0)
+                                
+                                if objects_count >= 0 and 1.0 <= avg_rating <= 5.0:
+                                    self.log_result(f"GeoPandas - District {district.get('district_name')} Stats", "PASS",
+                                                  f"Objects: {objects_count}, Avg Rating: {avg_rating}, "
+                                                  f"Dominant: {district.get('dominant_category')}")
+                                else:
+                                    all_districts_valid = False
+                                    self.log_result(f"GeoPandas - District {district.get('district_name')} Stats", "FAIL",
+                                                  f"Invalid values - Objects: {objects_count}, Rating: {avg_rating}")
+                        
+                        if all_districts_valid:
+                            self.log_result("GeoPandas - All District Statistics", "PASS",
+                                          "All districts have valid statistics")
+                    else:
+                        self.log_result("GeoPandas - District Count", "FAIL",
+                                      f"Expected 4 districts, got {len(district_stats)}")
+                    
+                    # Verify methodology mentions GeoPandas operations
+                    methodology = data.get("methodology", {})
+                    if ("GeoPandas" in methodology.get("library", "") and
+                        "Spatial Join" in str(methodology.get("operations", []))):
+                        
+                        self.log_result("GeoPandas - Statistics Methodology", "PASS",
+                                      "GeoPandas spatial operations methodology documented")
+                    else:
+                        self.log_result("GeoPandas - Statistics Methodology", "FAIL",
+                                      f"Missing GeoPandas methodology: {methodology}")
+                    
+                    self.log_result("GeoPandas District Statistics API", "PASS",
+                                  f"District statistics calculated for {len(district_stats)} districts")
+                else:
+                    self.log_result("GeoPandas District Statistics API", "FAIL",
+                                  f"Success=false in response: {data}")
+            else:
+                self.log_result("GeoPandas District Statistics API", "FAIL",
+                              f"HTTP {response.status_code}: {response.text}")
+                
+        except Exception as e:
+            self.log_result("GeoPandas District Statistics API", "FAIL",
+                          "Request failed", e)
+    
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Comprehensive Backend Testing for Zhytomyr Tourism Website")
