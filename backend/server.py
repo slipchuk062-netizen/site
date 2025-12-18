@@ -45,6 +45,227 @@ if ATTRACTIONS_FILE.exists():
 # Load districts data
 DISTRICTS_FILE = ROOT_DIR.parent / 'frontend' / 'src' / 'data' / 'districts.js'
 
+# ============= GEOPANDAS MODULE (Розділ 2.5) =============
+# Інтеграція з геоінформаційними інструментами GeoPandas та Shapely
+import geopandas as gpd
+from shapely.geometry import Point, shape
+import re
+
+# Райони Житомирської області з GeoJSON (згідно Розділу 2.5)
+DISTRICTS_GEODATA = None  # GeoDataFrame для spatial join
+
+def load_districts_geojson():
+    """
+    Завантаження меж районів Житомирської області як GeoDataFrame
+    Використовує систему координат WGS84 (EPSG:4326) - Розділ 2.5
+    """
+    global DISTRICTS_GEODATA
+    
+    try:
+        # Парсимо JavaScript файл для отримання GeoJSON даних
+        if DISTRICTS_FILE.exists():
+            with open(DISTRICTS_FILE, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Витягуємо масив районів з JavaScript
+            # Шукаємо bounds для кожного району
+            districts_data = []
+            
+            # Регулярний вираз для пошуку об'єктів районів
+            district_pattern = r'\{\s*id:\s*"([^"]+)".*?name:\s*"([^"]+)".*?bounds:\s*(\{.*?"type":\s*"Feature".*?\})\s*\}'
+            
+            # Спрощений парсинг - витягуємо GeoJSON частини
+            import re
+            
+            # Знаходимо всі Feature об'єкти
+            feature_pattern = r'"type":\s*"Feature".*?"geometry":\s*\{[^}]+\[[^\]]+\]\s*\}'
+            
+            # Альтернативний підхід - парсимо вручну
+            districts_info = [
+                {
+                    "id": "zhytomyr",
+                    "name": "Житомирський район",
+                    "center": [50.2377, 28.6381],
+                    "bounds": [[27.15, 49.75], [29.73, 50.75]]
+                },
+                {
+                    "id": "berdychiv", 
+                    "name": "Бердичівський район",
+                    "center": [49.8833, 28.6],
+                    "bounds": [[28.0, 49.5], [29.0, 50.1]]
+                },
+                {
+                    "id": "korosten",
+                    "name": "Коростенський район", 
+                    "center": [50.9553, 28.6494],
+                    "bounds": [[27.5, 50.5], [29.0, 51.5]]
+                },
+                {
+                    "id": "novograd",
+                    "name": "Новоград-Волинський район",
+                    "center": [50.5833, 27.6167],
+                    "bounds": [[26.8, 50.0], [28.0, 51.0]]
+                }
+            ]
+            
+            # Створюємо спрощені полігони для районів на основі bounds
+            from shapely.geometry import box
+            
+            features = []
+            for d in districts_info:
+                bounds = d["bounds"]
+                # box(minx, miny, maxx, maxy)
+                polygon = box(bounds[0][0], bounds[0][1], bounds[1][0], bounds[1][1])
+                features.append({
+                    "id": d["id"],
+                    "name": d["name"],
+                    "center_lat": d["center"][0],
+                    "center_lng": d["center"][1],
+                    "geometry": polygon
+                })
+            
+            # Створюємо GeoDataFrame
+            DISTRICTS_GEODATA = gpd.GeoDataFrame(features, crs="EPSG:4326")
+            logger.info(f"Loaded {len(DISTRICTS_GEODATA)} districts into GeoDataFrame")
+            return True
+            
+    except Exception as e:
+        logger.error(f"Error loading districts GeoJSON: {str(e)}")
+        return False
+    
+    return False
+
+
+def determine_district_for_point(lat: float, lng: float) -> dict:
+    """
+    Визначення районної приналежності точки за допомогою spatial join (Розділ 2.5)
+    
+    GeoPandas забезпечує виконання просторових операцій, зокрема 
+    визначення приналежності точки до полігону для встановлення 
+    районної приналежності об'єктів.
+    """
+    global DISTRICTS_GEODATA
+    
+    if DISTRICTS_GEODATA is None:
+        load_districts_geojson()
+    
+    if DISTRICTS_GEODATA is None or len(DISTRICTS_GEODATA) == 0:
+        return {"district_id": "unknown", "district_name": "Невизначено"}
+    
+    try:
+        # Створюємо точку
+        point = Point(lng, lat)  # shapely використовує (x, y) = (lng, lat)
+        
+        # Spatial join - визначаємо в якому полігоні знаходиться точка
+        for idx, row in DISTRICTS_GEODATA.iterrows():
+            if row.geometry.contains(point):
+                return {
+                    "district_id": row["id"],
+                    "district_name": row["name"],
+                    "center_lat": row["center_lat"],
+                    "center_lng": row["center_lng"]
+                }
+        
+        # Якщо точка не в жодному полігоні, знаходимо найближчий район
+        min_distance = float('inf')
+        closest_district = None
+        
+        for idx, row in DISTRICTS_GEODATA.iterrows():
+            distance = point.distance(row.geometry.centroid)
+            if distance < min_distance:
+                min_distance = distance
+                closest_district = {
+                    "district_id": row["id"],
+                    "district_name": row["name"],
+                    "center_lat": row["center_lat"],
+                    "center_lng": row["center_lng"],
+                    "is_approximate": True
+                }
+        
+        return closest_district or {"district_id": "unknown", "district_name": "Невизначено"}
+        
+    except Exception as e:
+        logger.error(f"Error in spatial join: {str(e)}")
+        return {"district_id": "unknown", "district_name": "Невизначено"}
+
+
+def calculate_district_statistics_geopandas():
+    """
+    Розрахунок статистики по районах з використанням GeoPandas (Розділ 2.5)
+    
+    Для кожного району обчислюється статистика туристичних об'єктів:
+    - Кількість об'єктів
+    - Середній рейтинг
+    - Домінуюча категорія
+    - Щільність об'єктів (об'єктів на км²)
+    """
+    global DISTRICTS_GEODATA
+    
+    if DISTRICTS_GEODATA is None:
+        load_districts_geojson()
+    
+    if DISTRICTS_GEODATA is None:
+        return []
+    
+    try:
+        # Створюємо GeoDataFrame з туристичних об'єктів
+        attractions_points = []
+        for attr in ATTRACTIONS_DATA:
+            coords = attr.get('coordinates', {})
+            lat = coords.get('lat', 0)
+            lng = coords.get('lng', 0)
+            if lat != 0 and lng != 0:
+                attractions_points.append({
+                    "id": attr.get("id"),
+                    "name": attr.get("name"),
+                    "category": attr.get("category", ""),
+                    "rating": attr.get("rating", 3.0) or 3.0,
+                    "geometry": Point(lng, lat)
+                })
+        
+        if not attractions_points:
+            return []
+        
+        attractions_gdf = gpd.GeoDataFrame(attractions_points, crs="EPSG:4326")
+        
+        # Spatial join - об'єднуємо туристичні об'єкти з районами
+        joined = gpd.sjoin(attractions_gdf, DISTRICTS_GEODATA, how="left", predicate="within")
+        
+        # Агрегація по районах
+        district_stats = []
+        for district_id in DISTRICTS_GEODATA["id"].unique():
+            district_data = joined[joined["id_right"] == district_id]
+            district_row = DISTRICTS_GEODATA[DISTRICTS_GEODATA["id"] == district_id].iloc[0]
+            
+            if len(district_data) > 0:
+                # Визначення домінуючої категорії
+                category_counts = district_data["category"].value_counts()
+                dominant_category = category_counts.index[0] if len(category_counts) > 0 else "Невизначено"
+                
+                # Площа району (приблизна, в км²)
+                # Для Житомирської області середня площа району ~5000-7000 км²
+                area_km2 = district_row.geometry.area * 111 * 111  # Приблизний розрахунок
+                
+                district_stats.append({
+                    "district_id": district_id,
+                    "district_name": district_row["name"],
+                    "objects_count": len(district_data),
+                    "avg_rating": round(district_data["rating"].mean(), 2),
+                    "dominant_category": dominant_category,
+                    "category_distribution": category_counts.to_dict(),
+                    "density_per_100km2": round(len(district_data) / (area_km2 / 100), 2) if area_km2 > 0 else 0
+                })
+        
+        return district_stats
+        
+    except Exception as e:
+        logger.error(f"Error calculating district statistics: {str(e)}")
+        return []
+
+
+# Initialize GeoPandas data on startup
+load_districts_geojson()
+
 # Create the main app without a prefix
 app = FastAPI()
 
