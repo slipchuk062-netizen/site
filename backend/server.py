@@ -2312,3 +2312,9 @@ async def download_scientific_novelty():
         )
     else:
         raise HTTPException(status_code=404, detail="Scientific novelty document not found")
+
+
+# ============= STARTUP INITIALIZATION =============
+# Initialize GeoPandas data after all definitions
+load_districts_geojson()
+logger.info("GeoPandas module initialized for spatial analysis (Розділ 2.5)")
