@@ -87,12 +87,24 @@ const DataUploadSection = () => {
     try {
       // Read file content
       const fileContent = await file.text();
-      const data = JSON.parse(fileContent);
+      let data;
+      
+      if (file.name.endsWith('.csv')) {
+        data = parseCSV(fileContent);
+        if (data.length === 0) {
+          setError('Не вдалося розпізнати дані з CSV файлу. Перевірте формат.');
+          setUploading(false);
+          return;
+        }
+      } else {
+        data = JSON.parse(fileContent);
+        data = Array.isArray(data) ? data : data.attractions || [];
+      }
 
       // Send to backend for analysis
       const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
       const response = await axios.post(`${backendUrl}/api/upload-data`, {
-        data: Array.isArray(data) ? data : data.attractions || [],
+        data: data,
         filename: file.name
       });
 
