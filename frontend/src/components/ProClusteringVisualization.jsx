@@ -270,7 +270,7 @@ const ProClusteringVisualization = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="relative h-96 bg-gradient-to-br from-slate-800/50 to-purple-900/50 rounded-lg p-6">
+                <div className="relative h-80 bg-gradient-to-br from-slate-800/50 to-purple-900/50 rounded-lg p-4">
                   {/* Y-axis - dynamic based on real WCSS values */}
                   {(() => {
                     const maxWcss = Math.max(...elbowData.map(d => d.wcss || 0));
