@@ -568,6 +568,111 @@ const ProClusteringVisualization = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* GeoPandas Spatial Analysis - Розділ 2.5 */}
+          <TabsContent value="geopandas">
+            <Card className="bg-white/10 backdrop-blur-md border-green-400/30">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center justify-between">
+                  <span>🗺️ GeoPandas Просторовий Аналіз (Розділ 2.5)</span>
+                  <Badge className="bg-green-600 text-white">
+                    {geoData?.spatial?.geopandas_info?.library_version || 'GeoPandas'}
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* Summary Statistics */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
+                    <div className="text-3xl font-bold text-green-300">
+                      {geoData?.spatial?.summary?.total_objects || 0}
+                    </div>
+                    <div className="text-xs text-green-200">Всього об'єктів</div>
+                  </div>
+                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
+                    <div className="text-3xl font-bold text-green-300">
+                      {geoData?.spatial?.summary?.districts_count || 0}
+                    </div>
+                    <div className="text-xs text-green-200">Районів</div>
+                  </div>
+                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
+                    <div className="text-3xl font-bold text-green-300">
+                      {geoData?.spatial?.summary?.coverage_percentage || 0}%
+                    </div>
+                    <div className="text-xs text-green-200">Покриття</div>
+                  </div>
+                  <div className="bg-green-900/30 p-4 rounded-lg border border-green-400/30 text-center">
+                    <div className="text-3xl font-bold text-green-300">
+                      WGS84
+                    </div>
+                    <div className="text-xs text-green-200">EPSG:4326</div>
+                  </div>
+                </div>
+
+                {/* District Statistics */}
+                <h4 className="text-lg font-semibold text-white mb-4">📊 Статистика по районах (Spatial Join)</h4>
+                <div className="space-y-3 mb-6">
+                  {geoData?.districts?.map((district, idx) => {
+                    const maxObjects = Math.max(...(geoData?.districts?.map(d => d.objects_count) || [1]));
+                    const percentage = (district.objects_count / maxObjects) * 100;
+                    const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+                    return (
+                      <div key={idx} className="bg-slate-800/50 p-4 rounded-lg border border-green-400/20">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-semibold text-green-200">{district.district_name}</span>
+                          <div className="flex items-center gap-3">
+                            <Badge className="bg-slate-700 text-white">{district.objects_count} об'єктів</Badge>
+                            <Badge style={{backgroundColor: colors[idx % 4]}} className="text-white">
+                              {district.dominant_category}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{width: `${percentage}%`, backgroundColor: colors[idx % 4]}}
+                          />
+                        </div>
+                        <div className="text-xs text-slate-400 mt-1">
+                          Рейтинг: ⭐ {district.avg_rating} | Щільність: {district.density_per_100km2} об/100км²
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Spatial Operations */}
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-blue-900/30 p-4 rounded-lg border border-blue-400/30">
+                    <h5 className="font-semibold text-blue-300 mb-2">🔧 Просторові операції</h5>
+                    <ul className="text-sm text-blue-100 space-y-1">
+                      {geoData?.spatial?.geopandas_info?.spatial_operations?.map((op, i) => (
+                        <li key={i}>• {op}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-amber-900/30 p-4 rounded-lg border border-amber-400/30">
+                    <h5 className="font-semibold text-amber-300 mb-2">📍 Географічні межі</h5>
+                    <ul className="text-sm text-amber-100 space-y-1">
+                      <li>• Широта: {geoData?.spatial?.geographic_bounds?.lat_min}° - {geoData?.spatial?.geographic_bounds?.lat_max}°</li>
+                      <li>• Довгота: {geoData?.spatial?.geographic_bounds?.lng_min}° - {geoData?.spatial?.geographic_bounds?.lng_max}°</li>
+                      <li>• Регіон: Житомирська область</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Methodology Reference */}
+                <div className="p-4 bg-green-900/30 rounded-lg border border-green-400/30">
+                  <p className="text-sm text-green-100 leading-relaxed">
+                    <strong className="text-green-300">📚 Розділ 2.5:</strong> GeoPandas забезпечує виконання просторових операцій, 
+                    зокрема <strong>визначення приналежності точки до полігону</strong> (point-in-polygon) для встановлення районної 
+                    приналежності об'єктів. Використовується система координат <strong>WGS84 (EPSG:4326)</strong> та бібліотека 
+                    <strong> Shapely</strong> для геометричних обчислень.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
 
         {/* Algorithm Info */}
